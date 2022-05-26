@@ -1,145 +1,219 @@
 # Transactions
 
-Реализация проекта Transactions.
-
+Implementation of in-memory key-value store for storing various financial transaction data.
 
 ## Contents
 
 1. [Chapter I](#chapter-i) \
-    1.1. [Introduction](#introduction)
+   1.1. [Introduction](#introduction)
 2. [Chapter II](#chapter-ii) \
-    2.1. [Information](#information)
+   2.1. [Information](#information)
 3. [Chapter III](#chapter-iii) \
-    3.1. [Part 1](#part-1-реализация-in-memory-key-value-хранилища-на-базе-хеш-таблицы)  
-    3.2. [Part 2](#part-2-реализация-in-memory-key-value-хранилища-на-базе-самобалансирующегося-бинарного-дерева-поиска)  
-    3.3. [Part 3](#part-3-реализация-консольного-интерфейса)  
-    3.4. [Part 4](#part-4-дополнительно-реализация-in-memory-key-value-хранилища-на-базе-b-деревьев)  
-    3.5. [Part 5](#part-5-дополнительно-исследование-временных-характеристик)
-
+   3.1. [Part 1](#part-1-implementation-of-in-memory-key-value-store-based-on-a-hash-table)  
+   3.2. [Part 2](#part-2-implementation-of-in-memory-key-value-store-based-on-self-balancing-binary-search-tree)  
+   3.3. [Part 3](#part-3-implementation-of-the-console-interface)  
+   3.4. [Part 4](#part-4-bonus-implementation-of-in-memory-key-value-store-based-on-b-trees)  
+   3.5. [Part 5](#part-5-bonus-research-on-temporal-characteristics)
 
 ## Chapter I
 
+It was unusually crowded in the kitchen, as if the entire floor had come to celebrate a colleague’s birthday. Or at
+least just to get their piece of the pie. Even Bob was here with his favorite mug. \
+Eve timidly congratulated the birthday boy, picked up a small plate of apple pie, and hurried back to her desk. She
+urgently had to finish a small project on implementing a fast and lightweight data store for the finance department. Bob
+kept saying that they didn't have enough people there. So Eve was called to at least partially make up for this
+shortage. And while everyone is having fun in the kitchen, she can work in peace and quiet.
+
+`-` "Bob, I don't even want to think about what happened a year ago," an unknown voice suddenly interrupted the silence.
+
+- "So much nerve and money went into putting this incident behind us, and now I find out that we could get something
+  worse."
+
+`-` "The ones responsible were punished then and are punished now. We're actively working on the recovery work," it was
+a familiar voice of the boss. They clearly didn't know that they were not alone. Eve didn't give herself away, too, and
+decided to eavesdrop on how the conversation would end.
+
+`-` "Apparently your punishments have no effect, since history is repeating itself."
+
+`-` "The situation is a little different, after all..."
+
+`-` "A little? That's an understatement. So far, it sounds much worse. If last time we got a zombified family that did
+whatever the crazy algorithm wanted, what will happen now? I mean, if it only made them buying, say, "certain" products,
+that's fine, but what did it do? Decided to organize its own "cult"?!"
+
+`-` "I understand your concern, but this time it's much more under control..." The sound of voices gradually faded away
+towards Bob's office, and it became harder and harder to understand the words. Eve continued to sit still and hardly
+breathed even as the voices fell silent, and her colleagues began to return to their desks after a delicious break. She
+still had to fully realize what she had just heard...
+
 ## Introduction
 
-В данном проекте Вам предстоит вспомнить и подробнее ознакомиться с такими структурами данных как хеш-таблицы и самобалансирующиеся бинарные деревья, а также реализовать на их основе хранилище типа ключ-значение.
-
+In this project, you will need to recall and learn more about such data structures as hash tables and self-balancing
+binary trees, and implement a key-value store based on them.
 
 ## Chapter II
 
 ## Information
 
-Хринилища типа «ключ-значение» (англ. key-value storage) предназначенны для хранения, извлечения и управления ассоциативными массивами. Подобное хранилище реализуется во многих языках программирования в виде контейнерного класса *словорь*. Словари содержат коллекцию объектов или записей, которые, в свою очередь, содержат множество различных полей с данными. Эти записи хранятся и извлекаются с использованием ключа, который однозначно идентифицирует запись и используется для быстрого поиска данных в хранилище.
+A key–value store is designed for storing, retrieving, and managing associative arrays. Such a store is implemented in
+many programming languages as a container class *dictionary*. Dictionaries contain a collection of objects, or records,
+which in turn have many different fields within them, each containing data. These records are stored and retrieved using
+a key that uniquely identifies the record, and is used to quickly find the data within the database.
 
-Также, за счёт высокой скорости чтения и записи, идею подобного хранилища реализуют многие NoSQL базы данных такие, как Redis, Memcached, Tarantool и многие-многие другие. Базы данных с использованием пар «ключ‑значение» поддерживают высокую разделяемость и обеспечивают беспрецедентное горизонтальное масштабирование, недостижимое при использовании многих других типов баз данных. 
+Many NoSQL databases such as Redis, Memcached, Tarantool and many, many others also implement the idea of such store due
+to high read and write speeds. Key-value pairs databases support high separability and provide unprecedented horizontal
+scaling unattainable with many other types of databases.
 
-![key-value-storage](misc/images/key-value-storage.png)
+![key-value-store](misc/images/key-value-storage.png)
 
-Для реализации key-value хранилищ в преобладающем большинстве используются хеш-таблицы или деревья поиска.
+Hash tables or search trees are mostly used to implement key-value stores.
 
-### Хеш-таблица
+#### Hash table
 
-**Хеш-таблица** - это структура данных, которая используются когда необходимо быстро выполнять операции вставки/удаления/нахождения элементов. 
-Скорость выполнения этих операций обусловлена устройством хеш-таблиц. В основе их работы лежит функция хеширования, которая вычисляет значение индекса на базе переданного ей ключа. Благодаря этой функции локализация элемента в таблице по его ключу в общем случае происходит со сложностью О(1), которая не зависит от размера самой хеш-таблицы. Сам же процесс получения индекса по ключу называется **хешированием**. 
+A **hash table** is a data structure that is used when you need to quickly perform insert/delete/find operations. The
+speed at which these operations are performed is determined by the hash table structure. They are based on a hashing
+function that calculates an index value based on the key passed to it.
+
+Thanks to this function, locating an element in a table by its key is generally performed with complexity O(1), which
+does not depend on the size of the hash table itself. The process of obtaining an index by the key is called **hashing**
+.
 
 ![hash-table](misc/images/hash-table.png)
 
-Когда хеш-функция генерирует одинаковый индекс для нескольких разных ключей, возникает конфликт: неизвестно, какое значение нужно сохранить в этом индексе. Подобные ситуации называются **коллизиями**.
+When a hash function generates the same index for several different keys, there is a conflict: it is unclear which value
+should be stored in this index. Such situations are called **collisions**.
 
-Есть несколько методов борьбы с коллизиями:
-- метод цепочек;
-- метод открытой адресации: линейное пробирование, квадратичное пробирование, двойное хеширование. 
+There are several methods of handling collisions:
 
-Хеш-таблицы используются для реализации контейнерных классов типа ключ-значения во многих языках программирования, к примеру:
+- Separate chaining
+- Open addressing: Linear probing, Quadratic probing, Double hashing.
+
+Hash tables are used to implement key-value container classes in many programming languages, for example:
+
 * *C#*: Dictionary, ConcurrentDictionary, HashMap
 * *Python*: set, map
 * *JavaScript*: Map
 
-### Двоичные деревья поиска
+### Binary search trees
 
-**Двоичное дерево (Бинарное дерево)** — это иерархическая структура данных, в которой каждый узел имеет значение и ссылки на левого и правого потомка. Узел, находящийся на самом верхнем уровне (не являющийся чьим либо потомком) называется корнем. Узлы, не имеющие потомков (оба потомка которых равны `NULL`) называются листьями.
+**A binary tree** is a hierarchical data structure in which each node has a value and links to its left and right child.
 
-**Бинарное дерево поиска** — это бинарное дерево, обладающее дополнительными свойствами: 
-* оба поддерева — левое и правое — являются двоичными деревьями поиска
-* у всех узлов левого поддерева произвольного узла X значения ключей данных меньше, нежели значение ключа данных самого узла X
-* у всех узлов правого поддерева произвольного узла X значения ключей данных больше либо равны, нежели значение ключа данных самого узла X
+The highest node (which is not a child of anyone else) is called the root. Nodes that have no children (both children of
+which are `NULL`) are called leaves.
+
+**A Binary search tree** is a binary tree with additional properties:
+
+* both subtrees, left and right, are binary search trees
+* all nodes in the left subtree of arbitrary node X have key values lesser than the key value of node X itself
+* all nodes in the right subtree of arbitrary node X have key values greater than or equal to the key value of node X
+  itself.
 
 ![binary-tree](misc/images/binary-tree.png)
 
-В итоге, данные в бинарном дереве поиска хранятся в отсортированном виде. При каждой операции вставки нового или удаления существующего узла отсортированный порядок дерева сохраняется. Благодаря этому появляется возможность формализации алгоритма поиска элементов в бинарном дереве:
+As a result, the data in the binary search tree is stored in a sorted order. Each time a new node is inserted, or an
+existing node is deleted, the sorted tree order is saved. This makes it possible to formalize the algorithm for
+searching items in a binary tree:
 
-* Поиск осуществляется целенаправленным движением по ветвям дерева
-* Если ключ поиска равен ключу в вершине, значит, ключ найден и можно вернуть значение узла
-* Если ключ поиска меньше ключа в вершине, то осуществляется движение по дереву вниз влево, в противном случае — вниз вправо 
-* Если в очередной вершине дальнейшее движение вниз невозможно (указатель равен `NULL`), то это означает, что искомого ключа нет в дереве
+* Searching is done by purposeful movement along the tree branches
+* If the search key is equal to that of the root, then the key is found, and the value of the node can be returned
+* If the search key is less than that of the root, the search proceeds by examining the left subtree, otherwise the
+  right one
+* If at the next node it is impossible to move further (the pointer is `NULL`), it means that the key you are looking
+  for is not in the tree
 
-Максимальная длина поиска в таком случае равна высоте дерева.
+The maximum search length in this case is equal to the height of the tree.
 
-**Сбалансированное бинарное дерево поиска** — это бинарное дерево поиска с логарифмической высотой. Оно применяется, когда необходимо осуществлять быстрый поиск элементов, чередующийся со вставками новых элементов и удалениями существующих. В подобных деревьях для каждой вершины высота двух поддеревьев различается не более чем на 1. Примерами самобалансирующихся деревьев поиска являются *красно-чёрные деревья* или *АВЛ-деревья*.
+**Balanced binary search tree** is a binary search tree with logarithmic height. It is used when it is necessary to
+perform a quick search for items, alternating with the insertion of new items and the deletion of existing ones. In such
+trees, the heights of the two subtrees differ by not more than 1. Examples of self-balancing search trees are the *
+red-black trees* or *AVL trees*.
 
-Красно-чёрные деревья поиска используются в структурах данных различных языков программирования, например:
+Red-black search trees are used in the data structures of different programming languages, for example:
+
 * *Java*: java.util.TreeMap | java.util.TreeSet
 * *C++ STL*: map, multimap, multiset.
 * *Linux kernel*: completely fair scheduler, linux/rbtree.h
 
-### Дерево поиска B-tree
+### B-tree
 
-Основные операции в деревьях выполняются за время пропорциональное его высоте. Сбалансированные деревья минимизируют свою высоту (к примеру, высота бинарного сбалансированного дерева с _n_ узлами равна _log n_). 
+Main operations in trees are performed in time proportional to its height.
 
-В чем же проблема этих стандартных деревьев поиска? Рассмотрим огромную базу данных, представленную в виде одного из упомянутых деревьев. Очевидно, что мы не можем хранить всё это дерево в оперативной памяти, поэтому в ней храним лишь часть информации, остальное же хранится на стороннем носителе (допустим, на жестком диске, скорость доступа к которому гораздо медленнее). Такие деревья как красно-черное или АВЛ будут требовать от нас _log n_ обращений к стороннему носителю. При больших _n_ это очень много. Как раз эту проблему и призваны решить B-деревья!
+Balanced trees minimize their height (for example, the height of a binary balanced tree with _n_ nodes is _log n_).
 
-B-деревья также представляют собой сбалансированные деревья, поэтому время выполнения стандартных операций в них пропорционально высоте. Но, в отличие от остальных деревьев, они созданы специально для эффективной работы с дисковой памятью, за счёт минимизации числа обращений на чтение или запись на диск.
+What is the problem with these standard search trees? Let's examine a huge database represented in the form of one of
+the above-mentioned trees. It is obvious that we can't keep the whole tree in RAM, so we keep only part of the
+information in it. The rest is stored on a different medium (say, a hard disk, which is much slower to access). Trees
+like red-black or AVL will require _log n_ calls to that medium. If _n_ is large, this is a lot. B-trees are designed to
+solve exactly this problem!
 
-B деревья используются в key-value хранилищах:
+B-trees are also balanced trees, so the execution time of standard operations in them is proportional to the height. But
+unlike the other trees, they are designed specifically for the efficient use of disk memory, by minimizing the number of
+read or write accesses to the disk.
+
+B-trees are used in key-value stores:
+
 * Apache Ignite
 * Tokyo Cabinet
 
-### Описание структуры данных
+### Data structure description
 
-В качестве ключа в key-value хранилище будут выступать **строки**. В качестве значений (данных) в key-value хранилище будут хранится записи о студентах Школы 21 в следующем виде:
-* Фамилия
-* Имя
-* Год рождения
-* Город
-* Число текущих коинов
+In the key-value store the key will be **strings** and values (data) will be records of School 21 students in the
+following form:
 
-### Описание реализуемых функций key-value хранилища
+* Last name
+* First name
+* Year of birth
+* City
+* Number of current coins
+
+### Description of key-value store functions
 
 ### SET
 
-Команда используется для установки ключа и его значения. В примере ниже ключом является строка `foo`, значением же является структура, описанная выше. Значение полей новой записи вводится в порядке их описания в структуре. В качестве необязательных параметров используется `EX` для указания срока жизни создаваемой записи. Если необязательное поле не указано, то по умолчанию временя жизни записи никак не ограничено.
+This command is used to set the key and its value. In the example below, the key is the string `foo`, and the value is
+the structure described above. The values of the new record fields are entered in the order they are described in the
+structure. `EX` is used as an optional parameter to specify the lifetime of the record you are creating. If the optional
+field is not specified, the record lifetime is not limited by default.
 
-Описание параметров команды `SET`:
+Description of the `SET` command parameters:
+
 ```
-SET <ключ> <Фамилия> <Имя> <Год рождения> <Город> <Число текущих коинов> EX <время в секундах>
+SET <key> <Last name> <First name> <Year of birth> <City> <Number of current coins> EX <time in seconds>
 ```
 
-Пример использования команды `SET` для создания записи без ограничения на время её существования:
+An example of using the `SET` command to create a record with no time limit:
+
 ```
-SET foo Васильев Иван 2000 Москва 55 
+SET foo Vasilev Ivan 2000 Moscow 55 
 > OK
-SET foo Васильев 123 aaaaa Москва 55 
+SET foo Vasilev 123 aaaaa Moscow 55 
 > ERROR: unable to cast value "aaaa" to type int 
 ```
 
-Пример использования команды `SET` для создания записи с ограничением на время её существования. В этом примере запись будет существовать на протяжении 10 секунд, после чего автоматически удалится:
+An example of using the `SET` command to create a record with a time limit. The record will exist for 10 seconds, and
+then it will be automatically deleted:
+
 ```
-SET foo Васильев Иван 2000 Москва 55 EX 10 
+SET foo Vasilev Ivan 2000 Moscow 55 EX 10 
 > OK
 ```
 
 ### GET
 
-Команда используется для получения значения, связанного с ключом. Если такой записи нет, то будет возвращён `(null)`:
+This command is used to get the value associated with the key. If there is no such record, `(null)` will be returned:
+
 ```
 GET foo
-> Васильев Иван 2000  Москва   55 
+> Vasilev Ivan 2000  Moscow   55 
 GET unknownkey
 > (null)
 ```
 
 ### EXISTS
 
-Эта команда проверяет, существует ли запись с данным ключом. Она возвращает `true` если объект существует или `false` если нет:
+This command checks if a record with the given key exists. It returns `true` if the object exists or `false` if it
+doesn't:
+
 ```
 EXISTS foo
 > true
@@ -147,7 +221,9 @@ EXISTS foo
 
 ### DEL
 
-Команда удаляет ключ и соответствующее значение, после чего возращает `true`, если запись успешно удалена, в противном случае - `false`:
+This command deletes the key and the corresponding value, then returns `true` if the record was successfully deleted,
+otherwise `false`:
+
 ```
 DEL foo
 > true
@@ -155,31 +231,34 @@ DEL foo
 
 ### UPDATE
 
-Команда обновляет значение по соответствующему ключу, если такой ключ существует:
+This command updates the value by the corresponding key if such a key exists:
+
 ```
-SET foo Вас И 20 Мос 5 
+SET foo Vas I 20 Mos 5 
 > OK
-UPDATE foo Васильев Иван 2000 Москва 55
+UPDATE foo Vasilev Ivan 2000 Moscow 55 
 > OK
 
 GET foo
-> Васильев Иван 2000 Москва 55 
+> Vasilev Ivan 2000 Moscow 55
 ```
 
-Если же какое-то поле менять не планируется, то на его месте ставится прочерк "-":
+If there is a field that is not planned to change, it is replaced by a dash "-":
+
 ```
-SET foo Вас И 20 Мос 5 
+SET foo Vas I 20 Mos 5 
 > OK
-UPDATE foo Васильев - - - 55
+UPDATE foo Vasilev - - - 55
 > OK
 
 GET foo
-> Васильев И 20 Мос 55 
+> Vasilev I 20 Mos 55 
 ```
 
 ### KEYS
 
-Возвращает все ключи, которые есть в хранилище:
+Returns all the keys that are in the store:
+
 ```
 KEYS
 1) boo
@@ -187,9 +266,10 @@ KEYS
 3) bar
 ```
 
-### RENAME 
+### RENAME
 
-Команда используется для переименования ключей:
+This command is used to rename keys:
+
 ```
 RENAME foo foo2
 > OK
@@ -198,14 +278,17 @@ GET foo
 > (null)
 
 GET foo2
-> Васильев И 20 Мос 55 
+> Vasilev I 20 Mos 55
 ```
 
 ### TTL
 
-Когда ключ установлен с истечением срока действия, эту команду можно использовать для просмотра оставшегося времени. Если записи с заданным ключом не существует, то возвращается `(null)`:
+When the key is set with the time limit, this command can be used to view the remaining time. If there is no record with
+the given key, `(null)` will be returned:
+
 ```
-SET Васильев Иван 2000 Москва 55 EX 10
+SET Vasilev Ivan 2000 Moscow 55 EX
+10
 > OK
 TTL foo
 > 6
@@ -219,132 +302,162 @@ TTL foo
 
 ### FIND
 
-Эта команда используется для восстановления ключа (или ключей) по заданному значению. Аналогично команде `UPDATE` необязательно указывать все значения из структуры студентов школы 21. Если по каким-либо полям не будет выполняться поиск, то на их месте просто проставляются прочерк `-`.
+This command is used to restore the key (or keys) according to a given value. Similarly to the `UPDATE` command, you
+don’t have to specify all the values from the structure of the School 21 students. If any fields will not be searched,
+it is replaced by a dash "-".
 
-Пример использования команды `FIND` с поиском по всем полям структуры студентов:
+An example of using the `FIND` command to search through all fields of a student structure:
+
 ```
-FIND Васильев Иван 2000 Москва 55
+FIND Vasilev Ivan 2000 Moscow 55 
 > 1) foo
-FIND Васильев Антон 1997 Тверь 55
+FIND Vasilev Anton 1997 Tver 55
 > 1) boo
 ```
 
-Пример использования команды `FIND` с поиском по фамилии и числу коинов: 
+An example of using the `FIND` command to search by last name and number of coins:
+
 ```
-FIND Васильев - - - 55
+FIND Vasilev - - - 55
 > 1) foo
 > 2) boo
 ```
 
 ### SHOWALL
 
-Команда для получения всех записей, которые содержатся в key-value хранилище на текущий момент:
+This command is used for getting all records that are in the key-value store at the moment:
+
 ```
 SHOWALL
->  №| Фамилия |   Имя   | год |  город   | Количество коинов |
-> 1 "Васильев"  "Иван"   2000   "Москва"           55 
-> 2  "Иванов"  "Василий" 2000   "Москва"           55 
+> № | Last name |   First name   | Year |  City   | Number of coins |
+> 1   "Vasilev"       "Ivan"       2000  "Moscow"         55 
+> 2   "Ivanov"       "Vasily"      2000  "Moscow"         55 
 ```
 
 ### UPLOAD
 
-Данная команда используется для загрузки данных из файла. Файл содержит список загружаемых данных в формате:
+This command is used to upload data from a file. The file contains a list of uploaded data in the format:
+
 ```
-key1 "Васильев" "Иван" 2001 "Ростов" 55
-key2 "Иванов" "Василий" 2000 "Москва" 55 
+key1 "Vasilev" "Ivan" 2001 " Rostov" 55
+key2 "Ivanov" "Vasiliy" 2000 "Москва" 55 
 ...
-key101 "Сидоров" "Сергей" 1847 "Суздаль" 12312313 
+key101 " Sidorov" "Sergei" 1847 "Suzdal" 12312313 
 ```
 
-Вызов команды:
+Command call:
+
 ```
-UPLOAD ~/Descktop/TestData/file.dat
+UPLOAD ~/Desktop/TestData/file.dat
 > OK 101
 ```
 
-После ответа `OK` выводится число загруженных строк из файла.
+After the `OK` the number of strings uploaded from the file is displayed.
 
 ### EXPORT
-  
-Данная команда используется для выгрузки данных, которые находятся в текущий момент в key-value хранилище в файл. Файл должен на выходе содержать список данных в формате:
+
+This command is used to export the data that are currently in the key-value store to a file. The output of the file must
+contain a list of data in the format:
+
 ```
-key1 "Васильев" "Иван" 2001 "Ростов" 55
-key2 "Иванов" "Василий" 2000 "Москва" 55 
+key1 "Vasilev" "Ivan" 2001 " Rostov" 55
+key2 "Ivanov" "Vasiliy" 2000 "Москва" 55 
 ...
-key101 "Сидоров" "Сергей" 1847 "Суздаль" 12312313 
+key101 " Sidorov" "Sergei" 1847 "Suzdal" 12312313 
 ```
 
-Вызов команды:
+Command call:
+
 ```
-EXPORT ~/Descktop/TestData/export.dat
+EXPORT ~/Desktop/TestData/export.dat
 > OK 101
 ```
 
-После ответа `OK` выводится число выгруженных строк из файла.
-
+After the `OK` the number of strings exported from the file is displayed.
 
 ## Chapter III
 
-## Part 1. Реализация in-memory key-value хранилища на базе хеш-таблицы
+## Part 1. Implementation of in-memory key-value store based on a hash table
 
-Необходимо реализовать in-memory key-value хранилище на основе хеш-таблицы:
-- Программа должна быть разработана на языке C++ стандарта C++17
-- Код программы должен находиться в папке src
-- Классы должны быть реализованы внутри пространства имен `s21`
-- Не использовать устаревшие и выведенные из употребления конструкции языка и библиотеки
-- Оформить решение как статическую библиотеку (с заголовочным файлом hash_table.h)
-- Библиотека должна быть представлена в виде класса `HashTable`, который хранит в себе информацию в виде хеш-таблицы и содержит все необходимые методы для реализации функционала, описанного [выше](#описание-реализуемых-функций-key-value-хранилища). Выбор хеш-функции и способа разрешения коллизий остаётся за вами
-- Класс `HashTable` должен наследоваться от базового абстрактного класса, содержащего все методы, описанные [выше](#описание-реализуемых-функций-key-value-хранилища)
-- Предусмотреть Makefile для сборки библиотеки и тестов (с целями all, clean, tests, hash_table.a)
-- Должно быть обеспечено полное покрытие unit-тестами методов класса `HashTable`
+You need to implement an in-memory key-value store based on a hash table:
 
-## Part 2. Реализация in-memory key-value хранилища на базе самобалансирующегося бинарного дерева поиска
+- The program must be developed in C++ language of C++17 standard
+- The program code must be located in the src folder
+- Classes must be implemented within the `s21` namespace
+- Do not use outdated language constructs and libraries
+- Make it as a static library (with a hash_table.h header file)
+- The library must be represented as a `HashTable` class, which stores the information in a hash table and contains all
+  the necessary methods to implement the functionality described [above] (#description-of-key-value-store-functions). It
+  is up to you which hash function and collision resolution method to choose.
+- `HashTable` class must be inherited from a base abstract class containing all the methods described [above] (
+  # description-of-key-value-store-functions )
+- Provide a Makefile for building the library and tests (with targets all, clean, tests, hash_table.a)
+- Prepare full coverage of `HashTable` class methods with unit-tests
 
-Необходимо реализовать in-memory key-value хранилище на основе самобалансирующегося бинарного дерева поиска:
-- Программа должна быть разработана на языке C++ стандарта C++17
-- Код программы должен находиться в папке src
-- Классы должны быть реализованы внутри пространства имен `s21`
-- Не использовать устаревшие и выведенные из употребления конструкции языка и библиотеки
-- Оформить решение как статическую библиотеку (с заголовочным файлом self_balancing_binary_search_tree.h)
-- Библиотека должна быть представлена в виде класса `SelfBalancingBinarySearchTree`, который хранит в себе информацию в виде самобалансирующегося бинарного дерева поиска и содержит все необходимые методы для реализации функционала, описанного [выше](#описание-реализуемых-функций-key-value-хранилища). Выбор типа самобалансирующегося бинарного дерева поиска остаётся за вами.
-- Класс `SelfBalancingBinarySearchTree` должен наследоваться от того же базового абстрактного класса, что и в [Part 1](#part-1-реализация-in-memory-key-value-хранилища-на-базе-хеш-таблицы), содержащего все методы, описанные [выше](#описание-реализуемых-функций-key-value-хранилища)
-- Предусмотреть Makefile для сборки библиотеки и тестов (с целями all, clean, tests, self_balancing_binary_search_tree.a)
-- Должно быть обеспечено полное покрытие unit-тестами методов класса `SelfBalancingBinarySearchTree`
+## Part 2. Implementation of in-memory key-value store based on self-balancing binary search tree
 
-## Part 3. Реализация консольного интерфейса
+You need to implement an in-memory key-value store based on self-balancing binary search tree:
 
-Должен быть реализован консольный интерфейс, который предоставляет пользователю следующие опции:
-- Первоначальный выбор типа хранилища, который будет использоваться в процессе работы программы:
-    - хеш-таблица
-    - самобалансирующееся бинарное дерево поиска
-- Возможность ввода команд, описанных [выше](#описание-реализуемых-функций-key-value-хранилища)
+- The program must be developed in C++ language of C++17 standard
+- The program code must be located in the src folder
+- Classes must be implemented within the `s21` namespace
+- Do not use outdated language constructs and libraries
+- Make it as a static library (with a self_balancing_binary_search_tree.h header file)
+- The library must be represented as a `SelfBalancingBinarySearchTree` class, which stores information in the form of a
+  self-balancing binary search tree and contains all the necessary methods to implement the functionality
+  described [above] (#description-of-key-value-store-functions). It is up to you which type of self-balancing binary
+  search tree to choose.
+- `SelfBalancingBinarySearchTree` class must be inherited from the same base abstract class as
+  in [Part 1](#part-1-implementation-of-in-memory-key-value-store-based-on-a-hash-table), containing all the methods
+  described [above](#description-of-key-value-store-functions)
+- Provide a Makefile for building the library and tests (with targets all, clean, tests,
+  self_balancing_binary_search_tree.a)
+- Prepare full coverage of `self_balancing_binary_search_tree.a` class methods with unit-tests
 
-## Part 4. Дополнительно. Реализация in-memory key-value хранилища на базе B+ деревьев
+## Part 3. Implementation of the console interface
 
-Необходимо реализовать in-memory key-value хранилище на основе самобалансирующегося бинарного дерева поиска:
-- Программа должна быть разработана на языке C++ стандарта C++17
-- Код программы должен находиться в папке src
-- Классы должны быть реализованы внутри пространства имен `s21`
-- Не использовать устаревшие и выведенные из употребления конструкции языка и библиотеки
-- Оформить решение как статическую библиотеку (с заголовочным файлом b_plus_tree.h)
-- Библиотека должна быть представлена в виде класса `BPlusTree`, который хранит в себе информацию в виде B+ дерева и содержит все необходимые методы для реализации функционала, описанного в [выше](#описание-реализуемых-функций-key-value-хранилища).
-- Класс `BPlusTree` должен наследоваться от базового абстрактного класса из [Part 1](#part-1-реализация-in-memory-key-value-хранилища-на-базе-хеш-таблицы) и [Part 2](#part-2-реализация-in-memory-key-value-хранилища-на-базе-самобалансирующегося-бинарного-дерева-поиска), содержащего все методы, описанные [выше](#описание-реализуемых-функций-key-value-хранилища)
-- Предусмотреть Makefile для сборки библиотеки и тестов (с целями all, clean, tests, b_plus_tree.a)
-- Должно быть обеспечено полное покрытие unit-тестами методов класса `BPlusTree`
-- Добавить в консольный интерфейс, описанный в [Part 3](#part-3-реализация-консольного-интерфейса), возможность выбора B+ дерева в качестве создаваемого in-memory key-value хранилища
+A console interface must be implemented that provides the user with the following options:
 
-## Part 5. Дополнительно. Исследование временных характеристик
+- Initial selection of the store type to be used in the process of running the program:
+    - hash table
+    - self-balancing binary search tree
+- Ability to enter commands described [above](#description-of-key-value-store-functions)
 
-Провести исследование временных характеристик вариантов реализаций in-memory key-value хранилища на базе хеш-таблицы, а также бинарного дерева поиска.
+## Part 4. Bonus. Implementation of in-memory key-value store based on B+ trees
 
-- Пользователем задается количество элементов в хранилище
-- Данные в хранилище генерируются случайным образом
-- Пользователем задается количество повторений одного действия
-- Каждое действие, указанное ниже, выполнить указанное пользователем количество раз, после чего вывести среднее среди полученных значений времени работы
-- Изменить время выполнения следующих действих обоими видами хранилищ:
-    - Получение произвольного элемента
-    - Добавление элемента
-    - Удаление элемента
-    - Получения списка всех элементов в словаре
-    - Поиск ключа элемента по значению
-- Быть готовым объяснить полученные результаты
+You need to implement an in-memory key-value store based on a self-balancing binary search tree:
+
+- The program must be developed in C++ language of C++17 standard
+- The program code must be located in the src folder
+- Classes must be implemented within the `s21` namespace
+- Do not use outdated language constructs and libraries
+- Make it as a static library (with a b_plus_tree.h header file)
+- The library must be represented as a `BPlusTree` class, which stores information in the form of a B+ tree and contains
+  all the necessary methods to implement the functionality described [above] (#description-of-key-value-store-functions)
+  .
+- `BPlusTree` class must be inherited from the same base abstract class as
+  in [Part 1](#part-1-implementation-of-in-memory-key-value-store-based-on-a-hash-table)
+  and [Part 2](#part-2-implementation-of-in-memory-key-value-store-based-on-self-balancing-binary-search-tree),
+  containing all the methods described [above](#description-of-key-value-store-functions)
+- Provide a Makefile for building the library and tests (with targets all, clean, tests, b_plus_tree.a)
+- Prepare full coverage of `BPlusTree` class methods with unit-tests
+- Add to the console interface described in [Part 3](#part-3-implementation-of-the-console-interface) the ability to
+  select the B+ tree as the in-memory key-value store
+
+## Part 5. Bonus. Research on temporal characteristics.
+
+Research on temporal characteristics of in-memory key-value store implementations based on a hash table and also a
+binary search tree.
+
+- The user sets the number of items in the store
+- Data in the store is randomly generated
+- The user sets the number of iterations of one operation
+- Perform each operation listed below the number of times specified by the user, and then display the average running
+  time among the obtained values
+- Measure the time for the following operations by both types of stores:
+    - Getting an arbitrary item
+    - Adding an item
+    - Deleting an item
+    - Getting a list of all elements in the dictionary
+    - Finding the item key by value
+- Be prepared to explain the obtained results
