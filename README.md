@@ -15,7 +15,9 @@ Implementation of in-memory key-value store for storing various financial transa
    3.4. [Part 4](#part-4-bonus-implementation-of-in-memory-key-value-store-based-on-b-trees)  
    3.5. [Part 5](#part-5-bonus-research-on-temporal-characteristics)
 
-## Chapter I
+## Chapter I  
+
+![Transactions](misc/images/Transactions.JPG)
 
 It was unusually crowded in the kitchen, as if the entire floor had come to celebrate a colleague’s birthday. Or at
 least just to get their piece of the pie. Even Bob was here with his favorite mug. \
@@ -26,7 +28,7 @@ shortage. And while everyone is having fun in the kitchen, she can work in peace
 
 `-` "Bob, I don't even want to think about what happened a year ago," an unknown voice suddenly interrupted the silence.
 
-- "So much nerve and money went into putting this incident behind us, and now I find out that we could get something
+`-` "So much nerve and money went into putting this incident behind us, and now I find out that we could get something
   worse."
 
 `-` "The ones responsible were punished then and are punished now. We're actively working on the recovery work," it was
