@@ -385,6 +385,7 @@ You need to implement an in-memory key-value store based on a hash table:
 
 - The program must be developed in C++ language of C++17 standard
 - The program code must be located in the src folder
+- When writing code it is necessary to follow the Google style
 - Classes must be implemented within the `s21` namespace
 - Do not use outdated language constructs and libraries
 - Make it as a static library (with a hash_table.h header file)
@@ -402,6 +403,7 @@ You need to implement an in-memory key-value store based on self-balancing binar
 
 - The program must be developed in C++ language of C++17 standard
 - The program code must be located in the src folder
+- When writing code it is necessary to follow the Google style
 - Classes must be implemented within the `s21` namespace
 - Do not use outdated language constructs and libraries
 - Make it as a static library (with a self_balancing_binary_search_tree.h header file)
@@ -412,8 +414,7 @@ You need to implement an in-memory key-value store based on self-balancing binar
 - `SelfBalancingBinarySearchTree` class must be inherited from the same base abstract class as
   in [Part 1](#part-1-implementation-of-in-memory-key-value-store-based-on-a-hash-table), containing all the methods
   described [above](#description-of-key-value-store-functions)
-- Provide a Makefile for building the library and tests (with targets all, clean, tests,
-  self_balancing_binary_search_tree.a)
+- Add to an existing Makefile target called "self_balancing_binary_search_tree.a" for building the library 
 - Prepare full coverage of `self_balancing_binary_search_tree.a` class methods with unit-tests
 
 ## Part 3. Implementation of the console interface
@@ -431,6 +432,7 @@ You need to implement an in-memory key-value store based on a self-balancing bin
 
 - The program must be developed in C++ language of C++17 standard
 - The program code must be located in the src folder
+- When writing code it is necessary to follow the Google style
 - Classes must be implemented within the `s21` namespace
 - Do not use outdated language constructs and libraries
 - Make it as a static library (with a b_plus_tree.h header file)
@@ -441,7 +443,7 @@ You need to implement an in-memory key-value store based on a self-balancing bin
   in [Part 1](#part-1-implementation-of-in-memory-key-value-store-based-on-a-hash-table)
   and [Part 2](#part-2-implementation-of-in-memory-key-value-store-based-on-self-balancing-binary-search-tree),
   containing all the methods described [above](#description-of-key-value-store-functions)
-- Provide a Makefile for building the library and tests (with targets all, clean, tests, b_plus_tree.a)
+- Add to an existing Makefile target called "b_plus_tree.a" for building the library
 - Prepare full coverage of `BPlusTree` class methods with unit-tests
 - Add to the console interface described in [Part 3](#part-3-implementation-of-the-console-interface) the ability to
   select the B+ tree as the in-memory key-value store
