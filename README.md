@@ -465,3 +465,6 @@ binary search tree.
     - Getting a list of all elements in the dictionary
     - Finding the item key by value
 - Be prepared to explain the obtained results
+
+
+💡 [Tap here](https://forms.yandex.ru/u/635ab06ad04688219d2c1920/) **to leave your feedback on the project**. Pedago Team really tries to make your educational experience better.
