@@ -289,7 +289,7 @@ When the key is set with the time limit, this command can be used to view the re
 the given key, `(null)` will be returned:
 
 ```
-SET Vasilev Ivan 2000 Moscow 55 EX
+SET foo Vasilev Ivan 2000 Moscow 55 EX
 10
 > OK
 TTL foo
