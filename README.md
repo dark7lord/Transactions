@@ -467,4 +467,4 @@ binary search tree.
 - Be prepared to explain the obtained results
 
 
-💡 [Tap here](https://forms.yandex.ru/cloud/64181f5273cee70c4947898c/) **to leave your feedback on the project**. Pedago Team really tries to make your educational experience better.
+💡 [Tap here](https://forms.yandex.ru/cloud/64181f5273cee70c4947898c/) **to leave your feedback on the project**. Product Team really tries to make your educational experience better.
