@@ -36,8 +36,8 @@ namespace s21 {
 
     class IKeyValueStorage {
     public:
-        virtual void set(Key, Value, TimeLimit=-1);
-        virtual Value get(Key);
+        virtual void set(Key, Value, TimeLimit=-1) = 0;
+        virtual Value get(Key) = 0;
         // virtual bool exists(Key);
         // virtual void del(Key);
         // virtual std::vector<Key> keys(void);
@@ -47,31 +47,6 @@ namespace s21 {
         // virtual std::vector<Value> showall(void);
         // virtual void upload(const std::string& filename);
         // virtual void s21::export(const std::string& filename); // delete 0
-    };
-
-    template<class T> // специфицировать шаблон для AbstractKeyValueStorage
-    class KeyValueStorage : IKeyValueStorage {
-    private:
-        T _instance;
-    public:
-        KeyValueStorage();
-        KeyValueStorage(Value&);
-        KeyValueStorage(Value&&);
-        KeyValueStorage& operator=(KeyValueStorage&);
-        KeyValueStorage& operator=(KeyValueStorage&&);
-        ~KeyValueStorage();
-
-        void set(Key, Value, TimeLimit=-1);
-        Value get(Key);
-        // bool exists(Key);
-        // void del(Key);
-        // std::vector<Key> keys(void);
-        // void rename(Key, Key);
-        // TimeLimit ttl(Key);
-        // std::vector<Key> find(Value);
-        // std::vector<Value> showall(void);
-        // void upload(const std::string& filename);
-        // void s21::export(const std::string& filename);
     };
 
 }

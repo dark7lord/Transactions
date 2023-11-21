@@ -1,7 +1,7 @@
 #ifndef S21_HASH_TABLE
 #define S21_HASH_TABLE
 
-#include "../s21_key_value_storage/s21_key_value_storage.h"
+#include "../s21_i_key_value_storage/s21_i_key_value_storage.h"
 
 namespace s21 {
 

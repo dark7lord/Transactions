@@ -1,20 +1,29 @@
-CC			= g++
-CCFLAGS		= -Wall -Wextra -Werror -std=c++17
-NAME		= s21_hash_table.a
-SRC_DIR		= ./
-OBJ_DIR		= obj/
-SRC_FILES   = s21_hash_table.cpp
-OBJ_FILES   = $(SRC_FILES:.cpp=.o)
-SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
-OBJ			= $(addprefix $(OBJ_DIR), $(OBJ_FILES))
-INC         = s21_hash_table.h ../s21_key_value_storage/s21_key_value_storage.h
+CC			 = g++
+CCFLAGS		 = -Wall -Wextra -Werror -std=c++17
+
+NAME		 = s21_hash_table.a
+SRC_DIR		 = ./
+OBJ_DIR		 = obj/
+SRC_FILES    = s21_hash_table.cpp
+OBJ_FILES    = $(SRC_FILES:.cpp=.o)
+SRC			 = $(addprefix $(SRC_DIR), $(SRC_FILES))
+OBJ			 = $(addprefix $(OBJ_DIR), $(OBJ_FILES))
+INC          = s21_hash_table.h
+
+EXT_LIB 	 = s21_i_key_value_storage
+EXT_LIB_DIR  = ../$(EXT_LIB)
+EXT_LIB_NAME = $(EXT_LIB_DIR)/$(EXT_LIB).a
+
 
 .PHONY: all clean fclean re test
 
-all : $(NAME)
+all : $(EXT_LIB_NAME) $(NAME)
+
+$(EXT_LIB_NAME) :
+	cd $(EXT_LIB_DIR) && make
 
 $(NAME): $(OBJ)
-	ar rcs $(NAME) $(OBJ)
+	ar rcs $(NAME) $(OBJ) $(EXT_LIB_NAME)
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC)
 	@mkdir -p $(OBJ_DIR)
