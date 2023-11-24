@@ -31,7 +31,7 @@ namespace s21 {
 	class IKeyValueStorage {
 	public:
 		virtual void set(Key, Value, TimeLimit=-1) = 0;
-		virtual Value* get(Key) noexcept = 0;
+		virtual const Value* get(Key) const noexcept = 0;
 		// virtual bool exists(Key);
 		// virtual void del(Key);
 		// virtual std::vector<Key> keys(void);
@@ -43,6 +43,6 @@ namespace s21 {
 		// virtual void s21::export(const std::string& filename); // delete 0
 	};
 
-	}
+}
 
 #endif

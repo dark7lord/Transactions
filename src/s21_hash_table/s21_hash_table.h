@@ -24,7 +24,7 @@ namespace s21 {
         TimeLimit t;
     
         void set(Key, Value, TimeLimit);
-        Value* get(Key) noexcept;
+        const Value* get(Key) const noexcept;
         // bool exists(Key);
         // void del(Key);
         // std::vector<Key> keys(void);

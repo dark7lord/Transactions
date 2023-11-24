@@ -2,7 +2,7 @@
 
 namespace s21 {
 
-    // Value::Value() {}
+	// Value::Value() {}
 
 }
 

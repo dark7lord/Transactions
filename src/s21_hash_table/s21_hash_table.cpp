@@ -29,7 +29,7 @@ namespace s21 {
         std::cout << "New lst size " << (*table_)[index].size() << std::endl;
     }
 
-    Value* HashTable::get(Key key) noexcept {
+    const Value* HashTable::get(Key key) const noexcept {
         HashCode    hash = this -> hashCode_(key);
         std::size_t index = indexFor_(hash);
         auto first = (*table_)[index].begin();
