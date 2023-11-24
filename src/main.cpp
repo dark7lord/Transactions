@@ -12,7 +12,7 @@ int main() {
 
     s21::HashTable a;
     a.set("Hello, world", v, 5);
-    std::cout << a.get("Hello, world").first_name << std::endl;
+    std::cout << a.get("Hello, world") -> first_name << std::endl;
 
     // KeyValueStorage<HashTable> a;
     // a.set("Hello, world", "Hello, world", 5);
