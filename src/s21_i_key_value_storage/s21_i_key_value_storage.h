@@ -16,17 +16,20 @@ namespace s21 {
 		// ~Value() = default;
 		// explicit Value(std::string); // парсер
 
-		std::string     last_name; // только буквы или одно -
-		std::string     first_name; // только буквы или одно -
-		std::string     birth_year; // только 4 цифры или одно -
-		std::string     city; // только буквы или одно -
-		std::string     coins_number; // любые цифры или одно -
+		std::string	last_name; // только буквы или одно -
+		std::string	first_name; // только буквы или одно -
+		std::string	birth_year; // только 4 цифры или одно -
+		std::string	city; // только буквы или одно -
+		std::string	coins_number; // любые цифры или одно -
 	};
 
 	bool operator==(Value, Value); // return true if one of the values is -
 
-	using Key = std::string;
-	using TimeLimit = int;
+	// using Key = std::string;
+	// using TimeLimit = int;
+	// warning: alias declarations are a C++11 extension [-Wc++11-extensions]
+	typedef std::string Key;
+	typedef int TimeLimit;
 
 	class IKeyValueStorage {
 	public:
