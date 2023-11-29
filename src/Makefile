@@ -1,6 +1,9 @@
 NAME:=		main
 OUTPUT:=	$(NAME).exe
 
+CC:=		g++
+CCFLAGS:=	-Wall -Wextra -Werror -std=c++17
+
 # Paths libs
 KEY_VALUE_STORAGE_PATH:=	./s21_i_key_value_storage
 HASH_TABLE_PATH:=			./s21_hash_table
@@ -18,33 +21,35 @@ KEY_VALUE_STORAGE:=			$(KEY_VALUE_STORAGE_PATH)/$(KEY_VALUE_STORAGE_NAME).a
 
 .PHONY: all run fclean re test
 
-all :
+all: $(NAME)
+
+$(NAME):
 	@make --silent -C $(HASH_TABLE_PATH) && echo ...compiling $(HASH_TABLE_NAME)
 	@make --silent -C $(BIN_TREE_PATH) && echo ...compiling $(BIN_TREE_NAME)
-	@g++ main.cpp $(HASH_TABLE) $(BIN_TREE) \
+	@$(CC) $(CCFLAGS) main.cpp $(HASH_TABLE) $(BIN_TREE) \
 		-I $(HASH_TABLE_PATH) \
 		-I $(BIN_TREE_PATH) \
 		-o main.exe && echo Compiling success!
 
-run :
+run: all
 	./$(OUTPUT)
+
+test: $(BIN_TREE)
+	$(CC) $(CCFLAGS) tests/test.cpp tests/bin_tree.cpp $(BIN_TREE) -I $(BIN_TREE_PATH) -o test.exe -lgtest
+	./test.exe
 
 
 clean:
 #cd ./s21_hash_table && make clean
-	@make --silent -C $(HASH_TABLE_PATH) 		clean && echo ...clean $(HASH_TABLE_NAME)
-	@make --silent -C $(BIN_TREE_PATH) 			clean && echo ...clean $(BIN_TREE_NAME)
+	@make --silent -C $(HASH_TABLE_PATH)		clean && echo ...clean $(HASH_TABLE_NAME)
+	@make --silent -C $(BIN_TREE_PATH)			clean && echo ...clean $(BIN_TREE_NAME)
 	@make --silent -C $(KEY_VALUE_STORAGE_PATH) clean && echo ...clean $(KEY_VALUE_STORAGE_NAME)
 	@echo Cleaning success!
-#cd ./s21_i_key_value_storage && make clean
-# rm -rf main
 
 fclean:
 	@make --silent -C $(HASH_TABLE_PATH) 		fclean && echo ...full clean $(HASH_TABLE_NAME)
 	@make --silent -C $(BIN_TREE_PATH) 			fclean && echo ...full clean $(BIN_TREE_NAME)
 	@make --silent -C $(KEY_VALUE_STORAGE_PATH) fclean && echo ...full clean $(KEY_VALUE_STORAGE)
-#	cd ./s21_hash_table && make fclean
-#	cd ./s21_i_key_value_storage && make fclean
 	@rm -rf $(OUTPUT)
 	@echo Full cleaning success!
 
