@@ -15,9 +15,9 @@ namespace s21 {
         Key k;
         Value v;
         TimeLimit t;
-        void set(Key, Value, TimeLimit);
-        const Value* get(Key) const noexcept;
-        // bool exists(Key);
+        void set(const Key&, const Value&, TimeLimit) override;
+        const Value* get(const Key&) const noexcept override;
+		bool exists(const Key&) const noexcept override;
         // void del(Key);
         // std::vector<Key> keys(void);
         // void rename(Key, Key);

@@ -11,19 +11,19 @@ namespace s21 {
 
     SelfBalancingBinarySearchTree::SelfBalancingBinarySearchTree() {}
 
-    void SelfBalancingBinarySearchTree::set(Key k, Value v, TimeLimit t) {
+    void SelfBalancingBinarySearchTree::set(const Key& k, const Value& v, TimeLimit t) {
         this -> k = k;
         this -> v = v;
         this -> t = t;
     }
 
-    const Value* SelfBalancingBinarySearchTree::get(Key) const noexcept {
+    const Value* SelfBalancingBinarySearchTree::get(const Key&) const noexcept {
         return &(this -> v);
     }
 
-    // bool SelfBalancingBinarySearchTree::exists(Key) {
-
-    // }
+	bool SelfBalancingBinarySearchTree::exists(const Key &) const noexcept {
+		return false;
+	}
 
     // void SelfBalancingBinarySearchTree::del(Key) {
 

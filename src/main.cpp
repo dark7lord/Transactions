@@ -20,11 +20,4 @@ int main() {
 	std::cout << a.get("Hello, world") -> first_name << std::endl;
 	std::cout << b.get("Bye-bye, world") -> last_name << std::endl;
 
-	// KeyValueStorage<HashTable> a;
-	// a.set("Hello, world", "Hello, world", 5);
-	// std::cout << a.get("Hello, world") << std::endl;
-    // KeyValueStorage<SelfBalancingTree> b;
-    // b.set("Hello, world", "Hello, world", 5);
-    // std::cout << b.get("Hello, world") << std::endl;
-
 };
