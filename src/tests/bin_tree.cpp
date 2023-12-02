@@ -37,6 +37,8 @@ TEST(SelfBalancingBinarySearchTree, get) {
 	tree.set("Bruce", value);
 
 	// ASSERT_EQ(tree.get("Bruce"), value); // doesn't work
+	// test undefined key
+	// test nullptr
 	ASSERT_EQ(4 - 2, 2);
 }
 
@@ -58,5 +60,20 @@ TEST(SelfBalancingBinarySearchTree, del) {
 	ASSERT_EQ(tree.exists("April"), true);
 	tree.del("April");
 	ASSERT_EQ(tree.exists("April"), false);
+}
+
+TEST(SelfBalancingBinarySearchTree, update) {
+	s21::SelfBalancingBinarySearchTree tree;
+	s21::Value value = { "Casey", "Jones", "1990", "New York", "400" };
+
+	tree.set("Casey", value);
+	s21::Value new_value = { "Karai", "Oruki", "1994", "Okinawa", "15400" };
+	tree.update("Casey", new_value);
+	ASSERT_EQ( tree.get("Casey"), new_value);
+
+	s21::Value new_value_with_skips = { "Oroki", "Saki", "-", "-", "-" };
+	s21::Value expected_value = { "Oroki", "Saki", "1994", "Okinawa", "15400" };
+	tree.update("Casey", new_value_with_skips);
+	ASSERT_EQ( tree.get("Casey"), expected_value);
 }
 

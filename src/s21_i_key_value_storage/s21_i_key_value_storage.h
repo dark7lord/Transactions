@@ -4,6 +4,7 @@
 #include <string>
 #include <stdbool.h>
 #include <vector>
+#include <iostream>
 
 namespace s21 {
 
@@ -21,13 +22,20 @@ namespace s21 {
 		std::string	birth_year; // только 4 цифры или одно -
 		std::string	city; // только буквы или одно -
 		std::string	coins_number; // любые цифры или одно -
+
+		std::string& operator[](const std::string& key);
+		const std::string& operator[](const std::string& key) const;
 	};
 
-	bool operator==(Value, Value); // return true if one of the values is -
+	std::ostream& operator<<(std::ostream& os, const Value& value);
 
+
+	// bool operator==(Value, Value); // return true if one of the values is -
+	bool operator==(const Value& lhs, const Value& rhs);
+
+	// warning: alias declarations are a C++11 extension [-Wc++11-extensions]
 	// using Key = std::string;
 	// using TimeLimit = int;
-	// warning: alias declarations are a C++11 extension [-Wc++11-extensions]
 	typedef std::string Key;
 	typedef int TimeLimit;
 

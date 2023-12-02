@@ -13,7 +13,7 @@ INC         = s21_i_key_value_storage.h
 
 all : $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) $(INC)
 	ar rcs $(NAME) $(OBJ)
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC)

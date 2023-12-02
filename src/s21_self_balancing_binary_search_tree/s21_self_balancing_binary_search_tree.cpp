@@ -191,6 +191,29 @@ namespace s21 {
 		std::cout << "--------------------\n";
 	}
 
+	void update_value (Value& old_value, const Value& new_value, const Key& key) {
+		if (old_value[key] != new_value[key] && new_value[key] != "-") {
+			old_value[key] = new_value[key];
+		}
+	}
+
+	void SelfBalancingBinarySearchTree::update(Key key, const Value& new_value) {
+		AVL_Node* node = find_node(_root, key);
+
+		if (!node) throw std::out_of_range("Key not found");
+		Value& old_value = node -> value;
+
+		// (void)new_value;
+
+		// old_value.first_name = new_value
+		// (old_value[key] != new_value[key] && new_value[key] != "-") && old_value[key] = new_value[key];
+		update_value(old_value, new_value, "first_name");
+		update_value(old_value, new_value, "last_name");
+		update_value(old_value, new_value, "birth_year");
+		update_value(old_value, new_value, "city");
+		update_value(old_value, new_value, "coins_number");
+	}
+
 	// std::array<Key> SelfBalancingBinarySearchTree::keys(void) {}
 	// void SelfBalancingBinarySearchTree::rename(Key, Key) {}
 	// TimeLimit SelfBalancingBinarySearchTree::ttl(Key) {}
