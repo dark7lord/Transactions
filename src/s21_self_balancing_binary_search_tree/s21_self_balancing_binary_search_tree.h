@@ -38,8 +38,8 @@ namespace s21 {
 		Value		get(const Key& key);
 		bool		exists(Key);
 		bool		del(Key);
+		void		update(Key key, const Value& new_value);
 
-		// update
 		// find
 		// keys
 

@@ -24,9 +24,10 @@ KEY_VALUE_STORAGE:=			$(KEY_VALUE_STORAGE_PATH)/$(KEY_VALUE_STORAGE_NAME).a
 all: $(NAME)
 
 $(NAME):
+	@make --silent -C $(KEY_VALUE_STORAGE_PATH) && echo ...compiling $(KEY_VALUE_STORAGE_NAME)
 	@make --silent -C $(HASH_TABLE_PATH) && echo ...compiling $(HASH_TABLE_NAME)
 	@make --silent -C $(BIN_TREE_PATH) && echo ...compiling $(BIN_TREE_NAME)
-	@$(CC) $(CCFLAGS) main.cpp $(HASH_TABLE) $(BIN_TREE) \
+	$(CC) $(CCFLAGS) main.cpp $(HASH_TABLE) $(BIN_TREE) $(KEY_VALUE_STORAGE) \
 		-I $(HASH_TABLE_PATH) \
 		-I $(BIN_TREE_PATH) \
 		-o main.exe && echo Compiling success!
@@ -35,8 +36,9 @@ run: all
 	./$(OUTPUT)
 
 test: $(BIN_TREE)
-	$(CC) $(CCFLAGS) tests/test.cpp tests/bin_tree.cpp $(BIN_TREE) -I $(BIN_TREE_PATH) -o test.exe -lgtest
+	$(CC) $(CCFLAGS) tests/test.cpp tests/bin_tree.cpp $(BIN_TREE) -I $(BIN_TREE_PATH) $(KEY_VALUE_STORAGE) -o test.exe -lgtest
 	./test.exe
+	rm test.exe
 
 
 clean:

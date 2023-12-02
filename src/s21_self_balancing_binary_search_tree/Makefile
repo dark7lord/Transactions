@@ -25,7 +25,8 @@ all : $(FULL_NAME)
 $(EXT_LIB):
 	make --silent -C $(EXT_LIB_DIR) && echo ...compiling $(EXT_LIB_NAME)
 
-$(FULL_NAME): $(EXT_LIB) $(OBJ)
+$(FULL_NAME): $(OBJ) $(INC)
+	@make --silent -C $(EXT_LIB_DIR) && echo ...compiling $(EXT_LIB_NAME)
 	@ar rcs $(FULL_NAME) $(OBJ) $(EXT_LIB)
 	@echo Compiling $(FULL_NAME) success!
 
