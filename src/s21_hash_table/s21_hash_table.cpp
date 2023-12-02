@@ -2,38 +2,34 @@
 
 namespace s21 {
 
-    void HashTable::set(Key key, Value val, TimeLimit time) {
-        HashCode    hash = this -> hashCode_(key);
-        Node*       node = new HashTable::Node({hash, key, val, time});
-        std::size_t index = indexFor_(hash);
-        std::list<Node>&  bucket = (*table_)[index];
+	/*
+	Save new node in appropriate bucket in sorted by hash order.
+	Exception: the key already exists.
+	*/
+    void HashTable::set(const Key& key, const Value& val, TimeLimit time) {
+        HashCode    		hash = hashCode_(key);
+        std::size_t			index = indexFor_(hash);
+        std::list<Node>&	bucket = (*table_)[index];
 
         std::cout << "Set New node - key " << key << std::endl;
-        auto place = first_bigger_or_equal_hash(hash, bucket);
-        place = check_same_key(key, hash, bucket, place);
-        if (place == bucket.end()) {
-            bucket.push_front(*node);
-        } else {
-            if (place -> key == key) {
-                throw HashTable::KeyException("The key already exists");
-            } else {
-                bucket.insert(place, *node);
-            }
-        }
+        auto place_to_insert = first_bigger_or_equal_hash(hash, bucket);
+		if (check_key_exists(key, hash, bucket, place_to_insert)) {
+			throw HashTable::KeyException("The key already exists");
+		}
+		bucket.insert(place_to_insert, HashTable::Node({hash, key, val, time}));
         currentLoadCount_++;
         if (HashTable::currentLoadFactor_() >= initialLoadFactor_) {
             HashTable::increaseTable_();
         }
-            
         std::cout << "Changed list index " << index << std::endl;
         std::cout << "New lst size " << (*table_)[index].size() << std::endl;
     }
 
-    const Value* HashTable::get(Key key) const noexcept {
-        HashCode    hash = this -> hashCode_(key);
+    const Value* HashTable::get(const Key& key) const noexcept {
+        HashCode    hash = hashCode_(key);
         std::size_t index = indexFor_(hash);
-        auto first = (*table_)[index].begin();
-        auto last = (*table_)[index].end();
+        auto		first = (*table_)[index].begin();
+        auto		last = (*table_)[index].end();
 
         while (first != last && first -> hash <= hash) {
             if (hash == first -> hash && key == first -> key) {
@@ -44,12 +40,24 @@ namespace s21 {
         return nullptr;
     }
 
+	bool HashTable::exists(const Key& key) const noexcept {
+		HashCode    hash = hashCode_(key);
+		std::size_t index = indexFor_(hash);
+		auto		first = first_bigger_or_equal_hash(hash, (*table_)[index]);
+
+		return check_key_exists(key, hash, (*table_)[index], first);
+	}
+
+	std::size_t HashTable::size() const noexcept {
+		return currentLoadCount_;
+	}
+
     /*
-    Standart boost realization of hash_code(std::string) function. The 
+    Standard boost realization of hash_code(std::string) function. The
     irrational golden ratio 0x9e3779b9 is used for generating non-collinear 
     binary sequence.
     */
-    HashCode HashTable::hashCode_(Key key) const noexcept {
+    HashCode HashTable::hashCode_(const Key& key) noexcept {
         std::cout << "Get Hash Code - key " << key << std::endl;
         HashCode    seed = HashTable::hashSeed_;
         auto        first = key.begin();
@@ -69,16 +77,41 @@ namespace s21 {
     }
 
     double HashTable::currentLoadFactor_() const noexcept {
-        return 0.5;
+        return (double) currentLoadCount_ / (double) currentBucketCount_;
     }
     
-    void HashTable::increaseTable_() {}
+    void HashTable::increaseTable_() {
+		std::size_t	old_buckets_cnt = currentBucketCount_;
+		std::list<Node>::iterator it;
+		std::size_t new_index;
+		std::cout << "increase table - capacity " << table_ -> capacity() << " size " << table_ -> size() << std::endl;
+
+		if (currentBucketCount_ == maximumCapacity_) {
+			return;
+		}
+		currentBucketCount_ *= 2;
+		table_ -> reserve(currentBucketCount_);
+		table_ -> insert(table_ -> end(), old_buckets_cnt, std::list<Node>());
+		for (std::size_t bucket_num = 0; bucket_num < old_buckets_cnt; bucket_num++) {
+			it = (*table_)[bucket_num].begin();
+			while (it != (*table_)[bucket_num].end()) {
+				new_index = indexFor_(it -> hash);
+				if (new_index != bucket_num) {
+					(*table_)[new_index].push_back(*it);
+					it = (*table_)[bucket_num].erase(it);
+				} else {
+					it++;
+				}
+			}
+		}
+		std::cout << "increase table - capacity " << table_ -> capacity() << " size " << table_ -> size() << std::endl;
+	}
 
     /* 
     Find first occurence with bigger or equal hash code than inserted to store 
     nodes in sorted order.
     */
-    std::list<HashTable::Node>::iterator 
+    std::list<HashTable::Node>::iterator
     first_bigger_or_equal_hash(const HashCode& hash, 
                                std::list<HashTable::Node>& lst) noexcept {
         std::cout << "Get Place for insert - hash " << hash << std::endl;
@@ -92,72 +125,75 @@ namespace s21 {
         return last;
     }
 
-    std::list<HashTable::Node>::iterator 
-    check_same_key(Key key,
-                   const HashCode& hash, 
-                   const std::list<HashTable::Node>& lst,
-                   std::list<HashTable::Node>::iterator first) noexcept {
+    bool check_key_exists(const Key& key,
+						  const HashCode& hash,
+                          const std::list<HashTable::Node>& lst,
+                          std::list<HashTable::Node>::iterator first) noexcept {
         std::cout << "Check suspicious hash - hash " << hash << std::endl;
         auto last = lst.end();
+		bool key_found = false;
 
-        for (; first != last; first++) {
-            if (hash == first -> hash && key == first -> key) {
-                return first;
-            }
-            if (hash > first -> hash) {
-                return first;
+        for (; first != last && hash == first -> hash; first++) {
+            if (key == first -> key) {
+				key_found = true;
+				break;
             }
         }
-        return first;
+        return key_found;
     }
 
-    HashTable::HashTable() {
+    HashTable::HashTable() : currentBucketCount_(initialBucketCount_),
+	                         currentLoadCount_(0) {
         std::cout << "Create Hash Table - default constructor" << std::endl;
-        currentBucketCount_ = initialBucketCount_;
         table_ = new std::vector<std::list<Node>>(initialBucketCount_);
-        table_ -> shrink_to_fit();
+		std::cout << "Create Hash Table : capacity " << table_ -> capacity() << " size " << table_ -> size() << std::endl;
     }
 
-    HashTable::HashTable(HashTable& other) {
+    HashTable::HashTable(HashTable const& other) : currentBucketCount_(other.currentBucketCount_),
+	                                               currentLoadCount_(other.currentLoadCount_) {
         std::cout << "Create Hash Table - copy constructor" << std::endl;
         table_ = new std::vector<std::list<Node>>(*other.table_);
     }
 
-    HashTable::HashTable(HashTable&& other) {
+    HashTable::HashTable(HashTable&& other) noexcept : currentBucketCount_(other.currentBucketCount_),
+													   currentLoadCount_(other.currentLoadCount_) {
         std::cout << "Create Hash Table - move constructor" << std::endl;
-        table_ = std::move(other.table_);
+        table_ = other.table_;
+		other.table_ = nullptr;
     }
 
-    HashTable& HashTable::operator=(HashTable& other) {
+    HashTable& HashTable::operator=(HashTable const& other) {
         std::cout << "Copy Hash Table - copy operator" << std::endl;
         if (this != &other) {
             table_ = new std::vector<std::list<Node>>(*other.table_);
+			currentBucketCount_ = other.currentBucketCount_;
+			currentLoadCount_ = other.currentLoadCount_;
         }
         return *this;
     }
 
-    HashTable& HashTable::operator=(HashTable&& other) {
+    HashTable& HashTable::operator=(HashTable&& other) noexcept {
         std::cout << "Move Hash Table - move operator" << std::endl;
         if(this != &other) {
-            table_ = std::move(other.table_);
+            table_ = other.table_;
+			other.table_ = nullptr;
+			currentBucketCount_ = other.currentBucketCount_;
+			currentLoadCount_ = other.currentLoadCount_;
         } 
         return *this;
     }
 
     HashTable::~HashTable() {
         std::cout << "Destroy Hash Table - destructor" << std::endl;
+		std::list<Node>::iterator it;
         delete table_;
     }
 
-    HashTable::HashTableException::HashTableException(const std::string &arg)
+	HashTable::HashTableException::HashTableException(const std::string &arg)
         : std::runtime_error(arg) {}
 
     HashTable::KeyException::KeyException(const std::string &arg)
         : HashTable::HashTableException(arg) {}
-
-    // bool HashTable::exists(Key) {
-
-    // }
 
     // void HashTable::del(Key) {
 

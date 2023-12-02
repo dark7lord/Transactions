@@ -8,8 +8,10 @@ OBJ_FILES   = $(SRC_FILES:.cpp=.o)
 SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ			= $(addprefix $(OBJ_DIR), $(OBJ_FILES))
 INC         = s21_i_key_value_storage.h
+TEST_DIR	= tests/
+TEST_EXE	= run_tests
 
-.PHONY: all clean fclean re test
+.PHONY: all clean fclean re tests
 
 all : $(NAME)
 
@@ -24,6 +26,12 @@ clean:
 	rm -rf $(OBJ_DIR) a.out
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(TEST_DIR)/$(TEST_EXE)
 
 re: fclean $(NAME)
+
+# set $LIBRARY_PATH to place where libgtest.a is located
+# set $CPLUS_INCLUDE_PATH to place where gtest/gtest.h is located
+tests: $(NAME)
+	$(CC) $(CCFLAGS) $(TEST_DIR)/unit_tests.cpp $(NAME) -l gtest -o $(TEST_DIR)/$(TEST_EXE)
+	./$(TEST_DIR)/$(TEST_EXE)

@@ -4,7 +4,6 @@
 #include <string>
 #include <stdbool.h>
 #include <vector>
-#include <iostream>
 
 namespace s21 {
 
@@ -27,17 +26,11 @@ namespace s21 {
 		const std::string& operator[](const std::string& key) const;
 	};
 
+	bool operator==(Value, Value); // return true if one of the values is -
 	std::ostream& operator<<(std::ostream& os, const Value& value);
 
-
-	// bool operator==(Value, Value); // return true if one of the values is -
-	bool operator==(const Value& lhs, const Value& rhs);
-
-	// warning: alias declarations are a C++11 extension [-Wc++11-extensions]
-	// using Key = std::string;
-	// using TimeLimit = int;
-	typedef std::string Key;
-	typedef int TimeLimit;
+	using Key = std::string;
+	using TimeLimit = int;
 
 	class IKeyValueStorage {
 	public:
@@ -52,6 +45,7 @@ namespace s21 {
 		// virtual std::vector<Value> showall(void);
 		// virtual void upload(const std::string& filename);
 		// virtual void s21::export(const std::string& filename); // delete 0
+		virtual std::size_t size() const noexcept = 0;
 	};
 
 }

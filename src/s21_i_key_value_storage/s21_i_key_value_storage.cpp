@@ -23,16 +23,6 @@ namespace s21 {
 		throw std::out_of_range("Key not found");
 	}
 
-	bool operator==(const Value& lhs, const Value& rhs) {
-		return (
-			( lhs.first_name == rhs.first_name		|| rhs.first_name == "-"	) &&
-			( lhs.last_name == rhs.last_name		|| rhs.last_name == "-"		) &&
-			( lhs.birth_year == rhs.birth_year		|| rhs.birth_year == "-"	) &&
-			( lhs.city == rhs.city					|| rhs.city == "-"			) &&
-			( lhs.coins_number == rhs.coins_number	|| rhs.coins_number == "-"	)
-		);
-	}
-
 	std::ostream& operator<<(std::ostream& os, const Value& value) {
 		os << "first_name: " << value.first_name << ", "
 		<< "last_name: " << value.last_name << ", "
@@ -42,5 +32,15 @@ namespace s21 {
 		return os;
 	}
 
-}
+	bool operator==(const Value& l, const Value& r) {
+		return (
+			(l.last_name == r.last_name || l.last_name == "-" || r.last_name == "-") &&
+			(l.first_name == r.first_name || l.first_name == "-" || r.first_name == "-") &&
+			(l.birth_year == r.birth_year || l.birth_year == "-" || r.birth_year == "-") &&
+			(l.city == r.city || l.city == "-" || r.city == "-") &&
+			(l.coins_number == r.coins_number || l.coins_number == "-" || r.coins_number == "-")
+		);
+	}
+
+} // end of namespace s21
 
