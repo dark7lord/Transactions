@@ -1,5 +1,5 @@
 #include "s21_i_key_value_storage.h"
-// #include <iostream>
+#include <iostream>
 
 namespace s21 {
 

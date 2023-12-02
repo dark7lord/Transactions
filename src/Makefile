@@ -1,5 +1,4 @@
-NAME:=		main
-OUTPUT:=	$(NAME).exe
+NAME:=		main.exe
 
 CC:=		g++
 CCFLAGS:=	-Wall -Wextra -Werror -std=c++17
@@ -27,13 +26,13 @@ $(NAME):
 	@make --silent -C $(KEY_VALUE_STORAGE_PATH) && echo ...compiling $(KEY_VALUE_STORAGE_NAME)
 	@make --silent -C $(HASH_TABLE_PATH) && echo ...compiling $(HASH_TABLE_NAME)
 	@make --silent -C $(BIN_TREE_PATH) && echo ...compiling $(BIN_TREE_NAME)
-	$(CC) $(CCFLAGS) main.cpp $(HASH_TABLE) $(BIN_TREE) $(KEY_VALUE_STORAGE) \
+	$(CC) $(CCFLAGS) main.cpp $(HASH_TABLE) $(BIN_TREE) \
 		-I $(HASH_TABLE_PATH) \
 		-I $(BIN_TREE_PATH) \
 		-o main.exe && echo Compiling success!
 
 run: all
-	./$(OUTPUT)
+	./$(NAME)
 
 test: $(BIN_TREE)
 	$(CC) $(CCFLAGS) tests/test.cpp tests/bin_tree.cpp $(BIN_TREE) -I $(BIN_TREE_PATH) $(KEY_VALUE_STORAGE) -o test.exe -lgtest
@@ -52,7 +51,7 @@ fclean:
 	@make --silent -C $(HASH_TABLE_PATH) 		fclean && echo ...full clean $(HASH_TABLE_NAME)
 	@make --silent -C $(BIN_TREE_PATH) 			fclean && echo ...full clean $(BIN_TREE_NAME)
 	@make --silent -C $(KEY_VALUE_STORAGE_PATH) fclean && echo ...full clean $(KEY_VALUE_STORAGE)
-	@rm -rf $(OUTPUT)
+	@rm -rf $(NAME)
 	@echo Full cleaning success!
 
 re: fclean all

@@ -22,14 +22,17 @@ namespace s21 {
 		void set(const Key&, const Value&, TimeLimit=-1) override;
 		const Value* get(const Key&) const noexcept override;
 		bool exists(const Key&) const noexcept override;
-		// void del(Key);
-		// std::vector<Key> keys(void);
-		// void rename(Key, Key);
-		// TimeLimit ttl(Key);
-		// std::vector<Key> find(Value);
-		// std::vector<Value> showall(void);
-		// void upload(const std::string& filename);
-		// void s21::export(const std::string& filename);
+		bool			del(const Key&) noexcept override;
+		void			update(const Key&, const Value&) override;
+
+		std::vector<Key> keys(void) const noexcept override;
+		void rename(const Key&, const Key&) override;
+		TimeLimit ttl(const Key&) const noexcept override;
+		std::vector<Key> find(const Value&) const noexcept override;
+//		std::vector<Value> showall(void) const noexcept override; //  согласовать использование итератора
+		void upload(const std::string& filename) override;
+//		void s21::SelfBalancingBinarySearchTree::export(const std::string& filename) const override; // delete 0
+
 		std::size_t size() const noexcept override;
 
 		struct HashTableException : std::runtime_error {

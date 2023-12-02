@@ -34,17 +34,18 @@ namespace s21 {
 
 	class IKeyValueStorage {
 	public:
-		virtual void set(Key, Value, TimeLimit=-1) = 0;
-		virtual const Value* get(Key) const noexcept = 0;
-		// virtual bool exists(Key);
-		// virtual void del(Key);
-		// virtual std::vector<Key> keys(void);
-		// virtual void rename(Key, Key);
-		// virtual TimeLimit ttl(Key);
-		// virtual std::vector<Key> find(Value);
-		// virtual std::vector<Value> showall(void);
-		// virtual void upload(const std::string& filename);
-		// virtual void s21::export(const std::string& filename); // delete 0
+		virtual void set(const Key&, const Value&, TimeLimit) = 0;
+		virtual const Value* get(const Key&) const noexcept = 0;
+		virtual bool exists(const Key&) const noexcept = 0;
+		virtual bool del(const Key&) noexcept = 0;
+		virtual void update(const Key&, const Value&) = 0;
+		virtual std::vector<Key> keys(void) const noexcept= 0;
+		virtual void rename(const Key&, const Key&) = 0;
+		virtual TimeLimit ttl(const Key&) const noexcept = 0;
+		virtual std::vector<Key> find(const Value&) const noexcept = 0;
+//		virtual std::vector<Value> showall(void) const noexcept = 0; //  согласовать использование итератора
+		virtual void upload(const std::string& filename) = 0;
+//		virtual void s21::export(const std::string& filename) const = 0; // delete 0
 		virtual std::size_t size() const noexcept = 0;
 	};
 

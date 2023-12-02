@@ -23,7 +23,7 @@ $(EXT_LIB_NAME) :
 	cd $(EXT_LIB_DIR) && make
 
 $(NAME): $(OBJ)
-	ar rcs $(NAME) $(OBJ) $(EXT_LIB_NAME)
+	ar rcs $(NAME) $(OBJ) ../s21_i_key_value_storage/obj/s21_i_key_value_storage.o
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC)
 	@mkdir -p $(OBJ_DIR)

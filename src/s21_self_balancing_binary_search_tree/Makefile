@@ -27,7 +27,7 @@ $(EXT_LIB):
 
 $(FULL_NAME): $(OBJ) $(INC)
 	@make --silent -C $(EXT_LIB_DIR) && echo ...compiling $(EXT_LIB_NAME)
-	@ar rcs $(FULL_NAME) $(OBJ) $(EXT_LIB)
+	@ar rcs $(FULL_NAME) $(OBJ) ../s21_i_key_value_storage/obj/s21_i_key_value_storage.o
 	@echo Compiling $(FULL_NAME) success!
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC)

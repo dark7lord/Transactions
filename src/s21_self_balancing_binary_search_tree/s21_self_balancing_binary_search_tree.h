@@ -6,7 +6,7 @@
 #include "../s21_i_key_value_storage/s21_i_key_value_storage.h"
 
 namespace s21 {
-	class SelfBalancingBinarySearchTree {
+	class SelfBalancingBinarySearchTree : IKeyValueStorage {
 	private:
 		AVL_Node* _root;
 
@@ -30,25 +30,25 @@ namespace s21 {
 		// SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&&) = default;
 		// ~SelfBalancingBinarySearchTree() = default;
 
-		AVL_Node* find_node(AVL_Node* node, Key key);
+		AVL_Node* find_node(AVL_Node* node, Key key) const;
 		void printTree(AVL_Node* root, int level = 0);
 
 	public:			/*** Methods ***/
-		void		set(Key, Value, TimeLimit = -1);
-		Value		get(const Key& key);
-		bool		exists(Key);
-		bool		del(Key);
-		void		update(Key key, const Value& new_value);
+		void			set(const Key&, const Value&, TimeLimit = -1) override;
+		const Value*	get(const Key& key) const noexcept override;
+		bool			exists(const Key&) const noexcept override;
+		bool			del(const Key&) noexcept override;
+		void			update(const Key&, const Value&) override;
 
-		// find
-		// keys
+		std::vector<Key> keys(void) const noexcept override;
+		void rename(const Key&, const Key&) override;
+		TimeLimit ttl(const Key&) const noexcept override;
+		std::vector<Key> find(const Value&) const noexcept override;
+//		std::vector<Value> showall(void) const noexcept override; //  согласовать использование итератора
+		void upload(const std::string& filename) override;
+//		void s21::SelfBalancingBinarySearchTree::export(const std::string& filename) const override; // delete 0
+		std::size_t size() const noexcept override;
 
-		// rename
-
-		// ttl
-		// showall
-		// upload
-		// _export
 		void printTree();
 
 

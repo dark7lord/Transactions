@@ -195,36 +195,25 @@ namespace s21 {
     HashTable::KeyException::KeyException(const std::string &arg)
         : HashTable::HashTableException(arg) {}
 
-    // void HashTable::del(Key) {
+	std::vector<Key> HashTable::keys(void) const noexcept {
+		return std::vector<Key>();
+	}
+	void HashTable::rename(const Key&, const Key&) {}
+	TimeLimit HashTable::ttl(const Key&) const noexcept {
+		return TimeLimit();
+	}
+	std::vector<Key> HashTable::find(const Value&) const noexcept {
+		return std::vector<Key>();
+	}
+//		std::vector<Value> showall(void) const noexcept ; //  согласовать использование итератора
+	void HashTable::upload(const std::string&) {}
 
-    // }
+	bool HashTable::del(const Key &) noexcept {
+		return false;
+	}
 
-    // std::array<Key> HashTable::keys(void) {
+	void HashTable::update(const Key &, const Value &) {
 
-    // }
-
-    // void HashTable::rename(Key, Key) {
-
-    // }
-
-    // TimeLimit HashTable::ttl(Key) {
-
-    // }
-
-    // std::array<Key> HashTable::find(Value) {
-   
-    // }
-
-    // std::array<Value> HashTable::showall(void) {
-        
-    // }
-
-    // void HashTable::upload(const std::string& filename) {
-
-    // }
-
-    // void HashTable::export(const std::string& filename) {
-
-    // }
+	}
 
 }

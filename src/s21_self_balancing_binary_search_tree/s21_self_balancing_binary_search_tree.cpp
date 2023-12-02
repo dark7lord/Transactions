@@ -94,21 +94,22 @@ namespace s21 {
 		return balance(node);
 	}
 
-	Value SelfBalancingBinarySearchTree::get(const Key& key) {
+	const Value* SelfBalancingBinarySearchTree::get(const Key& key) const noexcept {
 		AVL_Node* resultNode = find_node(_root, key);
 		if (resultNode) {
-			return resultNode->value;
+			return &(resultNode->value);
 		} else {
-			throw std::out_of_range("Key not found"); // or nullptr?
+//			throw std::out_of_range("Key not found"); // or nullptr?
+			return nullptr;
 		}
 	}
 
-	void SelfBalancingBinarySearchTree::set(Key key, Value value, TimeLimit t) {
+	void SelfBalancingBinarySearchTree::set(const Key& key, const Value& value, TimeLimit t) {
 		(void) t;
 		_root = insert(_root, key, value);
 	}
 
-	AVL_Node* SelfBalancingBinarySearchTree::find_node(AVL_Node* node, Key key) {
+	AVL_Node* SelfBalancingBinarySearchTree::find_node(AVL_Node* node, Key key) const {
 		if (!node) {
 			return nullptr; // Ключ не найден
 		}
@@ -121,7 +122,7 @@ namespace s21 {
 		}
 	}
 
-	bool SelfBalancingBinarySearchTree::exists(Key key) {
+	bool SelfBalancingBinarySearchTree::exists(const Key& key) const noexcept {
 		return find_node(_root, key) != nullptr;
 	}
 
@@ -166,7 +167,7 @@ namespace s21 {
 		return balance(root);
 	}
 
-	bool SelfBalancingBinarySearchTree::del(Key key) {
+	bool SelfBalancingBinarySearchTree::del(const Key& key) noexcept {
 		AVL_Node* current_root = _root;
 		_root = deleteNode(current_root, key);
 		return current_root != _root;
@@ -197,7 +198,7 @@ namespace s21 {
 		}
 	}
 
-	void SelfBalancingBinarySearchTree::update(Key key, const Value& new_value) {
+	void SelfBalancingBinarySearchTree::update(const Key& key, const Value& new_value) {
 		AVL_Node* node = find_node(_root, key);
 
 		if (!node) throw std::out_of_range("Key not found");
@@ -214,13 +215,22 @@ namespace s21 {
 		update_value(old_value, new_value, "coins_number");
 	}
 
-	// std::array<Key> SelfBalancingBinarySearchTree::keys(void) {}
-	// void SelfBalancingBinarySearchTree::rename(Key, Key) {}
-	// TimeLimit SelfBalancingBinarySearchTree::ttl(Key) {}
-	// std::array<Key> SelfBalancingBinarySearchTree::find(Value) {}
-	// std::array<Value> SelfBalancingBinarySearchTree::showall(void) {}
-	// void SelfBalancingBinarySearchTree::upload(const std::string& filename) {}
-	// void SelfBalancingBinarySearchTree::export(const std::string& filename) {}
+	std::vector<Key> SelfBalancingBinarySearchTree::keys(void) const noexcept {
+		return std::vector<Key>();
+	}
+	void SelfBalancingBinarySearchTree::rename(const Key&, const Key&) {}
+	TimeLimit SelfBalancingBinarySearchTree::ttl(const Key&) const noexcept {
+		return TimeLimit();
+	}
+	std::vector<Key> SelfBalancingBinarySearchTree::find(const Value&) const noexcept {
+		return std::vector<Key>();
+	}
+//		std::vector<Value> showall(void) const noexcept ; //  согласовать использование итератора
+	void SelfBalancingBinarySearchTree::upload(const std::string&) {}
+//		void s21::SelfBalancingBinarySearchTree::export(const std::string& filename) const override; // delete 0
+	std::size_t SelfBalancingBinarySearchTree::size() const noexcept {
+		return 0;
+	}
 }
 
 
