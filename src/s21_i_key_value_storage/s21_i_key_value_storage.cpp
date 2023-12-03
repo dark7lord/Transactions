@@ -32,6 +32,15 @@ namespace s21 {
 		return os;
 	}
 
+	std::ostream& operator<<(std::ostream& os, const Value* value) {
+		os << "first_name: " << value -> first_name << ", "
+		<< "last_name: " << value -> last_name << ", "
+		<< "birth_year: " << value -> birth_year << ", "
+		<< "city: " << value -> city << ", "
+		<< "coins_number: " << value -> coins_number;
+		return os;
+	}
+
 	bool operator==(const Value& l, const Value& r) {
 		return (
 			(l.last_name == r.last_name || l.last_name == "-" || r.last_name == "-") &&

@@ -31,13 +31,16 @@ $(NAME):
 		-I $(BIN_TREE_PATH) \
 		-o main.exe && echo Compiling success!
 
-run: all
+run: re
+	@make --silent -C $(KEY_VALUE_STORAGE_PATH) && echo ...compiling $(KEY_VALUE_STORAGE_NAME)
+	@make --silent -C $(HASH_TABLE_PATH) && echo ...compiling $(HASH_TABLE_NAME)
+	@make --silent -C $(BIN_TREE_PATH) && echo ...compiling $(BIN_TREE_NAME)
 	./$(NAME)
 
 test: $(BIN_TREE)
-	$(CC) $(CCFLAGS) tests/test.cpp tests/bin_tree.cpp $(BIN_TREE) -I $(BIN_TREE_PATH) $(KEY_VALUE_STORAGE) -o test.exe -lgtest
-	./test.exe
-	rm test.exe
+	@$(CC) $(CCFLAGS) tests/test.cpp tests/bin_tree.test.cpp $(BIN_TREE) -I $(BIN_TREE_PATH) $(KEY_VALUE_STORAGE) -o test.exe -lgtest
+	@./test.exe
+	@rm test.exe
 
 
 clean:

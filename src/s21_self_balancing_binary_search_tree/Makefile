@@ -32,7 +32,7 @@ $(FULL_NAME): $(OBJ) $(INC)
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC)
 	@mkdir -p $(OBJ_DIR)
-	$(CC) $(CCFLAGS) -I. -c $< -o $@
+	$(CC) $(CCFLAGS) -I. -I $(EXT_LIB_DIR) -c $< -o $@
 
 test:
 	g++ main.cpp AVL_Node.cpp s21_self_balancing_binary_search_tree.cpp -o bst.exe

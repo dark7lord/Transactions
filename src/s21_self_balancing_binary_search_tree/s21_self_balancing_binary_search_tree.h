@@ -33,17 +33,17 @@ namespace s21 {
 		AVL_Node* find_node(AVL_Node* node, Key key) const;
 		void printTree(AVL_Node* root, int level = 0);
 
-	public:			/*** Methods ***/
-		void			set(const Key&, const Value&, TimeLimit = -1) override;
-		const Value*	get(const Key& key) const noexcept override;
-		bool			exists(const Key&) const noexcept override;
-		bool			del(const Key&) noexcept override;
-		void			update(const Key&, const Value&) override;
+	public:					/*** Methods ***/
+		void				set(const Key&, const Value&, TimeLimit = -1) override;
+		const Value*		get(const Key& key) const noexcept override;
+		bool				exists(const Key&) const noexcept override;
+		bool				del(const Key&) noexcept override;
+		void				update(const Key&, const Value&) override;
 
+		std::vector<Key>	find(const Value&) const noexcept override;
 		std::vector<Key> keys(void) const noexcept override;
 		void rename(const Key&, const Key&) override;
 		TimeLimit ttl(const Key&) const noexcept override;
-		std::vector<Key> find(const Value&) const noexcept override;
 //		std::vector<Value> showall(void) const noexcept override; //  согласовать использование итератора
 		void upload(const std::string& filename) override;
 //		void s21::SelfBalancingBinarySearchTree::export(const std::string& filename) const override; // delete 0

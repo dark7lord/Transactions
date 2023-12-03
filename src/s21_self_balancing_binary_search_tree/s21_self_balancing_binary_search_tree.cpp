@@ -29,8 +29,8 @@ namespace s21 {
 		y->left = x;
 		updateHeight(x);
 		updateHeight(y);
-		std::cout << "	key("<< x -> key << ") going to left" << std::endl;
-		std::cout << "	key("<< y -> key << ") going to top" << std::endl;
+		// std::cout << "	key("<< x -> key << ") going to left" << std::endl;
+		// std::cout << "	key("<< y -> key << ") going to top" << std::endl;
 		return y;
 	}
 
@@ -44,8 +44,8 @@ namespace s21 {
 		x->right = y;
 		updateHeight(y);
 		updateHeight(x);
-		std::cout << "	key("<< y -> key << ") going to right" << std::endl;
-		std::cout << "	key("<< x -> key << ") going to top" << std::endl;
+		// std::cout << "	key("<< y -> key << ") going to right" << std::endl;
+		// std::cout << "	key("<< x -> key << ") going to top" << std::endl;
 		return x;
 	}
 
@@ -56,18 +56,18 @@ namespace s21 {
 		int balanceFactor = getHeight(node->left) - getHeight(node->right);
 		if (balanceFactor > 1) {
 			if (getHeight(node->left->right) > getHeight(node->left->left)) {
-				std::cout << "rotateLeft:" << std::endl;
+				// std::cout << "rotateLeft:" << std::endl;
 				node->left = rotateLeft(node->left);
 			}
-			std::cout << "rotateRight:" << std::endl;
+			// std::cout << "rotateRight:" << std::endl;
 			return rotateRight(node);
 		}
 		else if (balanceFactor < -1) {
 			if (getHeight(node->right->left) > getHeight(node->right->right)) {
-				std::cout << "rotateRight:" << std::endl;
+				// std::cout << "rotateRight:" << std::endl;
 				node->right = rotateRight(node->right);
 			}
-			std::cout << "rotateleft:" << std::endl;
+			// std::cout << "rotateleft:" << std::endl;
 			return rotateLeft(node);
 		}
 
@@ -81,14 +81,13 @@ namespace s21 {
 		}
 
 		if (key < node->key) {
-			std::cout << "trying to insert on the left" << std::endl;
 			node->left = insert(node->left, key, value);
 		} else if (key > node->key) {
-			std::cout << "trying to insert on the right" << std::endl;
 			node->right = insert(node->right, key, value);
 		} else {
+			// Это вставка уже в существующий ключ
 			return node;
-			// throw new std::exception
+			// throw new Exception;
 		}
 
 		return balance(node);
@@ -110,16 +109,11 @@ namespace s21 {
 	}
 
 	AVL_Node* SelfBalancingBinarySearchTree::find_node(AVL_Node* node, Key key) const {
-		if (!node) {
-			return nullptr; // Ключ не найден
-		}
-		if (key == node->key) {
-			return node; // Ключ найден
-		} else if (key < node->key) {
-			return find_node(node->left, key); // Идем влево
-		} else {
-			return find_node(node->right, key); // Идем вправо
-		}
+		if (!node)					return nullptr;
+
+		if (key == node->key)		return node;
+		else if (key < node->key)	return find_node(node->left, key);
+		else						return find_node(node->right, key);
 	}
 
 	bool SelfBalancingBinarySearchTree::exists(const Key& key) const noexcept {
@@ -145,11 +139,10 @@ namespace s21 {
 
 				AVL_Node *temp = root->left ? root->left : root->right;
 
-				if (temp == nullptr) { // No child case
-					temp = root;
+				if (temp == nullptr) {
 					root = nullptr;
 				}
-				else { // One child case
+				else {
 					*root = *temp;
 				}
 
@@ -204,8 +197,6 @@ namespace s21 {
 		if (!node) throw std::out_of_range("Key not found");
 		Value& old_value = node -> value;
 
-		// (void)new_value;
-
 		// old_value.first_name = new_value
 		// (old_value[key] != new_value[key] && new_value[key] != "-") && old_value[key] = new_value[key];
 		update_value(old_value, new_value, "first_name");
@@ -215,15 +206,28 @@ namespace s21 {
 		update_value(old_value, new_value, "coins_number");
 	}
 
+	void find_recursive(AVL_Node *node, std::vector<Key> &arrKeys, const Value &value) {
+		if (node != nullptr) {
+			find_recursive(node -> left, arrKeys, value);
+
+			if (node -> value == value) arrKeys.push_back(node -> key);
+
+			find_recursive(node -> right, arrKeys, value);
+		}
+	}
+
+	std::vector<Key> SelfBalancingBinarySearchTree::find(const Value& value) const noexcept {
+		std::vector<Key> arrKeys;
+		find_recursive(_root, arrKeys, value);
+		return arrKeys;
+	}
+
 	std::vector<Key> SelfBalancingBinarySearchTree::keys(void) const noexcept {
 		return std::vector<Key>();
 	}
 	void SelfBalancingBinarySearchTree::rename(const Key&, const Key&) {}
 	TimeLimit SelfBalancingBinarySearchTree::ttl(const Key&) const noexcept {
 		return TimeLimit();
-	}
-	std::vector<Key> SelfBalancingBinarySearchTree::find(const Value&) const noexcept {
-		return std::vector<Key>();
 	}
 //		std::vector<Value> showall(void) const noexcept ; //  согласовать использование итератора
 	void SelfBalancingBinarySearchTree::upload(const std::string&) {}
