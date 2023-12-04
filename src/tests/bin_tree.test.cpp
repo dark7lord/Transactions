@@ -126,3 +126,38 @@ TEST(SelfBalancingBinarySearchTree, find) {
 
 	// std::cout << tree.get("Leo") << std::endl;
 }
+
+TEST(SelfBalancingBinarySearchTree, keys) {
+	s21::SelfBalancingBinarySearchTree tree;
+
+	// Ninjas values
+	s21::Value don = { "Donatello", "Tech Genius", "1997", "New York", "100" };
+	s21::Value mike = { "Michael", "Part Dude", "1998", "New York", "70" };
+	s21::Value leo = { "Leonardo", "Ninja Leader", "1996", "New York", "240" };
+	s21::Value raf = { "Leonardo", "Rebel", "1997", "New York", "100" };
+
+	tree.set("Don", don);
+	tree.set("Mike", mike);
+	tree.set("Leo", leo);
+	tree.set("Raf", don);
+
+	auto result = tree.keys();
+	std::vector<s21::Key> vector_expected;
+	vector_expected.insert(
+		vector_expected.end(), {"Don", "Leo", "Mike", "Raf"}
+	);
+
+	ASSERT_EQ( result, vector_expected);
+}
+
+TEST(SelfBalancingBinarySearchTree, rename) {
+	s21::SelfBalancingBinarySearchTree tree;
+	s21::Value don = { "Donatello", "Tech Genius", "1997", "New York", "100" };
+
+	tree.set("Don", don);
+	tree.rename("Don", "Donatello");
+	ASSERT_EQ(tree.get("Don"), nullptr);
+
+	auto result = *(tree.get( "Donatello"));
+	ASSERT_EQ(result, don);
+}

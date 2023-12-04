@@ -98,7 +98,6 @@ namespace s21 {
 		if (resultNode) {
 			return &(resultNode->value);
 		} else {
-//			throw std::out_of_range("Key not found"); // or nullptr?
 			return nullptr;
 		}
 	}
@@ -151,6 +150,7 @@ namespace s21 {
 			else {
 				AVL_Node* temp = minValueNode(root->right);
 				root->key = temp->key;
+				root->value = temp->value;
 				root->right = deleteNode(root->right, temp->key);
 			}
 		}
@@ -219,13 +219,38 @@ namespace s21 {
 	std::vector<Key> SelfBalancingBinarySearchTree::find(const Value& value) const noexcept {
 		std::vector<Key> arrKeys;
 		find_recursive(_root, arrKeys, value);
+
 		return arrKeys;
 	}
 
-	std::vector<Key> SelfBalancingBinarySearchTree::keys(void) const noexcept {
-		return std::vector<Key>();
+	void find_recursive(AVL_Node *node, std::vector<Key> &arrKeys) {
+		if (node != nullptr) {
+			find_recursive(node -> left, arrKeys);
+			arrKeys.push_back(node -> key);
+			find_recursive(node -> right, arrKeys);
+		}
 	}
-	void SelfBalancingBinarySearchTree::rename(const Key&, const Key&) {}
+
+	std::vector<Key> SelfBalancingBinarySearchTree::keys(void) const noexcept {
+		std::vector<Key> arrKeys;
+		find_recursive(_root, arrKeys);
+
+		return arrKeys;
+	}
+	void SelfBalancingBinarySearchTree::rename(const Key& old_key, const Key& new_key) {
+		const Value *value = get(old_key);
+
+		if (value == nullptr) {
+			throw std::out_of_range("Key not found");
+		}
+
+		del(old_key);
+		set(new_key, *value);
+	}
+
+
+
+
 	TimeLimit SelfBalancingBinarySearchTree::ttl(const Key&) const noexcept {
 		return TimeLimit();
 	}
