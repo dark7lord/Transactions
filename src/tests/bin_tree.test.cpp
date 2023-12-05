@@ -21,6 +21,7 @@
 // 	}
 // }
 
+
 TEST(SelfBalancingBinarySearchTree, set) {
 	// s21::SelfBalancingBinarySearchTree tree;
 	// tree.set("Alice", (s21::Value) { "Alice", "Wonder", "1996", "Paris", "0" }, -1);
@@ -28,6 +29,7 @@ TEST(SelfBalancingBinarySearchTree, set) {
 	// test nullptr
 	// test TimiLimit t
 	// test same key
+	// а что если задать время 0, то это запись которая уже мертва без шанса пожить какое-то время?
 	ASSERT_EQ(4 - 2, 2);
 }
 
@@ -36,10 +38,9 @@ TEST(SelfBalancingBinarySearchTree, get) {
 	s21::Value value = { "Bruce", "Wayne", "1996", "Gotham", "100000" };
 	tree.set("Bruce", value);
 
-	// ASSERT_EQ(tree.get("Bruce"), value); // doesn't work
-	// test undefined key
-	// test nullptr
-	ASSERT_EQ(4 - 2, 2);
+	ASSERT_EQ(*tree.get("Bruce"), value);
+	ASSERT_EQ(tree.get("Random key"), nullptr);
+	// ASSERT_EQ(tree.get(nullptr), nullptr);
 }
 
 TEST(SelfBalancingBinarySearchTree, exists) {
@@ -98,33 +99,18 @@ TEST(SelfBalancingBinarySearchTree, find) {
 
 	s21::Value allKey = { "-", "-", "-", "-", "-" };
 	auto arrKeys = tree.find(allKey);
-	std::vector<s21::Key> arrKeysExpected;
-	arrKeysExpected.insert(
-		arrKeysExpected.end(), {"Don", "Leo", "Mike", "Raf", "Shredder"}
-	);
+	std::vector<s21::Key> arrKeysExpected = { "Don", "Leo", "Mike", "Raf", "Shredder" };
 	ASSERT_EQ( arrKeys, arrKeysExpected);
 
 	s21::Value keyByCity = { "-", "-", "-", "New York", "-" };
 	auto keysByCity = tree.find(keyByCity);
-	std::vector<s21::Key> arrKeysByCityExpected;
-	arrKeysByCityExpected.insert(
-		arrKeysByCityExpected.end(), {"Don", "Leo", "Mike", "Raf"}
-	);
+	std::vector<s21::Key> arrKeysByCityExpected = { "Don", "Leo", "Mike", "Raf" };
 	ASSERT_EQ( keysByCity, arrKeysByCityExpected);
 
 	s21::Value key_ByCity_and_ByCoins = { "-", "-", "-", "New York", "100" };
 	auto keys_ByCity_ByCoins = tree.find(key_ByCity_and_ByCoins);
-	std::vector<s21::Key> keys_ByCity_ByCoins_expected;
-	keys_ByCity_ByCoins_expected.insert(
-		keys_ByCity_ByCoins_expected.end(), {"Don", "Raf"}
-	);
+	std::vector<s21::Key> keys_ByCity_ByCoins_expected = { "Don", "Raf" };
 	ASSERT_EQ( keys_ByCity_ByCoins, keys_ByCity_ByCoins_expected);
-
-	// for (auto key : arrKeys) {
-	// 	std::cout << "key = " << key << std::endl;
-	// }
-
-	// std::cout << tree.get("Leo") << std::endl;
 }
 
 TEST(SelfBalancingBinarySearchTree, keys) {
@@ -142,11 +128,7 @@ TEST(SelfBalancingBinarySearchTree, keys) {
 	tree.set("Raf", don);
 
 	auto result = tree.keys();
-	std::vector<s21::Key> vector_expected;
-	vector_expected.insert(
-		vector_expected.end(), {"Don", "Leo", "Mike", "Raf"}
-	);
-
+	std::vector<s21::Key> vector_expected = { "Don", "Leo", "Mike", "Raf" };
 	ASSERT_EQ( result, vector_expected);
 }
 
