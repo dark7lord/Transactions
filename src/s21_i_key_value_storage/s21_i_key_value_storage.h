@@ -41,14 +41,13 @@ namespace s21 {
 		virtual bool				exists(const Key&) const noexcept = 0;
 		virtual bool				del(const Key&) noexcept = 0;
 		virtual void				update(const Key&, const Value&) = 0;
-		virtual std::vector<Key>	keys(void) const noexcept= 0;
+		virtual std::vector<Key>	keys() const noexcept= 0;
 		virtual void				rename(const Key&, const Key&) = 0;
 		virtual TimeLimit			ttl(const Key&) const noexcept = 0;
 		virtual std::vector<Key>	find(const Value&) const noexcept = 0;
-//		virtual std::vector<Value>	showall(void) const noexcept = 0; //  согласовать использование итератора
-		virtual void				upload(const std::string& filename) = 0;
-//		virtual void 				export(const std::string& filename) const = 0; // delete 0
-		virtual std::size_t			size() const noexcept = 0;
+		virtual std::vector<Value>	showall() const noexcept = 0;
+		virtual void				upload(const std::string&) = 0;
+		virtual void				save(const std::string&) const = 0;
 	};
 
 }

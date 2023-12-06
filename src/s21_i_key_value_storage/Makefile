@@ -1,7 +1,7 @@
 CC			= g++
 CCFLAGS		= -Wall -Wextra -Werror -std=c++17
 NAME		= s21_i_key_value_storage.a
-SRC_DIR		= ./
+SRC_DIR		= src/
 OBJ_DIR		= obj/
 SRC_FILES   = s21_i_key_value_storage.cpp
 OBJ_FILES   = $(SRC_FILES:.cpp=.o)
@@ -20,7 +20,7 @@ $(NAME): $(OBJ) $(INC)
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC)
 	@mkdir -p $(OBJ_DIR)
-	$(CC) $(CCFLAGS) -I. -c $< -o $@
+	$(CC) $(CCFLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(OBJ_DIR) a.out
