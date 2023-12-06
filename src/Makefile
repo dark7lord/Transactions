@@ -1,7 +1,12 @@
+# set $LIBRARY_PATH to place where libgtest.a is located
+# set $CPLUS_INCLUDE_PATH to place where gtest/gtest.h is located
+
 NAME:=		main.exe
 
 CC:=		g++
 CCFLAGS:=	-Wall -Wextra -Werror -std=c++17
+
+SRC := main.cpp
 
 # Paths libs
 KEY_VALUE_STORAGE_PATH:=	./s21_i_key_value_storage
@@ -18,43 +23,33 @@ HASH_TABLE:=				$(HASH_TABLE_PATH)/$(HASH_TABLE_NAME).a
 BIN_TREE:=					$(BIN_TREE_PATH)/$(BIN_TREE_NAME).a
 KEY_VALUE_STORAGE:=			$(KEY_VALUE_STORAGE_PATH)/$(KEY_VALUE_STORAGE_NAME).a
 
-.PHONY: all run fclean re test
+.PHONY: all run fclean clean re tests
 
 all: $(NAME)
 
 $(NAME):
-	@make --silent -C $(KEY_VALUE_STORAGE_PATH) && echo ...compiling $(KEY_VALUE_STORAGE_NAME)
-	@make --silent -C $(HASH_TABLE_PATH) && echo ...compiling $(HASH_TABLE_NAME)
-	@make --silent -C $(BIN_TREE_PATH) && echo ...compiling $(BIN_TREE_NAME)
-	$(CC) $(CCFLAGS) main.cpp $(HASH_TABLE) $(BIN_TREE) \
-		-I $(HASH_TABLE_PATH) \
-		-I $(BIN_TREE_PATH) \
-		-o main.exe && echo Compiling success!
+	@echo ...compiling $(HASH_TABLE_NAME) && make --silent -C $(HASH_TABLE_PATH)
+	@echo ...compiling $(BIN_TREE_NAME)   && make --silent -C $(BIN_TREE_PATH)
+	$(CC) $(CCFLAGS) $(SRC) $(HASH_TABLE) $(BIN_TREE) -I $(HASH_TABLE_PATH) -I $(BIN_TREE_PATH) -o $(NAME)
+	@echo Compiling success!
 
-run: re
-	@make --silent -C $(KEY_VALUE_STORAGE_PATH) && echo ...compiling $(KEY_VALUE_STORAGE_NAME)
-	@make --silent -C $(HASH_TABLE_PATH) && echo ...compiling $(HASH_TABLE_NAME)
-	@make --silent -C $(BIN_TREE_PATH) && echo ...compiling $(BIN_TREE_NAME)
+run: all
 	./$(NAME)
-
-test: $(BIN_TREE)
-	@$(CC) $(CCFLAGS) tests/test.cpp tests/bin_tree.test.cpp $(BIN_TREE) -I $(BIN_TREE_PATH) $(KEY_VALUE_STORAGE) -o test.exe -lgtest
-	@./test.exe
-	@rm test.exe
-
 
 clean:
 #cd ./s21_hash_table && make clean
-	@make --silent -C $(HASH_TABLE_PATH)		clean && echo ...clean $(HASH_TABLE_NAME)
-	@make --silent -C $(BIN_TREE_PATH)			clean && echo ...clean $(BIN_TREE_NAME)
-	@make --silent -C $(KEY_VALUE_STORAGE_PATH) clean && echo ...clean $(KEY_VALUE_STORAGE_NAME)
+	@echo ...clean $(HASH_TABLE_NAME) && make --silent -C $(HASH_TABLE_PATH) clean
+	@echo ...clean $(BIN_TREE_NAME) && make --silent -C $(BIN_TREE_PATH)     clean
 	@echo Cleaning success!
 
 fclean:
-	@make --silent -C $(HASH_TABLE_PATH) 		fclean && echo ...full clean $(HASH_TABLE_NAME)
-	@make --silent -C $(BIN_TREE_PATH) 			fclean && echo ...full clean $(BIN_TREE_NAME)
-	@make --silent -C $(KEY_VALUE_STORAGE_PATH) fclean && echo ...full clean $(KEY_VALUE_STORAGE)
+	@echo ...full clean $(HASH_TABLE_NAME) && make --silent -C $(HASH_TABLE_PATH) fclean
+	@echo ...full clean $(BIN_TREE_NAME)   && make --silent -C $(BIN_TREE_PATH)   fclean
 	@rm -rf $(NAME)
-	@echo Full cleaning success!
+	@echo Cleaning is over.
 
 re: fclean all
+
+tests: all
+	@make --silent -C $(HASH_TABLE_PATH) tests
+	@make --silent -C $(BIN_TREE_PATH) tests

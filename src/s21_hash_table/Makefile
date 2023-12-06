@@ -1,5 +1,6 @@
 CC			 = g++
 CCFLAGS		 = -Wall -Wextra -Werror -std=c++17
+LDFLAGS		 = -lgtest
 
 NAME		 = s21_hash_table.a
 
@@ -21,7 +22,6 @@ SRC			 = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ			 = $(addprefix $(OBJ_DIR), $(SRC_FILES:.cpp=.o))
 INC			 = $(addprefix $(INC_DIR), $(INC_FILES)) $(HEADER)
 TEST		 = $(addprefix $(TEST_DIR), $(TEST_FILES))
-EXT			 = $(shell ar t $(EXT_DIR)$(EXT_LIB) $(EXT_OBJ_DIR)*.o)
 
 .PHONY: all clean fclean re tests
 
@@ -31,7 +31,8 @@ $(EXT_DIR)$(EXT_LIB):
 	cd $(EXT_DIR) && make
 
 $(NAME): $(OBJ)
-	ar rcs $(NAME) $(OBJ) $(EXT)
+	ar rcs $(NAME) $(OBJ) $(shell ar t $(EXT_DIR)$(EXT_LIB) $(EXT_OBJ_DIR)*.o)
+	@echo Compiling $(NAME) success!
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC) $(EXT_DIR)$(EXT_LIB)
 	@mkdir -p $(OBJ_DIR)
@@ -40,15 +41,17 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC) $(EXT_DIR)$(EXT_LIB)
 clean:
 	rm -rf $(OBJ_DIR)
 	cd $(EXT_DIR) && make clean
+	@echo Cleaning obj/ success!
 
 fclean: clean
 	rm -f $(NAME)
 	cd $(EXT_DIR) && make fclean
+	@echo Full cleaning success!
 
 re: fclean all
 
 tests: all
-	$(CC) $(CCFLAGS) $(TEST) $(NAME) -o $(TEST_DIR)$(TEST_EXE) -lgtest
+	$(CC) $(CCFLAGS) $(TEST) $(NAME) -o $(TEST_DIR)$(TEST_EXE) $(LDFLAGS)
 	./$(TEST_DIR)$(TEST_EXE)
 	#leaks -atExit -- ./$(TEST_DIR)$(TEST_EXE)
 	rm $(TEST_DIR)$(TEST_EXE)

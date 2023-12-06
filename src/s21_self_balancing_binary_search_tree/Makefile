@@ -23,8 +23,6 @@ SRC				:= $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ				:= $(addprefix $(OBJ_DIR), $(OBJ_FILES))
 INC				:= $(addprefix $(INC_DIR), $(INC_FILES)) $(HEADER)
 TEST			:= $(addprefix $(TEST_DIR), $(TEST_FILES))
-EXT				:= $(shell ar t $(EXT_DIR)$(EXT_LIB) $(EXT_OBJ_DIR)*.o)
-
 
 .PHONY: all clean fclean re tests
 
@@ -34,7 +32,7 @@ $(EXT_DIR)$(EXT_LIB):
 	make --silent -C $(EXT_DIR) && echo ...compiling $(EXT_LIB)
 
 $(NAME): $(OBJ)
-	@ar rcs $(NAME) $(OBJ) $(EXT)
+	@ar rcs $(NAME) $(OBJ) $(shell ar t $(EXT_DIR)$(EXT_LIB) $(EXT_OBJ_DIR)*.o)
 	@echo Compiling $(NAME) success!
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC) $(EXT_DIR)$(EXT_LIB)
