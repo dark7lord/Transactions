@@ -18,5 +18,5 @@ public:
 	~AVL_Node();
 };
 
-// #include "AVL_Node.tpp"
+// #inc "AVL_Node.tpp"
 #endif

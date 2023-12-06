@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-// #include "s21_key_value_storage/s21_key_value_storage.h"
-#include "s21_hash_table.h"
+// #inc "s21_key_value_storage/s21_key_value_storage.h"
+#include "include/HashTable.h"
 #include "s21_self_balancing_binary_search_tree.h"
 
 

@@ -26,7 +26,7 @@ namespace s21 {
 		const std::string& operator[](const std::string& key) const;
 	};
 
-	bool operator==(Value, Value); // return true if one of the values is -
+	bool operator==(const Value&, const Value&); // return true if one of the values is -
 	std::ostream& operator<<(std::ostream& os, const Value& value);
 
 	using Key = std::string;
@@ -43,10 +43,9 @@ namespace s21 {
 		virtual void rename(const Key&, const Key&) = 0;
 		virtual TimeLimit ttl(const Key&) const noexcept = 0;
 		virtual std::vector<Key> find(const Value&) const noexcept = 0;
-//		virtual std::vector<Value> showall(void) const noexcept = 0; //  согласовать использование итератора
-		virtual void upload(const std::string& filename) = 0;
-//		virtual void s21::export(const std::string& filename) const = 0; // delete 0
-		virtual std::size_t size() const noexcept = 0;
+		virtual std::vector<Value> showall() const noexcept = 0; //  согласовать использование итератора
+		virtual void upload(const std::string&) = 0;
+		virtual void save(const std::string&) const = 0; // delete 0
 	};
 
 }
