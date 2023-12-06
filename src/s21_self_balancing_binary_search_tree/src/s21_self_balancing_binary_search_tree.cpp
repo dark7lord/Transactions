@@ -1,5 +1,5 @@
-#include "AVL_Node.h"
-#include "s21_self_balancing_binary_search_tree.h"
+#include "../inc/AVL_Node.h"
+#include "../s21_self_balancing_binary_search_tree.h"
 
 namespace s21 {
 	using std::max;
@@ -254,12 +254,14 @@ namespace s21 {
 	TimeLimit SelfBalancingBinarySearchTree::ttl(const Key&) const noexcept {
 		return TimeLimit();
 	}
-//		std::vector<Value> showall(void) const noexcept ; //  согласовать использование итератора
-	void SelfBalancingBinarySearchTree::upload(const std::string&) {}
-//		void s21::SelfBalancingBinarySearchTree::export(const std::string& filename) const override; // delete 0
-	std::size_t SelfBalancingBinarySearchTree::size() const noexcept {
-		return 0;
+
+	std::vector<Value> SelfBalancingBinarySearchTree::showall() const noexcept {
+		return  std::vector<Value>();
 	}
+
+	void SelfBalancingBinarySearchTree::upload(const std::string&) {}
+
+	void SelfBalancingBinarySearchTree::save(const std::string&) const {}
 }
 
 

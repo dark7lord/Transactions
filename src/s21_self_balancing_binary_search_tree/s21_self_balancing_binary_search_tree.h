@@ -1,6 +1,6 @@
 #ifndef SELF_BALANCING_BINARY_SEARCH_TREE
 #define SELF_BALANCING_BINARY_SEARCH_TREE
-#include "AVL_Node.h"
+#include "inc/AVL_Node.h"
 #include <string>
 #include <iostream>
 #include "../s21_i_key_value_storage/s21_i_key_value_storage.h"
@@ -44,10 +44,9 @@ namespace s21 {
 
 		void				rename(const Key&, const Key&) override;
 		TimeLimit ttl(const Key&) const noexcept override;
-//		std::vector<Value> showall(void) const noexcept override; //  согласовать использование итератора
-		void upload(const std::string& filename) override;
-//		void s21::SelfBalancingBinarySearchTree::export(const std::string& filename) const override; // delete 0
-		std::size_t size() const noexcept override;
+		std::vector<Value> showall() const noexcept override;
+		void upload(const std::string&) override;
+		void save(const std::string&) const override;
 
 		void printTree();
 
