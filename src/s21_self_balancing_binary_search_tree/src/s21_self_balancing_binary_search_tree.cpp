@@ -1,4 +1,5 @@
-#include "s21_self_balancing_binary_search_tree.h"
+#include "../inc/AVL_Node.h"
+#include "../s21_self_balancing_binary_search_tree.h"
 
 namespace s21 {
 	using std::max;
@@ -236,6 +237,7 @@ namespace s21 {
 
 		return arrKeys;
 	}
+
 	void SelfBalancingBinarySearchTree::rename(const Key& old_key, const Key& new_key) {
 		const Value *value = get(old_key);
 
@@ -403,7 +405,8 @@ namespace s21 {
 
 
 //	void s21::SelfBalancingBinarySearchTree::    export(const std::string& filename) const override; // delete 0
-	void SelfBalancingBinarySearchTree::s21_export(const std::string& filename) const {
+	// void SelfBalancingBinarySearchTree::s21_export(const std::string& filename) const {
+	void SelfBalancingBinarySearchTree::save(const std::string& filename) const {
 
 		std::vector<std::string> keys_values;
 		std::ofstream output_file(filename);
@@ -417,6 +420,7 @@ namespace s21 {
 				count++;
 			}
 			std::cout << "OK " << count << std::endl;
+			
 		} else {
 			std::cerr << "Unable to open file: " << filename << std::endl;
 		}
@@ -425,9 +429,18 @@ namespace s21 {
 		// 	std::cout << str << std::endl;
 		// }
 	}
-	std::size_t SelfBalancingBinarySearchTree::size() const noexcept {
-		return 0;
-	}
+	// std::size_t SelfBalancingBinarySearchTree::size() const noexcept {
+	// 	return 0;
+
+	// }
+
+	// std::vector<Value> SelfBalancingBinarySearchTree::showall() const noexcept {
+	// 	return  std::vector<Value>();
+	// }
+
+	// void SelfBalancingBinarySearchTree::upload(const std::string&) {}
+
+	// void SelfBalancingBinarySearchTree::save(const std::string&) const {}
 }
 
 

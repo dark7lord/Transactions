@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <s21_self_balancing_binary_search_tree.h>
+#include "../s21_self_balancing_binary_search_tree.h"
 
 // class node
 // Тут можно разрешить методы get_root,get_left и get_right

@@ -1,4 +1,4 @@
-#include "AVL_Node.h"
+#include "../inc/AVL_Node.h"
 #include <iostream>
 
 

@@ -1,6 +1,6 @@
 #ifndef SELF_BALANCING_BINARY_SEARCH_TREE
 #define SELF_BALANCING_BINARY_SEARCH_TREE
-#include "AVL_Node.h"
+#include "inc/AVL_Node.h"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -49,16 +49,21 @@ namespace s21 {
 		std::vector<Key>	keys(void) const noexcept override;
 		void				rename(const Key&, const Key&) override;
 
-		std::vector<Value>	showall(void) const noexcept override; //  согласовать использование итератора
+
+		TimeLimit			ttl(const Key&) const noexcept override;
+		std::vector<Value>	showall() const noexcept override;
+		void				upload(const std::string&) override;
+		void 				save(const std::string&) const override;
+
+		// std::vector<Value>	showall(void) const noexcept override; //  согласовать использование итератора
 		// std::vector<Value>	showall(void) const noexcept; //  согласовать использование итератора
 
 //		void				export(const std::string& filename) const override; // delete 0
-		void				s21_export(const std::string& filename) const; // delete 0
+		// void				s21_export(const std::string& filename) const; // delete 0
 
-		void				upload(const std::string& filename) override;
-		std::size_t			size() const noexcept override;
-		TimeLimit			ttl(const Key&) const noexcept override;
-
+		// void				upload(const std::string& filename) override;
+		// std::size_t			size() const noexcept override;
+		// TimeLimit			ttl(const Key&) const noexcept override;
 		void printTree();
 	};
 
