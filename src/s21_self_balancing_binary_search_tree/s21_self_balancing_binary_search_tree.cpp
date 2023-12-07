@@ -1,4 +1,3 @@
-#include "AVL_Node.h"
 #include "s21_self_balancing_binary_search_tree.h"
 
 namespace s21 {
@@ -249,14 +248,183 @@ namespace s21 {
 	}
 
 
-
-
 	TimeLimit SelfBalancingBinarySearchTree::ttl(const Key&) const noexcept {
+		// AVL_Node* node = find_node(_root, key);
+
+		// if (!node) {
+		// 	throw std::out_of_range("Key not found");
+		// // 	// return nullptr;
+		// }
+
+		// return node -> time_limit;
 		return TimeLimit();
 	}
-//		std::vector<Value> showall(void) const noexcept ; //  согласовать использование итератора
-	void SelfBalancingBinarySearchTree::upload(const std::string&) {}
-//		void s21::SelfBalancingBinarySearchTree::export(const std::string& filename) const override; // delete 0
+
+	void push_value_recursive(AVL_Node *node, std::vector<Value> &values) {
+		if (node != nullptr) {
+			push_value_recursive(node -> left, values);
+			values.push_back(node -> value);
+			push_value_recursive(node -> right, values);
+		}
+	}
+
+
+	// void print_values(const std::vector<Value>& values) {
+	// 	const int padding = 2;
+
+	// 	int max_index_width = 1;
+	// 	int max_last_name_width = 0;
+	// 	int max_first_name_width = 0;
+	// 	int max_birth_year_width = 4;  // Исходно установим для года
+	// 	int max_city_width = 0;
+	// 	int max_coins_number_width = 18;  // Исходно установим для количества коинов
+
+	// 	int i = 1;
+	// 	for (const auto& value : values) {
+	// 		max_index_width = std::max(max_index_width, static_cast<int>(std::to_string(i++).length()));
+	// 		max_last_name_width = std::max(max_last_name_width, static_cast<int>(value.last_name.length()));
+	// 		max_first_name_width = std::max(max_first_name_width, static_cast<int>(value.first_name.length()));
+	// 		max_birth_year_width = std::max(max_birth_year_width, static_cast<int>(value.birth_year.length()));
+	// 		max_city_width = std::max(max_city_width, static_cast<int>(value.city.length()));
+	// 		max_coins_number_width = std::max(max_coins_number_width, static_cast<int>(value.coins_number.length()));
+	// 	}
+
+	// 	std::cout
+	// 		<< std::left
+	// 		<< std::setw(max_index_width + padding)			<< "№"
+	// 		<< std::setw(max_last_name_width + padding + 2)		<< "Last name"
+	// 		<< std::setw(max_first_name_width + padding + 2)	<< "First name"
+	// 		<< std::setw(max_birth_year_width + padding)	<< "Year"
+	// 		<< std::setw(max_city_width + padding + 2)			<< "City"
+	// 		<< std::setw(max_coins_number_width + padding)	<< "Number of coins"
+	// 		<< std::endl;
+
+	// 	int count = 1;
+	// 	for (const auto& value : values) {
+	// 		std::cout
+
+	// 			<< std::left << std::setw(max_index_width + padding)			<< count++
+	// 			<< std::setw(max_last_name_width + padding + 2)		<< "\"" + value.last_name + "\""
+	// 			<< std::setw(max_first_name_width + padding + 2)	<< "\"" + value.first_name + "\""
+	// 			<< std::setw(max_birth_year_width + padding)	<< value.birth_year
+	// 			<< std::setw(max_city_width + padding + 2)			<< "\"" + value.city + "\""
+	// 			 << std::setw(max_coins_number_width + padding)	<< value.coins_number
+	// 			<< std::endl;
+	// 	}
+	// }
+
+	std::vector<Value>	SelfBalancingBinarySearchTree::showall() const noexcept {
+	// std::vector<Value> SelfBalancingBinarySearchTree::showall() const noexcept {
+		std::vector<Value> values;
+		push_value_recursive(_root, values);
+
+		return values;
+	}
+
+
+	std::vector<std::string> tokenize(const std::string& line) {
+		std::vector<string>	tokens;
+		std::istringstream	iss(line);
+		string				token;
+
+		while (iss >> std::quoted(token)) {
+			tokens.push_back(token);
+		}
+
+		return tokens;
+	}
+
+	void SelfBalancingBinarySearchTree::upload(const std::string& filename) {
+		std::ifstream input_file(filename);
+
+		if (!input_file) {
+			std::cerr
+				<< "Error: " << filename
+				<< "could not be opened for reading!" << std::endl;
+		}
+
+		string line;
+		int count = 0;
+
+		while (std::getline(input_file, line)) {
+			std::vector<string> tokens = tokenize(line);
+			count++;
+
+			if (tokens.size() == 6) {
+				Value value {
+					tokens[1],
+					tokens[2],
+					tokens[3],
+					tokens[4],
+					tokens[5]
+				};
+
+				// auto [ key, last_name, first_name, birth_year, city, coins_number ] = tokens;
+
+				std::cout	<< "Key: "			<< tokens[0] << ", "
+							<< "Last Name: "	<< value.last_name << ", "
+							<< "First Name: "	<< value.first_name << ", "
+							<< "Birth Year: "	<< value.birth_year << ", "
+							<< "City: "			<< value.city << ", "
+							<< "Coins Number: "	<< value.coins_number
+							<< std::endl;
+			} else {
+				std::cerr << "Failed to parse line " << count << " : " << line << std::endl;
+				// throw error_reading
+			}
+			// Here will Value(std::string&)
+		}
+	}
+
+	string extract_str_node(const AVL_Node* node) {
+		const Value& value = node->value;
+
+		std::ostringstream oss;
+		oss << node -> key << ' '
+			<< std::quoted(value.last_name) << ' '
+			<< std::quoted(value.first_name) << ' '
+			<< value.birth_year << ' '
+			<< std::quoted(value.city) << ' '
+			<< value.coins_number;
+
+		return oss.str();
+}
+
+	void push_key_value_recursive(AVL_Node *node, std::vector<std::string> &values) {
+		if (node != nullptr) {
+			push_key_value_recursive(node -> left, values);
+
+			std::string str = extract_str_node(node);
+			values.push_back(str);
+
+			push_key_value_recursive(node -> right, values);
+		}
+	}
+
+
+//	void s21::SelfBalancingBinarySearchTree::    export(const std::string& filename) const override; // delete 0
+	void SelfBalancingBinarySearchTree::s21_export(const std::string& filename) const {
+
+		std::vector<std::string> keys_values;
+		std::ofstream output_file(filename);
+
+		push_key_value_recursive(_root, keys_values);
+
+		if (output_file.is_open()) {
+			int count = 0;
+			for (const auto& line : keys_values) {
+				output_file << line << std::endl;;
+				count++;
+			}
+			std::cout << "OK " << count << std::endl;
+		} else {
+			std::cerr << "Unable to open file: " << filename << std::endl;
+		}
+
+		// for (auto str : keys_values) {
+		// 	std::cout << str << std::endl;
+		// }
+	}
 	std::size_t SelfBalancingBinarySearchTree::size() const noexcept {
 		return 0;
 	}

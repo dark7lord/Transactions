@@ -46,3 +46,9 @@ fclean: clean
 	@echo Full cleaning success!
 
 re: fclean $(FULL_NAME)
+
+
+# clang_n:
+# 	clang-format -style=Google -n *.c *.h
+# clang_i:
+# 	clang-format -style=Google -i *.c *.h

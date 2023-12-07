@@ -14,7 +14,7 @@ namespace s21 {
 		// Value& operator=(Value&) = default;
 		// Value& operator=(Value&&) = default;
 		// ~Value() = default;
-		// explicit Value(std::string); // парсер
+		// explicit Value(std::string); // парсер // except
 
 		std::string	last_name; // только буквы или одно -
 		std::string	first_name; // только буквы или одно -
@@ -45,7 +45,7 @@ namespace s21 {
 		virtual void				rename(const Key&, const Key&) = 0;
 		virtual TimeLimit			ttl(const Key&) const noexcept = 0;
 		virtual std::vector<Key>	find(const Value&) const noexcept = 0;
-//		virtual std::vector<Value>	showall(void) const noexcept = 0; //  согласовать использование итератора
+		virtual std::vector<Value>	showall(void) const noexcept = 0; //  согласовать использование итератора
 		virtual void				upload(const std::string& filename) = 0;
 //		virtual void 				export(const std::string& filename) const = 0; // delete 0
 		virtual std::size_t			size() const noexcept = 0;

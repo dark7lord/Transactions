@@ -33,6 +33,11 @@ namespace s21 {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Value* value) {
+		if (value == nullptr) {
+			os << "(nullptr)";
+			return os;
+		}
+
 		os << "first_name: " << value -> first_name << ", "
 		<< "last_name: " << value -> last_name << ", "
 		<< "birth_year: " << value -> birth_year << ", "
@@ -50,6 +55,5 @@ namespace s21 {
 			(l.coins_number == r.coins_number || l.coins_number == "-" || r.coins_number == "-")
 		);
 	}
-
 } // end of namespace s21
 
