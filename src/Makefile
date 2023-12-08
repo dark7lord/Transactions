@@ -27,14 +27,19 @@ KEY_VALUE_STORAGE:=			$(KEY_VALUE_STORAGE_PATH)/$(KEY_VALUE_STORAGE_NAME).a
 
 all: $(NAME)
 
-$(NAME): $(SRC)
-	@echo ...compiling $(HASH_TABLE_NAME) && make --silent -C $(HASH_TABLE_PATH)
+bin_tree:
 	@echo ...compiling $(BIN_TREE_NAME)   && make --silent -C $(BIN_TREE_PATH)
-	$(CC) $(CCFLAGS) $(SRC) $(HASH_TABLE) $(BIN_TREE) -I $(HASH_TABLE_PATH) -I $(BIN_TREE_PATH) -o $(NAME)
+
+hash_table:
+	@echo ...compiling $(HASH_TABLE_NAME) && make --silent -C $(HASH_TABLE_PATH)
+
+
+$(NAME): $(SRC) bin_tree hash_table
+	@$(CC) $(CCFLAGS) $(SRC) $(HASH_TABLE) $(BIN_TREE) -I $(HASH_TABLE_PATH) -I $(BIN_TREE_PATH) -o $(NAME)
 	@echo Compiling success!
 
 run: all
-	./$(NAME)
+	@./$(NAME)
 
 clean:
 #cd ./s21_hash_table && make clean
