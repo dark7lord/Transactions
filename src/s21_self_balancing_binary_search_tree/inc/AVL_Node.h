@@ -1,7 +1,6 @@
 #ifndef AVL_NODE
 #define AVL_NODE
 
-#include <string>
 #include "../../s21_i_key_value_storage/s21_i_key_value_storage.h"
 
 using std::string;

@@ -55,5 +55,6 @@ namespace s21 {
 			(l.coins_number == r.coins_number || l.coins_number == "-" || r.coins_number == "-")
 		);
 	}
+
 } // end of namespace s21
 

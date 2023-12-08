@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <iomanip>
+#include <ctime>
 #include "../s21_i_key_value_storage/s21_i_key_value_storage.h"
 
 using std::string;
@@ -16,15 +17,15 @@ namespace s21 {
 	private:
 		AVL_Node* _root;
 
-		int					getHeight(AVL_Node* node);
-		void				updateHeight(AVL_Node* node);
+		int					getHeight(AVL_Node* node) const;
+		void				updateHeight(AVL_Node* node) const;
 
-		AVL_Node*			rotateLeft(AVL_Node* x);
-		AVL_Node*			rotateRight(AVL_Node* y);
-		AVL_Node*			balance(AVL_Node* node);
-		AVL_Node*			insert(AVL_Node* node, const Key& key, const Value& value);
-		AVL_Node*			minValueNode(AVL_Node*);
-		AVL_Node*			deleteNode(AVL_Node*, Key);
+		AVL_Node*			rotateLeft(AVL_Node*) const;
+		AVL_Node*			rotateRight(AVL_Node*) const ;
+		AVL_Node*			balance(AVL_Node*) const;
+		AVL_Node*			insert(AVL_Node*, const Key&, const Value&, TimeLimit);
+		AVL_Node*			minValueNode(AVL_Node*) const;
+		AVL_Node*			deleteNode(AVL_Node*, const Key&) const;
 
 	public:
 		SelfBalancingBinarySearchTree() : _root(nullptr) {}
@@ -32,9 +33,6 @@ namespace s21 {
 
 		// SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&) = default;
 		// SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&&) = default;
-		// SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&) = default;
-		// SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&&) = default;
-		// ~SelfBalancingBinarySearchTree() = default;
 
 		AVL_Node*	find_node(AVL_Node* node, Key key) const;
 		void printTree(AVL_Node* root, int level = 0);
@@ -49,22 +47,13 @@ namespace s21 {
 		std::vector<Key>	keys(void) const noexcept override;
 		void				rename(const Key&, const Key&) override;
 
+		// TODO: the lines below have no tests
+		void 				save(const std::string&) const override;
+		std::vector<Value>	showall() const noexcept override;
 
 		TimeLimit			ttl(const Key&) const noexcept override;
-		std::vector<Value>	showall() const noexcept override;
 		void				upload(const std::string&) override;
-		void 				save(const std::string&) const override;
-
-		// std::vector<Value>	showall(void) const noexcept override; //  согласовать использование итератора
-		// std::vector<Value>	showall(void) const noexcept; //  согласовать использование итератора
-
-//		void				export(const std::string& filename) const override; // delete 0
-		// void				s21_export(const std::string& filename) const; // delete 0
-
-		// void				upload(const std::string& filename) override;
-		// std::size_t			size() const noexcept override;
-		// TimeLimit			ttl(const Key&) const noexcept override;
-		void printTree();
+		void				printTree();
 	};
 
 }

@@ -8,12 +8,12 @@ namespace s21 {
 	// SelfBalancingBinarySearchTree::SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&);
 	// SelfBalancingBinarySearchTree::~SelfBalancingBinarySearchTree();
 
-	int SelfBalancingBinarySearchTree::getHeight(AVL_Node* node) {
+	int SelfBalancingBinarySearchTree::getHeight(AVL_Node* node) const {
 		return (node != nullptr) ? node->height : 0;
 	}
 
 	// Обновление высоты узла
-	void SelfBalancingBinarySearchTree::updateHeight(AVL_Node* node) {
+	void SelfBalancingBinarySearchTree::updateHeight(AVL_Node* node) const {
 		if (node != nullptr) {
 			node->height = 1 + max( getHeight(node->left), getHeight(node->right) );
 		}
@@ -23,7 +23,7 @@ namespace s21 {
 	// (...) ← _x_  → (yl ← y → (,,,))
 	// ==> X swaps places with Y
 	// ( (...) ← x → yl ) ← _y_  → (,,,)
-	AVL_Node* SelfBalancingBinarySearchTree::rotateLeft(AVL_Node* x) {
+	AVL_Node* SelfBalancingBinarySearchTree::rotateLeft(AVL_Node* x) const {
 		AVL_Node* y = x->right;
 		x->right = y->left;
 		y->left = x;
@@ -38,7 +38,7 @@ namespace s21 {
 	// ( ,,, ← x → xr) ←  _y_  →  (...)
 	// ==> Y swaps places with X
 	// ( ,,, ) ←  _x_  → ( xr ← y → (...))
-	AVL_Node* SelfBalancingBinarySearchTree::rotateRight(AVL_Node* y) {
+	AVL_Node* SelfBalancingBinarySearchTree::rotateRight(AVL_Node* y) const {
 		AVL_Node* x = y->left;
 		y->left = x->right;
 		x->right = y;
@@ -50,7 +50,7 @@ namespace s21 {
 	}
 
 	// Балансировка узла
-	AVL_Node* SelfBalancingBinarySearchTree::balance(AVL_Node* node) {
+	AVL_Node* SelfBalancingBinarySearchTree::balance(AVL_Node* node) const {
 		updateHeight(node);
 
 		int balanceFactor = getHeight(node->left) - getHeight(node->right);
@@ -75,19 +75,19 @@ namespace s21 {
 	}
 
 	// Вставка узла с рекурсивным обновлением высот и балансировкой
-	AVL_Node* SelfBalancingBinarySearchTree::insert(AVL_Node* node, const Key& key, const Value& value) {
+	AVL_Node* SelfBalancingBinarySearchTree::insert(AVL_Node* node, const Key& key, const Value& value, TimeLimit ttl) {
 		if (node == nullptr) {
-			return new AVL_Node(key, value);
+			return new AVL_Node(key, value, ttl);
 		}
 
 		if (key < node->key) {
-			node->left = insert(node->left, key, value);
+			node->left = insert(node->left, key, value, ttl);
 		} else if (key > node->key) {
-			node->right = insert(node->right, key, value);
+			node->right = insert(node->right, key, value, ttl);
 		} else {
 			// Это вставка уже в существующий ключ
-			return node;
-			// throw new Exception;
+			// return node;
+			throw std::out_of_range("The key" + key + "exists");
 		}
 
 		return balance(node);
@@ -102,9 +102,8 @@ namespace s21 {
 		}
 	}
 
-	void SelfBalancingBinarySearchTree::set(const Key& key, const Value& value, TimeLimit t) {
-		(void) t;
-		_root = insert(_root, key, value);
+	void SelfBalancingBinarySearchTree::set(const Key& key, const Value& value, TimeLimit ttl) {
+		_root = insert(_root, key, value, ttl);
 	}
 
 	AVL_Node* SelfBalancingBinarySearchTree::find_node(AVL_Node* node, Key key) const {
@@ -119,7 +118,7 @@ namespace s21 {
 		return find_node(_root, key) != nullptr;
 	}
 
-	AVL_Node* SelfBalancingBinarySearchTree::minValueNode(AVL_Node* node) {
+	AVL_Node* SelfBalancingBinarySearchTree::minValueNode(AVL_Node* node) const {
 		AVL_Node* current = node;
 
 		while (current->left != nullptr)
@@ -128,7 +127,7 @@ namespace s21 {
 		return current;
 	}
 
-	AVL_Node* SelfBalancingBinarySearchTree::deleteNode(AVL_Node* root, Key key) {
+	AVL_Node* SelfBalancingBinarySearchTree::deleteNode(AVL_Node* root, const Key& key) const {
 		if (root == nullptr) return root;
 
 		if		( key < root->key ) root->left = deleteNode(root->left, key);
@@ -239,27 +238,48 @@ namespace s21 {
 	}
 
 	void SelfBalancingBinarySearchTree::rename(const Key& old_key, const Key& new_key) {
-		const Value *value = get(old_key);
 
-		if (value == nullptr) {
+		const Value *old_value = get(old_key);
+
+		if (old_value == nullptr) {
 			throw std::out_of_range("Key not found");
 		}
 
+		const Value *value_new_key = get(new_key);
+
+		if (value_new_key != nullptr) {
+			throw std::out_of_range("the key" + new_key + "exists");
+		}
+
 		del(old_key);
-		set(new_key, *value);
+		set(new_key, *old_value);
 	}
 
+	#define  NON_EXISTENT  0;
+	#define DELETE_TTL  0;
+	#define NO_TTL -1;
 
-	TimeLimit SelfBalancingBinarySearchTree::ttl(const Key&) const noexcept {
-		// AVL_Node* node = find_node(_root, key);
+	TimeLimit SelfBalancingBinarySearchTree::ttl(const Key& key) const noexcept {
+		AVL_Node *node = find_node(_root, key);
 
-		// if (!node) {
-		// 	throw std::out_of_range("Key not found");
-		// // 	// return nullptr;
-		// }
+		if (!node) {
+			return NON_EXISTENT;
+		}
 
-		// return node -> time_limit;
-		return TimeLimit();
+		int time_limit = node -> time_limit;
+		int different = time_limit - time(0);
+
+		if (time_limit < 0) {
+			// std::cout << "This node " << key << " immortal\n";
+			return NO_TTL;
+		}
+		else if (time_limit == 0 || different <= 0 ) {
+			deleteNode(node, key);
+			return DELETE_TTL;
+		}
+
+
+		return different;
 	}
 
 	void push_value_recursive(AVL_Node *node, std::vector<Value> &values) {
@@ -404,8 +424,6 @@ namespace s21 {
 	}
 
 
-//	void s21::SelfBalancingBinarySearchTree::    export(const std::string& filename) const override; // delete 0
-	// void SelfBalancingBinarySearchTree::s21_export(const std::string& filename) const {
 	void SelfBalancingBinarySearchTree::save(const std::string& filename) const {
 
 		std::vector<std::string> keys_values;
@@ -420,27 +438,11 @@ namespace s21 {
 				count++;
 			}
 			std::cout << "OK " << count << std::endl;
-			
+
 		} else {
 			std::cerr << "Unable to open file: " << filename << std::endl;
 		}
-
-		// for (auto str : keys_values) {
-		// 	std::cout << str << std::endl;
-		// }
 	}
-	// std::size_t SelfBalancingBinarySearchTree::size() const noexcept {
-	// 	return 0;
-
-	// }
-
-	// std::vector<Value> SelfBalancingBinarySearchTree::showall() const noexcept {
-	// 	return  std::vector<Value>();
-	// }
-
-	// void SelfBalancingBinarySearchTree::upload(const std::string&) {}
-
-	// void SelfBalancingBinarySearchTree::save(const std::string&) const {}
 }
 
 

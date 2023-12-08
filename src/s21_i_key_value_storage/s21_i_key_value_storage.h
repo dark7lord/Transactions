@@ -4,6 +4,7 @@
 #include <string>
 #include <stdbool.h>
 #include <vector>
+#include "stdio.h"
 
 namespace s21 {
 
@@ -49,7 +50,6 @@ namespace s21 {
 		virtual void				upload(const std::string&) = 0;
 		virtual void				save(const std::string&) const = 0;
 	};
-
 }
 
 #endif
