@@ -53,7 +53,6 @@ namespace s21 {
 		// TODO: the lines below have no tests
 		void 				save(const std::string&) const override;
 		std::vector<Value>	showall() const noexcept override;
-		void				upload(const std::string&) override;
 		void				printTree();
 	};
 

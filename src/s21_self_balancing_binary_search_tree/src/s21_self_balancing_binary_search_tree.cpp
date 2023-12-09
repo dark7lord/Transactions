@@ -311,39 +311,6 @@ namespace s21 {
 		return tokens;
 	}
 
-	void SelfBalancingBinarySearchTree::upload(const std::string& filename) {
-		std::ifstream input_file(filename);
-
-		if (!input_file.is_open()) {
-			throw std::ios_base::failure("Failed to open file: " + filename);
-		}
-
-		string line;
-		int count = 0;
-		std::map<Key, Value> keys_values; // на случай если одна строка не валидна
-
-		while (std::getline(input_file, line)) {
-			try {
-				Key key;
-				Value value = Value::str_to_value(line, &key);
-				keys_values.insert({ key, value });
-			}
-			catch (const std::exception& e) {
-				std::string numbered_line = "Failed to parse line " + std::to_string(++count) + ": " + line;
-				std::string type_error = e.what();
-				std::string error_msg = numbered_line + "\n" + type_error;
-
-				throw std::runtime_error(error_msg);
-			}
-		}
-
-		// А что если он пустой? отработает и вернет пустую мапу,
-		// но если просто перенос строки, то ошибка парсинга
-		for (const auto& [key, value]: keys_values ) {
-			set(key, value);
-		}
-
-	}
 
 	// TODO: можно вынести в метод AVL_Node
 	string node_to_str(const AVL_Node* node) {

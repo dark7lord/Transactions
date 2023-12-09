@@ -7,6 +7,7 @@
 #include "stdio.h"
 #include <sstream>
 #include <iomanip>
+#include <fstream>
 
 namespace s21 {
 
@@ -29,6 +30,14 @@ namespace s21 {
 		const std::string& operator[](const std::string& key) const;
 
 		static Value str_to_value(const std::string&, std::string* = nullptr);
+		// static Value& Value::validate_str_value(
+		static Value parse_value(
+			const std::string& first_name,
+			const std::string& last_name,
+			const std::string& birth_year,
+			const std::string& city,
+			const std::string& coins_number
+		);
 	};
 
 	bool operator==(const Value&, const Value&); // return true if one of the values is -
@@ -41,7 +50,7 @@ namespace s21 {
 
 	class IKeyValueStorage {
 	public:
-		virtual void				set(const Key&, const Value&, TimeLimit) = 0;
+		virtual void				set(const Key&, const Value&, TimeLimit = -1) = 0;
 		virtual const Value*		get(const Key&) const noexcept = 0;
 		virtual bool				exists(const Key&) const noexcept = 0;
 		virtual bool				del(const Key&) noexcept = 0;
@@ -51,7 +60,7 @@ namespace s21 {
 		virtual TimeLimit			ttl(const Key&) const noexcept = 0;
 		virtual std::vector<Key>	find(const Value&) const noexcept = 0;
 		virtual std::vector<Value>	showall() const noexcept = 0;
-		virtual void				upload(const std::string&) = 0;
+		virtual void				upload(const std::string&);
 		virtual void				save(const std::string&) const = 0;
 	};
 }
