@@ -7,6 +7,8 @@
 #include <fstream>
 #include <iomanip>
 #include <ctime>
+#include <stdexcept>
+#include <map>
 #include "../s21_i_key_value_storage/s21_i_key_value_storage.h"
 
 using std::string;
@@ -46,12 +48,11 @@ namespace s21 {
 		std::vector<Key>	find(const Value&) const noexcept override;
 		std::vector<Key>	keys(void) const noexcept override;
 		void				rename(const Key&, const Key&) override;
+		TimeLimit			ttl(const Key&) const noexcept override;
 
 		// TODO: the lines below have no tests
 		void 				save(const std::string&) const override;
 		std::vector<Value>	showall() const noexcept override;
-
-		TimeLimit			ttl(const Key&) const noexcept override;
 		void				upload(const std::string&) override;
 		void				printTree();
 	};

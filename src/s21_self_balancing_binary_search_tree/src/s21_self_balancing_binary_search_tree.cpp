@@ -167,12 +167,13 @@ namespace s21 {
 
 	// Рекурсия, я люблю тебя
 	void SelfBalancingBinarySearchTree::printTree(AVL_Node* root, int level) {
+		int padding = 4;
+
 		if (root != nullptr) {
 			printTree(root->right, level + 1);
-			for (int i = 0; i < level; i++) {
-				std::cout << "   ";
-			}
-			std::cout << root->key << "\n";
+			std::cout	<< std::string(level * padding, ' ')
+						<< root->key
+						<< std::endl;
 			printTree(root->left, level + 1);
 		}
 	}
@@ -290,53 +291,7 @@ namespace s21 {
 		}
 	}
 
-
-	// void print_values(const std::vector<Value>& values) {
-	// 	const int padding = 2;
-
-	// 	int max_index_width = 1;
-	// 	int max_last_name_width = 0;
-	// 	int max_first_name_width = 0;
-	// 	int max_birth_year_width = 4;  // Исходно установим для года
-	// 	int max_city_width = 0;
-	// 	int max_coins_number_width = 18;  // Исходно установим для количества коинов
-
-	// 	int i = 1;
-	// 	for (const auto& value : values) {
-	// 		max_index_width = std::max(max_index_width, static_cast<int>(std::to_string(i++).length()));
-	// 		max_last_name_width = std::max(max_last_name_width, static_cast<int>(value.last_name.length()));
-	// 		max_first_name_width = std::max(max_first_name_width, static_cast<int>(value.first_name.length()));
-	// 		max_birth_year_width = std::max(max_birth_year_width, static_cast<int>(value.birth_year.length()));
-	// 		max_city_width = std::max(max_city_width, static_cast<int>(value.city.length()));
-	// 		max_coins_number_width = std::max(max_coins_number_width, static_cast<int>(value.coins_number.length()));
-	// 	}
-
-	// 	std::cout
-	// 		<< std::left
-	// 		<< std::setw(max_index_width + padding)			<< "№"
-	// 		<< std::setw(max_last_name_width + padding + 2)		<< "Last name"
-	// 		<< std::setw(max_first_name_width + padding + 2)	<< "First name"
-	// 		<< std::setw(max_birth_year_width + padding)	<< "Year"
-	// 		<< std::setw(max_city_width + padding + 2)			<< "City"
-	// 		<< std::setw(max_coins_number_width + padding)	<< "Number of coins"
-	// 		<< std::endl;
-
-	// 	int count = 1;
-	// 	for (const auto& value : values) {
-	// 		std::cout
-
-	// 			<< std::left << std::setw(max_index_width + padding)			<< count++
-	// 			<< std::setw(max_last_name_width + padding + 2)		<< "\"" + value.last_name + "\""
-	// 			<< std::setw(max_first_name_width + padding + 2)	<< "\"" + value.first_name + "\""
-	// 			<< std::setw(max_birth_year_width + padding)	<< value.birth_year
-	// 			<< std::setw(max_city_width + padding + 2)			<< "\"" + value.city + "\""
-	// 			 << std::setw(max_coins_number_width + padding)	<< value.coins_number
-	// 			<< std::endl;
-	// 	}
-	// }
-
 	std::vector<Value>	SelfBalancingBinarySearchTree::showall() const noexcept {
-	// std::vector<Value> SelfBalancingBinarySearchTree::showall() const noexcept {
 		std::vector<Value> values;
 		push_value_recursive(_root, values);
 
@@ -359,46 +314,39 @@ namespace s21 {
 	void SelfBalancingBinarySearchTree::upload(const std::string& filename) {
 		std::ifstream input_file(filename);
 
-		if (!input_file) {
-			std::cerr
-				<< "Error: " << filename
-				<< "could not be opened for reading!" << std::endl;
+		if (!input_file.is_open()) {
+			throw std::ios_base::failure("Failed to open file: " + filename);
 		}
 
 		string line;
 		int count = 0;
+		std::map<Key, Value> keys_values; // на случай если одна строка не валидна
 
 		while (std::getline(input_file, line)) {
-			std::vector<string> tokens = tokenize(line);
-			count++;
-
-			if (tokens.size() == 6) {
-				Value value {
-					tokens[1],
-					tokens[2],
-					tokens[3],
-					tokens[4],
-					tokens[5]
-				};
-
-				// auto [ key, last_name, first_name, birth_year, city, coins_number ] = tokens;
-
-				std::cout	<< "Key: "			<< tokens[0] << ", "
-							<< "Last Name: "	<< value.last_name << ", "
-							<< "First Name: "	<< value.first_name << ", "
-							<< "Birth Year: "	<< value.birth_year << ", "
-							<< "City: "			<< value.city << ", "
-							<< "Coins Number: "	<< value.coins_number
-							<< std::endl;
-			} else {
-				std::cerr << "Failed to parse line " << count << " : " << line << std::endl;
-				// throw error_reading
+			try {
+				Key key;
+				Value value = Value::str_to_value(line, &key);
+				keys_values.insert({ key, value });
 			}
-			// Here will Value(std::string&)
+			catch (const std::exception& e) {
+				std::string numbered_line = "Failed to parse line " + std::to_string(++count) + ": " + line;
+				std::string type_error = e.what();
+				std::string error_msg = numbered_line + "\n" + type_error;
+
+				throw std::runtime_error(error_msg);
+			}
 		}
+
+		// А что если он пустой? отработает и вернет пустую мапу,
+		// но если просто перенос строки, то ошибка парсинга
+		for (const auto& [key, value]: keys_values ) {
+			set(key, value);
+		}
+
 	}
 
-	string extract_str_node(const AVL_Node* node) {
+	// TODO: можно вынести в метод AVL_Node
+	string node_to_str(const AVL_Node* node) {
 		const Value& value = node->value;
 
 		std::ostringstream oss;
@@ -416,7 +364,7 @@ namespace s21 {
 		if (node != nullptr) {
 			push_key_value_recursive(node -> left, values);
 
-			std::string str = extract_str_node(node);
+			std::string str = node_to_str(node);
 			values.push_back(str);
 
 			push_key_value_recursive(node -> right, values);
@@ -440,7 +388,7 @@ namespace s21 {
 			std::cout << "OK " << count << std::endl;
 
 		} else {
-			std::cerr << "Unable to open file: " << filename << std::endl;
+			throw std::ios_base::failure("Failed to open file: " + filename);
 		}
 	}
 }

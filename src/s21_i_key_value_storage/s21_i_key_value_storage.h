@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <vector>
 #include "stdio.h"
+#include <sstream>
+#include <iomanip>
 
 namespace s21 {
 
@@ -25,6 +27,8 @@ namespace s21 {
 
 		std::string& operator[](const std::string& key);
 		const std::string& operator[](const std::string& key) const;
+
+		static Value str_to_value(const std::string&, std::string* = nullptr);
 	};
 
 	bool operator==(const Value&, const Value&); // return true if one of the values is -
