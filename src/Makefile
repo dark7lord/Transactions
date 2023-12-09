@@ -33,8 +33,12 @@ bin_tree:
 hash_table:
 	@echo ...compiling $(HASH_TABLE_NAME) && make --silent -C $(HASH_TABLE_PATH)
 
+storage:
+	@echo ...compiling $(KEY_VALUE_STORAGE_NAME) && make --silent -C $(KEY_VALUE_STORAGE_PATH)
 
-$(NAME): $(SRC) bin_tree hash_table
+
+$(NAME): $(SRC) storage bin_tree hash_table
+# @echo ...compiling $(KEY_VALUE_STORAGE_NAME) && make --silent -C $(KEY_VALUE_STORAGE_PATH)
 	@$(CC) $(CCFLAGS) $(SRC) $(HASH_TABLE) $(BIN_TREE) -I $(HASH_TABLE_PATH) -I $(BIN_TREE_PATH) -o $(NAME)
 	@echo Compiling success!
 
