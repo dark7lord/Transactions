@@ -17,12 +17,12 @@ int main() {
 	std::cout << a.get("Ivan") << std::endl;
 	std::cout << b.get("Vika") << std::endl;
 
-	// try {
-	// 	// b.save("file_output");
-	// 	b.upload("s21_self_balancing_binary_search_tree/tests/test_files/file_for_import");
-	// 	b.printTree();
-	// }
-	// catch (const std::exception& e) {
-	// 	std::cerr << e.what() << std::endl;
-	// }
+	try {
+		b.upload("s21_self_balancing_binary_search_tree/tests/test_files/file_for_import");
+		b.print_tree();
+		b.save("file_output");
+	}
+	catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
 };

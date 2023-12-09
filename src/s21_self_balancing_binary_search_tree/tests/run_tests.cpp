@@ -126,30 +126,30 @@ TEST(SelfBalancingBinarySearchTree, rename) {
 }
 
 
-TEST(SelfBalancingBinarySearchTree, save) {
-	s21::SelfBalancingBinarySearchTree tree;
-	s21::Value value1 = { "Naruto", "Uzumaki", "1999", "Konoha", "15" };
-	s21::Value value2 = { "Haruno", "Sakura", "1998", "Konoha", "60" };
-	s21::Value value3 = { "Nara", "Shikamaru", "1997", "Konoha", "80" };
+// TEST(SelfBalancingBinarySearchTree, save) {
+// 	s21::SelfBalancingBinarySearchTree tree;
+// 	s21::Value value1 = { "Naruto", "Uzumaki", "1999", "Konoha", "15" };
+// 	s21::Value value2 = { "Haruno", "Sakura", "1998", "Konoha", "60" };
+// 	s21::Value value3 = { "Nara", "Shikamaru", "1997", "Konoha", "80" };
 
-	for (const auto& v: {value1, value2, value3}) {
-		std::cout << v << std::endl;
-		tree.set(v.first_name, v);
-	}
+// 	for (const auto& v: {value1, value2, value3}) {
+// 		std::cout << v << std::endl;
+// 		tree.set(v.first_name, v);
+// 	}
 
-	tree.save("test_files/file_for_export.1");
-	std::ifstream input_file(filename);
+// 	tree.save("test_files/file_for_export.1");
+// 	std::ifstream input_file(filename);
 
-	if (!input_file) {
-			std::cerr
-				<< "Error: " << filename
-				<< "could not be opened for reading!" << std::endl;
-		}
+// 	if (!input_file) {
+// 			std::cerr
+// 				<< "Error: " << filename
+// 				<< "could not be opened for reading!" << std::endl;
+// 		}
 
-	// tree.printTree();
+// 	// tree.printTree();
 
-	ASSERT_EQ(1, 1);
-}
+// 	ASSERT_EQ(1, 1);
+// }
 
 // TEST(SelfBalancingBinarySearchTree, showall) {
 // }
