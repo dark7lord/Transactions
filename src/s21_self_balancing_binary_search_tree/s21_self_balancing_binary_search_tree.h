@@ -1,5 +1,5 @@
-#ifndef SELF_BALANCING_BINARY_SEARCH_TREE
-#define SELF_BALANCING_BINARY_SEARCH_TREE
+#ifndef S21_SELF_BALANCING_BINARY_SEARCH_TREE
+#define S21_SELF_BALANCING_BINARY_SEARCH_TREE
 #include "inc/AVL_Node.h"
 #include <iostream>
 #include <sstream>
@@ -47,6 +47,6 @@ namespace s21 {
 		void				print_tree(void);
 	};
 
-}
+} // namespace s21
 
-#endif
+#endif // S21_SELF_BALANCING_BINARY_SEARCH_TREE

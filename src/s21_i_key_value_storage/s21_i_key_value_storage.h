@@ -1,5 +1,5 @@
-#ifndef KEY_VALUE_STORAGE
-#define KEY_VALUE_STORAGE
+#ifndef S21_KEY_VALUE_STORAGE
+#define S21_KEY_VALUE_STORAGE
 
 #include <string>
 #include <stdbool.h>
@@ -55,14 +55,17 @@ namespace s21 {
 		virtual bool				exists(const Key&) const noexcept = 0;
 		virtual bool				del(const Key&) noexcept = 0;
 		virtual void				update(const Key&, const Value&) = 0;
-		virtual std::vector<Key>	keys() const noexcept= 0;
+		virtual std::vector<Key>	keys() const noexcept = 0;
 		virtual void				rename(const Key&, const Key&) = 0;
 		virtual TimeLimit			ttl(const Key&) const noexcept = 0;
 		virtual std::vector<Key>	find(const Value&) const noexcept = 0;
 		virtual std::vector<Value>	showall() const noexcept = 0;
 		virtual void				upload(const std::string&);
 		virtual void				save(const std::string&) const = 0;
-	};
-}
 
-#endif
+		virtual ~IKeyValueStorage() = default;
+	};
+
+} // namespace s21
+
+#endif // S21_KEY_VALUE_STORAGE

@@ -9,7 +9,7 @@ namespace s21 {
 
 	typedef std::size_t HashCode;
 
-	class HashTable : IKeyValueStorage {
+	class HashTable : public IKeyValueStorage {
 	public:
 
 		/* HashTable. Defined in HashTable_core.cpp */

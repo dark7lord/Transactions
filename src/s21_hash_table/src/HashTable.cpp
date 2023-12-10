@@ -36,6 +36,7 @@ namespace s21 {
 
         while (first != last && first -> hash <= hash) {
             if (hash == first -> hash && key == first -> key) {
+				// Если истек удалить и вернуть null
                 return &(first -> val);
             }
             first++;
@@ -134,6 +135,7 @@ namespace s21 {
 
 		for (std::list<Node>& bucket : *table_) {
 			for (Node& node : bucket) {
+				// Проверить и удалить если что timelimit
 				res.push_back(node.val);
 			}
 		}
