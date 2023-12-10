@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
 #include "../s21_self_balancing_binary_search_tree.h"
+#include <iostream>
+#include <fstream>
+#include <string>
 
 TEST(SelfBalancingBinarySearchTree, set) {
 	s21::SelfBalancingBinarySearchTree tree;
@@ -126,33 +129,49 @@ TEST(SelfBalancingBinarySearchTree, rename) {
 }
 
 
-// TEST(SelfBalancingBinarySearchTree, save) {
-// 	s21::SelfBalancingBinarySearchTree tree;
-// 	s21::Value value1 = { "Naruto", "Uzumaki", "1999", "Konoha", "15" };
-// 	s21::Value value2 = { "Haruno", "Sakura", "1998", "Konoha", "60" };
-// 	s21::Value value3 = { "Nara", "Shikamaru", "1997", "Konoha", "80" };
+TEST(SelfBalancingBinarySearchTree, save) {
+	s21::SelfBalancingBinarySearchTree tree;
 
-// 	for (const auto& v: {value1, value2, value3}) {
-// 		std::cout << v << std::endl;
-// 		tree.set(v.first_name, v);
-// 	}
+	s21::Value value1 = { "Naruto", "Uzumaki", "1999", "Konoha", "15" };
+	s21::Value value2 = { "Haruno", "Sakura", "1998", "Konoha", "60" };
+	s21::Value value3 = { "Nara", "Shikamaru", "1997", "Konoha", "80" };
 
-// 	tree.save("test_files/file_for_export.1");
-// 	std::ifstream input_file(filename);
+	tree.set("Naruto", value1);
+	tree.set("Sakura", value2);
+	tree.set("Shikamaru", value3);
 
-// 	if (!input_file) {
-// 			std::cerr
-// 				<< "Error: " << filename
-// 				<< "could not be opened for reading!" << std::endl;
-// 		}
+	// Save the tree to a file
+	const std::string filename = "test_files/file_for_export.1";
 
-// 	// tree.printTree();
+	try {
+		tree.save(filename);
+		std::cout << "File saved successfully." << std::endl;
+	} catch (const std::exception& e) {
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		FAIL();  // Mark the test as failed
+	}
 
-// 	ASSERT_EQ(1, 1);
-// }
+	// Verify that the file was created
+	std::ifstream input_file(filename);
+	ASSERT_TRUE(input_file.good());
 
-// TEST(SelfBalancingBinarySearchTree, showall) {
-// }
+	// Add more assertions as needed...
+}
+
+TEST(SelfBalancingBinarySearchTree, showall) {
+	s21::SelfBalancingBinarySearchTree tree;
+
+	s21::Value value1 = { "Naruto", "Uzumaki", "1999", "Konoha", "15" };
+	s21::Value value2 = { "Haruno", "Sakura", "1998", "Konoha", "60" };
+	s21::Value value3 = { "Nara", "Shikamaru", "1997", "Konoha", "80" };
+
+	tree.set("Naruto", value1);
+	tree.set("Sakura", value2);
+	tree.set("Shikamaru", value3);
+
+	std::vector<s21::Value> all_values = tree.showall();
+	ASSERT_EQ(all_values.size(), 3);
+}
 
 TEST(SelfBalancingBinarySearchTree, ttl) {
 	s21::SelfBalancingBinarySearchTree tree;
@@ -169,12 +188,69 @@ TEST(SelfBalancingBinarySearchTree, ttl) {
 	ASSERT_EQ(tree.ttl("has time"), 3);
 	ASSERT_EQ(tree.ttl("dead"), 0);
 }
+
 // TEST(SelfBalancingBinarySearchTree, upload) {
+//     s21::SelfBalancingBinarySearchTree tree;
+
+//     // Attempt to upload from a non-existent file
+//     const std::string filename = "test_files/file_for_import.dat";
+
+//     try {
+//         tree.upload(filename);
+//         std::cout << "File uploaded successfully." << std::endl;
+//     } catch (const std::exception& e) {
+//         std::cerr << "Exception caught: " << e.what() << std::endl;
+//         FAIL();  // Mark the test as failed
+//     }
+
+//     // Add more assertions as needed...
 // }
 
+class FileManager {
+public:
+    void createFile(const std::string& filename, const std::string& content) {
+        std::ofstream file(filename);
+        if (file.is_open()) {
+            file << content;
+            file.close();
+        } else {
+            std::cerr << "Failed to create file: " << filename << std::endl;
+        }
+    }
 
+    std::string readFile(const std::string& filename) {
+        std::ifstream file(filename);
+        std::string content;
 
+        if (file.is_open()) {
+            std::getline(file, content);
+            file.close();
+        } else {
+            std::cerr << "Failed to open file: " << filename << std::endl;
+        }
 
+        return content;
+    }
+};
+
+TEST(FileManagerTest, CreateAndReadFile) {
+    FileManager fileManager;
+
+    // Временное имя файла для теста
+    const std::string filename = "test_file.txt";
+
+    // Содержимое, которое мы хотим записать в файл
+    const std::string content = "Hello, World!";
+
+    // Создаем файл
+    fileManager.createFile(filename, content);
+
+    // Читаем содержимое файла
+    std::string readContent = fileManager.readFile(filename);
+
+    // Проверяем, что содержимое файла совпадает с ожидаемым
+    EXPECT_EQ(content, readContent);
+}
 
 int main(int argc, char *argv[]) {
 	testing::InitGoogleTest(&argc, argv);

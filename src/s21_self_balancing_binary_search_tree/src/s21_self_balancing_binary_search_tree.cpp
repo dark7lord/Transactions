@@ -5,6 +5,7 @@ namespace s21 {
 	using Node = AVL_Node;
 
 	const Value* Tree::get(const Key& key) const noexcept {
+		check_nodes_with_TTL();
 		Node* result_node = find_node(_root, key);
 		if (result_node) {
 			return &(result_node->value);
@@ -14,14 +15,17 @@ namespace s21 {
 	}
 
 	void Tree::set(const Key& key, const Value& value, TimeLimit ttl) {
+		check_nodes_with_TTL();
 		_root = insert(_root, key, value, ttl);
 	}
 
 	bool Tree::exists(const Key& key) const noexcept {
+		check_nodes_with_TTL();
 		return find_node(_root, key) != nullptr;
 	}
 
 	bool Tree::del(const Key& key) noexcept {
+		check_nodes_with_TTL();
 		Node* current_root = _root;
 		_root = delete_node(current_root, key);
 		return current_root != _root;
@@ -41,6 +45,7 @@ namespace s21 {
 	}
 
 	void Tree::print_tree() {
+		check_nodes_with_TTL();
 		std::cout << "Printing Tree:\n";
 		std::cout << "--------------------\n";
 		_print_tree(_root);
@@ -55,6 +60,7 @@ namespace s21 {
 	}
 
 	void Tree::update(const Key& key, const Value& new_value) {
+		check_nodes_with_TTL();
 		Node* node = find_node(_root, key);
 
 		if (!node) throw std::out_of_range("Key not found");
@@ -75,6 +81,7 @@ namespace s21 {
 
 	/***  "some text" == "-" is true, operator "==" is overloaded  ***/
 	std::vector<Key> Tree::find(const Value& value) const noexcept {
+		check_nodes_with_TTL();
 		std::vector<Key> keys_by_value;
 
 		auto find_keys_by_value = [&value, &keys_by_value](Node* node) {
@@ -88,6 +95,7 @@ namespace s21 {
 	}
 
 	std::vector<Key> Tree::keys(void) const noexcept {
+		check_nodes_with_TTL();
 		std::vector<Key> all_keys;
 
 		auto collect_keys = [&all_keys](Node* node) {
@@ -99,6 +107,7 @@ namespace s21 {
 	}
 
 	void Tree::rename(const Key& old_key, const Key& new_key) {
+		check_nodes_with_TTL();
 		Node* old_node = find_node(_root, old_key);
 		if (!old_node) throw std::out_of_range("Key not found");
 
@@ -110,11 +119,12 @@ namespace s21 {
 		_root = insert(_root, new_key, value);
 	}
 
-	#define NON_EXISTENT 0;
-	#define DELETE_TTL 0;
-	#define NO_TTL -1;
+	constexpr TimeLimit NON_EXISTENT = 0;
+	constexpr TimeLimit DELETE_TTL = 0;
+	constexpr TimeLimit NO_TTL = -1;
 
 	TimeLimit Tree::ttl(const Key& key) const noexcept {
+		check_nodes_with_TTL();
 		Node *node = find_node(_root, key);
 
 		if (!node) {
@@ -122,20 +132,30 @@ namespace s21 {
 		}
 
 		int time_limit = node -> time_limit;
-		int different = time_limit - time(0);
 
 		if (time_limit < 0) {
 			return NO_TTL;
 		}
-		else if (time_limit == 0 || different <= 0 ) {
-			delete_node(node, key);
+		int time_difference = time_limit - time(0);
+		if (time_limit == 0 || time_difference <= 0 ) {
+			delete_node(_root, key);
+			// del(key);
 			return DELETE_TTL;
 		}
 
-		return different;
+		return time_difference;
+	}
+
+	void Tree::check_nodes_with_TTL() const {
+		for (const auto& node : _nodes_with_TTL) {
+			if (ttl(node -> key) == (DELETE_TTL)) {
+				delete_node(_root, node->key);
+			}
+		}
 	}
 
 	std::vector<Value>	Tree::showall() const noexcept {
+		check_nodes_with_TTL();
 		std::vector<Value> values;
 
 		auto collect_values = [&values](Node* node) {
@@ -170,17 +190,18 @@ namespace s21 {
 	}
 
 	void Tree::save(const std::string& filename) const {
-
+		check_nodes_with_TTL();
 		std::map<Key, Value> entries = get_entries();
 		std::ofstream output_file(filename);
 
 		if (output_file.is_open()) {
 			int count = 0;
 			for (const auto& [key, value] : entries) {
-				output_file << entry_to_str(key, value) << std::endl;;
+				output_file << entry_to_str(key, value) << std::endl;
 				count++;
 			}
 			std::cout << "OK " << count << std::endl;
+			output_file.close();
 
 		} else {
 			throw std::ios_base::failure("Failed to open file: " + filename);

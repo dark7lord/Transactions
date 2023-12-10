@@ -8,6 +8,7 @@
 #include <ctime>
 #include <stdexcept>
 #include <map>
+#include <set>
 #include "../s21_i_key_value_storage/s21_i_key_value_storage.h"
 
 using std::string;
@@ -18,15 +19,15 @@ namespace s21 {
 	class SelfBalancingBinarySearchTree : public IKeyValueStorage {
 	private:
 		AVL_Node*			_root;
+		std::set<AVL_Node*>	_nodes_with_TTL;
 		map<Key, Value>		get_entries(void) const;
+		void				check_nodes_with_TTL(void) const;
 
 	public:
 		SelfBalancingBinarySearchTree() : _root(nullptr) {}
 		~SelfBalancingBinarySearchTree() { if (_root) delete _root; }
 		// SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&) = default;
 		// SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&&) = default;
-
-		void 				printTree(AVL_Node* root, int level = 0);
 
 		/* * * * * * * * * * * * * * *   Methods  * * * * * * * * * * * * * * */
 
@@ -42,8 +43,8 @@ namespace s21 {
 
 		// TODO: the lines below have no tests
 		void 				save(const std::string&) const override;
-		std::vector<Value>	showall() const noexcept override;
-		void				print_tree();
+		std::vector<Value>	showall(void) const noexcept override;
+		void				print_tree(void);
 	};
 
 }
