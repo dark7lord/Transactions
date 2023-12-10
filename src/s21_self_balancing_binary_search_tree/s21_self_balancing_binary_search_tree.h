@@ -1,12 +1,12 @@
-#ifndef SELF_BALANCING_BINARY_SEARCH_TREE
-#define SELF_BALANCING_BINARY_SEARCH_TREE
+#ifndef S21_SELF_BALANCING_BINARY_SEARCH_TREE
+#define S21_SELF_BALANCING_BINARY_SEARCH_TREE
 #include "inc/AVL_Node.h"
 #include <string>
 #include <iostream>
 #include "../s21_i_key_value_storage/s21_i_key_value_storage.h"
 
 namespace s21 {
-	class SelfBalancingBinarySearchTree : IKeyValueStorage {
+	class SelfBalancingBinarySearchTree : public IKeyValueStorage {
 	private:
 		AVL_Node* _root;
 
@@ -53,6 +53,6 @@ namespace s21 {
 
 	};
 
-}
+} // namespace s21
 
-#endif
+#endif // S21_SELF_BALANCING_BINARY_SEARCH_TREE
