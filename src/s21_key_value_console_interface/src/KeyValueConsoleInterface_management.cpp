@@ -34,12 +34,25 @@ void KeyValueConsoleInterface::set_(const std::vector<std::string>& tokens) noex
 	if (tokens.size() == 9 && tokens[7] != "EX") {
 		std::cout << RED << "> ERROR: 'EX' expected on position 7" << NONE << std::endl;
 		return;
-	} // TODO empty values check
+	}
+	for (const std::string& token : tokens) {
+		if (token == "") {
+			std::cout << RED << KeyValueConsoleInterface::EMPTY_TOKEN << NONE << std::endl;
+			return;
+		}
+	}
 	try {
 		if (tokens.size() == 9) {
 			time = std::stoi(tokens[8]);
 		}
-		storage_ -> set(tokens[1], { "Ivanov", "Ivan", "2020", "Rostov", "55" }, time);
+		storage_ -> set(
+				tokens[1],
+				Value::parse_value(tokens[2],
+								   tokens[3],
+								   tokens[4],
+								   tokens[5],
+								   tokens[6]),
+				time);
 		std::cout << GREY << "> OK" << NONE << std::endl;
     } catch (std::exception& e) {
     	std::cout << RED << "> ERROR: " << e.what() << NONE << std::endl;

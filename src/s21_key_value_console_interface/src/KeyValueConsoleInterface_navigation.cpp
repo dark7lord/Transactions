@@ -121,6 +121,14 @@ namespace s21 {
 		if (tokens[0] == "EXIT") {
 			return KeyValueConsoleInterface::exit_(tokens);
 		}
+		if (tokens[0] == "GOPAL") {
+			std::cout << GREY << "I am Groot!" << NONE << std::endl;
+			return;
+		}
+		if (tokens[0] == "DEDELMIR") {
+			std::cout << GREY << "Drink a cup of tea. Right now!" << NONE << std::endl;
+			return;
+		}
 		std::cout << RED << "> ERROR: command " << tokens[0] <<
 			" is not defined. Type MENU to see help" << NONE << std::endl;
 	}

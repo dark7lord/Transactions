@@ -92,11 +92,11 @@ namespace s21 {
 		const std::string& number_coins
 	) {
 		if (!is_non_negative_integer(birth_year)) {
-			throw std::invalid_argument("Invalid birth year \"" + birth_year + "\"");
+			throw std::invalid_argument("unable to cast value \"" + birth_year + "\" to type uint");
 		}
 
 		if (!is_non_negative_integer(number_coins)) {
-			throw std::invalid_argument("Invalid coins number \"" + number_coins + "\"");
+			throw std::invalid_argument("unable to cast value \"" + number_coins + "\" to type uint");
 		}
 
 		// if (!isLettersOnly(first_name)) {
