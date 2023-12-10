@@ -1,31 +1,12 @@
 #include <gtest/gtest.h>
 #include "../s21_self_balancing_binary_search_tree.h"
-
-// class node
-// Тут можно разрешить методы get_root,get_left и get_right
-// и дополнить декораторами вывода
-// namespace s21 {
-// 	class BinTree : public SelfBalancingBinarySearchTree {
-
-// 	}
-
-// }
-// namespace Decorator {
-// 	template<typename Function>
-// 	static auto make(Function&& func) {
-// 		return[func = std::forward<Function>(func)](auto&&... args)
-// 		{
-// 			std::cout << "Do something" << std::endl;
-// 			return std::invoke(func, std::forward<decltype(args)>(args)...);
-// 		};
-// 	}
-// }
-
+#include <iostream>
+#include <fstream>
+#include <string>
 
 TEST(SelfBalancingBinarySearchTree, set) {
-	// s21::SelfBalancingBinarySearchTree tree;
-	// tree.set("Alice", (s21::Value) { "Alice", "Wonder", "1996", "Paris", "0" }, -1);
-
+	s21::SelfBalancingBinarySearchTree tree;
+	tree.set("Alice", (s21::Value) { "Alice", "Wonder", "1996", "Paris", "0" }, -1);
 	// test nullptr
 	// test TimiLimit t
 	// test same key
@@ -51,6 +32,7 @@ TEST(SelfBalancingBinarySearchTree, exists) {
 	ASSERT_EQ(tree.exists("Random Key"), false);
 	ASSERT_EQ(tree.exists("Alice"), true);
 }
+
 
 TEST(SelfBalancingBinarySearchTree, del) {
 	// TODO: нужно проверить что значения верные у корня взамен value
@@ -132,6 +114,8 @@ TEST(SelfBalancingBinarySearchTree, keys) {
 	ASSERT_EQ( result, vector_expected);
 }
 
+
+
 TEST(SelfBalancingBinarySearchTree, rename) {
 	s21::SelfBalancingBinarySearchTree tree;
 	s21::Value don = { "Donatello", "Tech Genius", "1997", "New York", "100" };
@@ -142,4 +126,133 @@ TEST(SelfBalancingBinarySearchTree, rename) {
 
 	auto result = *(tree.get( "Donatello"));
 	ASSERT_EQ(result, don);
+}
+
+
+TEST(SelfBalancingBinarySearchTree, save) {
+	s21::SelfBalancingBinarySearchTree tree;
+
+	s21::Value value1 = { "Naruto", "Uzumaki", "1999", "Konoha", "15" };
+	s21::Value value2 = { "Haruno", "Sakura", "1998", "Konoha", "60" };
+	s21::Value value3 = { "Nara", "Shikamaru", "1997", "Konoha", "80" };
+
+	tree.set("Naruto", value1);
+	tree.set("Sakura", value2);
+	tree.set("Shikamaru", value3);
+
+	// Save the tree to a file
+	const std::string filename = "test_files/file_for_export.1";
+
+	try {
+		tree.save(filename);
+		std::cout << "File saved successfully." << std::endl;
+	} catch (const std::exception& e) {
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		FAIL();  // Mark the test as failed
+	}
+
+	// Verify that the file was created
+	std::ifstream input_file(filename);
+	ASSERT_TRUE(input_file.good());
+
+	// Add more assertions as needed...
+}
+
+TEST(SelfBalancingBinarySearchTree, showall) {
+	s21::SelfBalancingBinarySearchTree tree;
+
+	s21::Value value1 = { "Naruto", "Uzumaki", "1999", "Konoha", "15" };
+	s21::Value value2 = { "Haruno", "Sakura", "1998", "Konoha", "60" };
+	s21::Value value3 = { "Nara", "Shikamaru", "1997", "Konoha", "80" };
+
+	tree.set("Naruto", value1);
+	tree.set("Sakura", value2);
+	tree.set("Shikamaru", value3);
+
+	std::vector<s21::Value> all_values = tree.showall();
+	ASSERT_EQ(all_values.size(), 3);
+}
+
+TEST(SelfBalancingBinarySearchTree, ttl) {
+	s21::SelfBalancingBinarySearchTree tree;
+	s21::Value value = { "Minato", "Hokage", "2001", "Konoha", "500" };
+
+	tree.set("immortal", value);
+	tree.set("has time", value, 5);
+	tree.set("dead", value, 1);
+
+	std::cout << "...Waiting sleeping... 2s" << std::endl;
+	sleep(2);
+
+	ASSERT_EQ(tree.ttl("immortal"), -1);
+	ASSERT_EQ(tree.ttl("has time"), 3);
+	ASSERT_EQ(tree.ttl("dead"), 0);
+}
+
+// TEST(SelfBalancingBinarySearchTree, upload) {
+//     s21::SelfBalancingBinarySearchTree tree;
+
+//     // Attempt to upload from a non-existent file
+//     const std::string filename = "test_files/file_for_import.dat";
+
+//     try {
+//         tree.upload(filename);
+//         std::cout << "File uploaded successfully." << std::endl;
+//     } catch (const std::exception& e) {
+//         std::cerr << "Exception caught: " << e.what() << std::endl;
+//         FAIL();  // Mark the test as failed
+//     }
+
+//     // Add more assertions as needed...
+// }
+
+class FileManager {
+public:
+    void createFile(const std::string& filename, const std::string& content) {
+        std::ofstream file(filename);
+        if (file.is_open()) {
+            file << content;
+            file.close();
+        } else {
+            std::cerr << "Failed to create file: " << filename << std::endl;
+        }
+    }
+
+    std::string readFile(const std::string& filename) {
+        std::ifstream file(filename);
+        std::string content;
+
+        if (file.is_open()) {
+            std::getline(file, content);
+            file.close();
+        } else {
+            std::cerr << "Failed to open file: " << filename << std::endl;
+        }
+
+        return content;
+    }
+};
+
+TEST(FileManagerTest, CreateAndReadFile) {
+    FileManager fileManager;
+
+    // Временное имя файла для теста
+    const std::string filename = "test_file.txt";
+
+    // Содержимое, которое мы хотим записать в файл
+    const std::string content = "Hello, World!";
+
+    // Создаем файл
+    fileManager.createFile(filename, content);
+
+    // Читаем содержимое файла
+    std::string readContent = fileManager.readFile(filename);
+
+    // Проверяем, что содержимое файла совпадает с ожидаемым
+    EXPECT_EQ(content, readContent);
+}
+
+int main(int argc, char *argv[]) {
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }

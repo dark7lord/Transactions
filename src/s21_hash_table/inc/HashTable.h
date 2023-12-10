@@ -9,7 +9,7 @@ namespace s21 {
 
 	typedef std::size_t HashCode;
 
-	class HashTable : IKeyValueStorage {
+	class HashTable : public IKeyValueStorage {
 	public:
 
 		/* HashTable. Defined in HashTable_core.cpp */
@@ -33,10 +33,6 @@ namespace s21 {
 		std::vector<Value>	showall(void) const noexcept override;
 		void				upload(const std::string& filename) override;
 		void				save(const std::string& filename) const override;
-
-		/* Exceptions. Defined in Exceptions.cpp. */
-		struct HashTableException;
-		struct KeyException;
 
 	private:
 

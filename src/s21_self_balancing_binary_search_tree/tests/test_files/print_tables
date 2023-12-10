@@ -1,0 +1,43 @@
+	// void print_values(const std::vector<Value>& values) {
+	// 	const int padding = 2;
+
+	// 	int max_index_width = 1;
+	// 	int max_last_name_width = 0;
+	// 	int max_first_name_width = 0;
+	// 	int max_birth_year_width = 4;  // Исходно установим для года
+	// 	int max_city_width = 0;
+	// 	int max_coins_number_width = 18;  // Исходно установим для количества коинов
+
+	// 	int i = 1;
+	// 	for (const auto& value : values) {
+	// 		max_index_width = std::max(max_index_width, static_cast<int>(std::to_string(i++).length()));
+	// 		max_last_name_width = std::max(max_last_name_width, static_cast<int>(value.last_name.length()));
+	// 		max_first_name_width = std::max(max_first_name_width, static_cast<int>(value.first_name.length()));
+	// 		max_birth_year_width = std::max(max_birth_year_width, static_cast<int>(value.birth_year.length()));
+	// 		max_city_width = std::max(max_city_width, static_cast<int>(value.city.length()));
+	// 		max_coins_number_width = std::max(max_coins_number_width, static_cast<int>(value.coins_number.length()));
+	// 	}
+
+	// 	std::cout
+	// 		<< std::left
+	// 		<< std::setw(max_index_width + padding)			<< "№"
+	// 		<< std::setw(max_last_name_width + padding + 2)		<< "Last name"
+	// 		<< std::setw(max_first_name_width + padding + 2)	<< "First name"
+	// 		<< std::setw(max_birth_year_width + padding)	<< "Year"
+	// 		<< std::setw(max_city_width + padding + 2)			<< "City"
+	// 		<< std::setw(max_coins_number_width + padding)	<< "Number of coins"
+	// 		<< std::endl;
+
+	// 	int count = 1;
+	// 	for (const auto& value : values) {
+	// 		std::cout
+
+	// 			<< std::left << std::setw(max_index_width + padding)			<< count++
+	// 			<< std::setw(max_last_name_width + padding + 2)		<< "\"" + value.last_name + "\""
+	// 			<< std::setw(max_first_name_width + padding + 2)	<< "\"" + value.first_name + "\""
+	// 			<< std::setw(max_birth_year_width + padding)	<< value.birth_year
+	// 			<< std::setw(max_city_width + padding + 2)			<< "\"" + value.city + "\""
+	// 			 << std::setw(max_coins_number_width + padding)	<< value.coins_number
+	// 			<< std::endl;
+	// 	}
+	// }

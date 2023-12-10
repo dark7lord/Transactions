@@ -1,9 +1,13 @@
-#ifndef KEY_VALUE_STORAGE
-#define KEY_VALUE_STORAGE
+#ifndef S21_KEY_VALUE_STORAGE
+#define S21_KEY_VALUE_STORAGE
 
 #include <string>
 #include <stdbool.h>
 #include <vector>
+#include "stdio.h"
+#include <sstream>
+#include <iomanip>
+#include <fstream>
 
 namespace s21 {
 
@@ -14,7 +18,7 @@ namespace s21 {
 		// Value& operator=(Value&) = default;
 		// Value& operator=(Value&&) = default;
 		// ~Value() = default;
-		// explicit Value(std::string); // парсер
+		// explicit Value(std::string); // парсер // except
 
 		std::string	last_name; // только буквы или одно -
 		std::string	first_name; // только буквы или одно -
@@ -24,6 +28,16 @@ namespace s21 {
 
 		std::string& operator[](const std::string& key);
 		const std::string& operator[](const std::string& key) const;
+
+		static Value str_to_value(const std::string&, std::string* = nullptr);
+		// static Value& Value::validate_str_value(
+		static Value parse_value(
+			const std::string& first_name,
+			const std::string& last_name,
+			const std::string& birth_year,
+			const std::string& city,
+			const std::string& coins_number
+		);
 	};
 
 	bool operator==(const Value&, const Value&); // return true if one of the values is -
@@ -36,20 +50,34 @@ namespace s21 {
 
 	class IKeyValueStorage {
 	public:
-		virtual void				set(const Key&, const Value&, TimeLimit) = 0;
+		virtual void				set(const Key&, const Value&, TimeLimit = -1) = 0;
 		virtual const Value*		get(const Key&) const noexcept = 0;
 		virtual bool				exists(const Key&) const noexcept = 0;
 		virtual bool				del(const Key&) noexcept = 0;
 		virtual void				update(const Key&, const Value&) = 0;
-		virtual std::vector<Key>	keys() const noexcept= 0;
+		virtual std::vector<Key>	keys() const noexcept = 0;
 		virtual void				rename(const Key&, const Key&) = 0;
 		virtual TimeLimit			ttl(const Key&) const noexcept = 0;
 		virtual std::vector<Key>	find(const Value&) const noexcept = 0;
 		virtual std::vector<Value>	showall() const noexcept = 0;
-		virtual void				upload(const std::string&) = 0;
+		virtual void				upload(const std::string&);
 		virtual void				save(const std::string&) const = 0;
+
+		virtual ~IKeyValueStorage() = default;
+
+		struct KeyValueStorageException : std::runtime_error {
+			explicit KeyValueStorageException(const std::string &arg);
+		};
+
+		struct KeyExistsException : KeyValueStorageException {
+			explicit KeyExistsException();
+		};
+
+		struct KeyNotExistsException : KeyValueStorageException {
+			explicit KeyNotExistsException();
+		};
 	};
 
-}
+} // namespace s21
 
-#endif
+#endif // S21_KEY_VALUE_STORAGE

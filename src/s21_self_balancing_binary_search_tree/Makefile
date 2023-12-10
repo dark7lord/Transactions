@@ -15,7 +15,7 @@ SRC_FILES		:= s21_self_balancing_binary_search_tree.cpp AVL_Node.cpp
 OBJ_FILES		:= $(SRC_FILES:.cpp=.o)
 INC_FILES		:= AVL_Node.h
 HEADER			:= s21_self_balancing_binary_search_tree.h
-TEST_FILES		:= bin_tree.test.cpp test.cpp
+TEST_FILES		:= run_tests.cpp
 TEST_EXE		:= bst.exe
 EXT_LIB			:= s21_i_key_value_storage.a
 
@@ -24,7 +24,7 @@ OBJ				:= $(addprefix $(OBJ_DIR), $(OBJ_FILES))
 INC				:= $(addprefix $(INC_DIR), $(INC_FILES)) $(HEADER)
 TEST			:= $(addprefix $(TEST_DIR), $(TEST_FILES))
 
-.PHONY: all clean fclean re tests
+.PHONY: all clean fclean re tests run_test
 
 all : $(EXT_DIR)$(EXT_LIB) $(NAME) $()
 
@@ -40,9 +40,9 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC) $(EXT_DIR)$(EXT_LIB)
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 tests: all
-	$(CC) $(CCFLAGS) $(TEST) $(NAME) -o $(TEST_DIR)$(TEST_EXE) $(LDFLAGS)
+	@$(CC) $(CCFLAGS) $(TEST) $(NAME) -o $(TEST_DIR)$(TEST_EXE) $(LDFLAGS)
 	./$(TEST_DIR)$(TEST_EXE)
-	#leaks -atExit -- ./$(TEST_DIR)$(TEST_EXE)
+#	leaks -atExit -- ./$(TEST_DIR)$(TEST_EXE)
 	rm $(TEST_DIR)$(TEST_EXE)
 
 clean:
@@ -55,4 +55,10 @@ fclean: clean
 	@cd $(EXT_DIR) && make fclean
 	@echo Full cleaning success!
 
-re: fclean all
+re: fclean $(FULL_NAME) all $(TARGET_TEST)
+
+
+# clang_n:
+# 	clang-format -style=Google -n *.c *.h
+# clang_i:
+# 	clang-format -style=Google -i *.c *.h
