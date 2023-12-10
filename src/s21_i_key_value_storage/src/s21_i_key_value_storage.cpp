@@ -1,6 +1,7 @@
 #include "../s21_i_key_value_storage.h"
 #include <iostream>
 #include <regex>
+#include <map>
 
 namespace s21 {
 
@@ -185,6 +186,12 @@ namespace s21 {
 			set(key, value);
 		}
 	}
+
+	IKeyValueStorage::KeyValueStorageException::KeyValueStorageException(const std::string &arg) : std::runtime_error(arg) {}
+
+	IKeyValueStorage::KeyExistsException::KeyExistsException() : IKeyValueStorage::KeyValueStorageException("the key already exists") {}
+
+	IKeyValueStorage::KeyNotExistsException::KeyNotExistsException() : IKeyValueStorage::KeyValueStorageException("the key does not exists") {}
 
 } // end of namespace s21
 

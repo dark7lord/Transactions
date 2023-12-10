@@ -37,8 +37,8 @@ namespace s21 {
 		KeyValueConsoleInterface &operator=(KeyValueConsoleInterface&& other) = delete;
 		~KeyValueConsoleInterface() = delete;
 
-		friend void tokenize_(const std::string& user_input, std::vector<std::string>& out) noexcept;
-		friend bool validateTokens_(const std::vector<std::string>&, std::size_t) noexcept;
+		static void tokenize_(const std::string& user_input, std::vector<std::string>& out) noexcept;
+		static bool validateTokens_(const std::vector<std::string>&, std::size_t) noexcept;
 
 		static void menu_(const std::vector<std::string>&) noexcept;
 		static void	files_(const std::vector<std::string>&) noexcept;

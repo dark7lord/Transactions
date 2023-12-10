@@ -64,6 +64,18 @@ namespace s21 {
 		virtual void				save(const std::string&) const = 0;
 
 		virtual ~IKeyValueStorage() = default;
+
+		struct KeyValueStorageException : std::runtime_error {
+			explicit KeyValueStorageException(const std::string &arg);
+		};
+
+		struct KeyExistsException : KeyValueStorageException {
+			explicit KeyExistsException();
+		};
+
+		struct KeyNotExistsException : KeyValueStorageException {
+			explicit KeyNotExistsException();
+		};
 	};
 
 } // namespace s21

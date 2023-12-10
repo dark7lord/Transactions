@@ -34,10 +34,6 @@ namespace s21 {
 		void				upload(const std::string& filename) override;
 		void				save(const std::string& filename) const override;
 
-		/* Exceptions. Defined in Exceptions.cpp. */
-		struct HashTableException;
-		struct KeyException;
-
 	private:
 
 		/* HashTable configurations. Defined in HashTable_core.cpp. */

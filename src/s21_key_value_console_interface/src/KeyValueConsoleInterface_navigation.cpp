@@ -8,15 +8,15 @@ static const std::string WELCOME_MESSAGE = ""
 
 static const std::string START_MENU_MESSAGE = "\n"
 	"Now you have the next opportunities:\n"
-	"	HASHTABLE: choose the fresh  hashtable to use in next actions.\n"
-	"	BINARYTREE: choose the fresh binary tree to use in next actions.\n"
+	"	HASHTABLE (HT): choose the fresh  hashtable to use in next actions.\n"
+	"	BINARYTREE (BT): choose the fresh binary tree to use in next actions.\n"
 	"	EXIT: exit program.\n\n"
 	"You need to choose one and type the command:";
 
 static const std::string MENU_MESSAGE = "\n"
 	"Now you have the next opportunities:\n"
-	"	HASHTABLE: choose the fresh hashtable to use in next actions.\n"
-	"	BINARYTREE: choose the fresh binary tree to use in next actions.\n"
+	"	HASHTABLE (HT): choose the fresh hashtable to use in next actions.\n"
+	"	BINARYTREE (BT): choose the fresh binary tree to use in next actions.\n"
 	"	FILES: show the list of available files with with saved storages.\n"
 	"	UPLOAD <filename>: load the storage from a .dat file.\n"
 	"	SHOWALL: get all records that are in the key-value storage at the moment.\n"
@@ -48,6 +48,9 @@ static const std::string MENU_MESSAGE = "\n"
 static void runArrows() noexcept;
 
 namespace s21 {
+
+	bool KeyValueConsoleInterface::on_exit_ = false;
+	bool KeyValueConsoleInterface::show_menu_ = true;
 
 	void startMenu() noexcept;
 	void menu() noexcept;
@@ -109,10 +112,10 @@ namespace s21 {
 		if (tokens.size() == 0) {
 			return;
 		}
-		if (tokens[0] == "HASHTABLE") {
+		if (tokens[0] == "HASHTABLE" || tokens[0] == "HT") {
 			return KeyValueConsoleInterface::hashTable_(tokens);
 		}
-		if (tokens[0] == "BINARYTREE") {
+		if (tokens[0] == "BINARYTREE" || tokens[0] == "BT") {
 			return KeyValueConsoleInterface::binaryTree_(tokens);
 		}
 		if (tokens[0] == "EXIT") {
@@ -130,10 +133,10 @@ namespace s21 {
 		if (tokens.size() == 0) {
 			return;
 		}
-		if (tokens[0] == "HASHTABLE") {
+		if (tokens[0] == "HASHTABLE" || tokens[0] == "HT") {
 			return KeyValueConsoleInterface::hashTable_(tokens);
 		}
-		if (tokens[0] == "BINARYTREE") {
+		if (tokens[0] == "BINARYTREE" || tokens[0] == "BT") {
 			return KeyValueConsoleInterface::binaryTree_(tokens);
 		}
 		if (tokens[0] == "FILES") {

@@ -34,7 +34,7 @@ void KeyValueConsoleInterface::set_(const std::vector<std::string>& tokens) noex
 	if (tokens.size() == 9 && tokens[7] != "EX") {
 		std::cout << RED << "> ERROR: 'EX' expected on position 7" << NONE << std::endl;
 		return;
-	}
+	} // TODO empty values check
 	try {
 		if (tokens.size() == 9) {
 			time = std::stoi(tokens[8]);
@@ -64,7 +64,7 @@ void KeyValueConsoleInterface::del_(const std::vector<std::string>& tokens) noex
 	if (validateTokens_(tokens, 2)) {
 		return;
 	}
-	std::cout << GREY << "> " << storage_ -> del(tokens[1]) << NONE << std::endl;
+	std::cout << GREY << "> " << std::boolalpha << storage_ -> del(tokens[1]) << NONE << std::endl;
 }
 
 void KeyValueConsoleInterface::update_(const std::vector<std::string>& tokens) noexcept {

@@ -11,8 +11,8 @@ TEST_DIR	 = tests/
 EXT_DIR		 = ../s21_i_key_value_storage/
 EXT_OBJ_DIR  = $(EXT_DIR)obj/
 
-SRC_FILES    = HashTable_core.cpp HashTable.cpp Exceptions.cpp utils.cpp
-INC_FILES    = HashTable.h Exceptions.h
+SRC_FILES    = HashTable_core.cpp HashTable.cpp utils.cpp
+INC_FILES    = HashTable.h
 HEADER		 = s21_hash_table.h
 TEST_FILES   = base_functional_unit_tests.cpp core_unit_tests.cpp run_tests.cpp
 TEST_EXE	 = run_tests

@@ -14,7 +14,7 @@ namespace s21 {
         std::cout << "Set New node - key " << key << std::endl;
         auto place_to_insert = first_bigger_or_equal_hash(hash, bucket);
 		if (check_key_exists(key, hash, bucket, place_to_insert)) {
-			throw HashTable::KeyException("The key already exists");
+			throw IKeyValueStorage::KeyExistsException();
 		}
 		bucket.insert(place_to_insert, HashTable::Node({hash, key, val, time}));
         currentLoadCount_++;
@@ -78,7 +78,7 @@ namespace s21 {
 		if (check_key_exists(key, hash, (*table_)[index], first)) {
 			first -> val = val;
 		} else {
-			throw HashTable::KeyException("The key does not exist");
+			throw IKeyValueStorage::KeyNotExistsException();
 		}
 	}
 

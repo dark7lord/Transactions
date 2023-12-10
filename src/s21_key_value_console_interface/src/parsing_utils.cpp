@@ -7,7 +7,7 @@ namespace s21 {
 	const std::string KeyValueConsoleInterface::ARGUMENTS_NUMBER = "> ERROR: invalid number of arguments";
 	const std::string KeyValueConsoleInterface::EMPTY_TOKEN = "> ERROR: empty tokens are not expected";
 
-	void tokenize_(const std::string& user_input, std::vector<std::string>& out) noexcept {
+	void KeyValueConsoleInterface::tokenize_(const std::string& user_input, std::vector<std::string>& out) noexcept {
 		std::stringstream	ss(user_input);
 		std::string			token;
 
@@ -16,7 +16,7 @@ namespace s21 {
 		}
 	}
 
-	bool validateTokens_(const std::vector<std::string>& tokens, std::size_t expected_number) noexcept {
+	bool KeyValueConsoleInterface::validateTokens_(const std::vector<std::string>& tokens, std::size_t expected_number) noexcept {
 		if (tokens.size() != expected_number) {
 			std::cout << RED << KeyValueConsoleInterface::ARGUMENTS_NUMBER << ": " << tokens.size() << NONE << std::endl;
 			return true;
