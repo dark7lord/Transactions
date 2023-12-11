@@ -20,7 +20,6 @@ namespace s21 {
 	private:
 		AVL_Node*			_root;
 		std::set<AVL_Node*>	_nodes_with_TTL;
-		map<Key, Value>		get_entries(void) const;
 		void				check_nodes_with_TTL(void) const;
 
 	public:

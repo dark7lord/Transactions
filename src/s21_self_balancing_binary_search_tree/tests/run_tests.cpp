@@ -42,7 +42,8 @@ TEST(SelfBalancingBinarySearchTree, del) {
 	ASSERT_EQ(tree.del("April"), false);
 	tree.set("April", value);
 	ASSERT_EQ(tree.exists("April"), true);
-	tree.del("April");
+	EXPECT_TRUE(tree.del("April"));
+
 	ASSERT_EQ(tree.exists("April"), false);
 }
 

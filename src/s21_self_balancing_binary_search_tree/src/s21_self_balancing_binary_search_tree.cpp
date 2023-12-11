@@ -63,7 +63,7 @@ namespace s21 {
 		check_nodes_with_TTL();
 		Node* node = find_node(_root, key);
 
-		if (!node) throw std::out_of_range("Key not found");
+		if (!node) throw IKeyValueStorage::KeyNotExistsException();
 		Value& old_value = node -> value;
 
 		const auto& fields = {
@@ -109,10 +109,10 @@ namespace s21 {
 	void Tree::rename(const Key& old_key, const Key& new_key) {
 		check_nodes_with_TTL();
 		Node* old_node = find_node(_root, old_key);
-		if (!old_node) throw std::out_of_range("Key not found");
+		if (!old_node) throw IKeyValueStorage::KeyNotExistsException();
 
 		Node* new_node = find_node(_root, new_key);
-		if (new_node) throw std::out_of_range("The key " + new_key + " already exists");
+		if (new_node) throw IKeyValueStorage::KeyExistsException();
 
 		Value&& value = std::move(old_node -> value);
 		_root = delete_node(_root, old_key);
@@ -178,29 +178,19 @@ namespace s21 {
 		return oss.str();
 	}
 
-	std::map<Key, Value> Tree::get_entries(void) const {
-		std::map<Key, Value> entries;
-
-		auto collect_entries = [&entries](Node* node) {
-			entries.insert({ node -> key, node -> value });
-		};
-		traverse_tree(_root, collect_entries);
-
-		return entries;
-	}
-
 	void Tree::save(const std::string& filename) const {
 		check_nodes_with_TTL();
-		std::map<Key, Value> entries = get_entries();
 		std::ofstream output_file(filename);
 
 		if (output_file.is_open()) {
 			int count = 0;
-			for (const auto& [key, value] : entries) {
-				output_file << entry_to_str(key, value) << std::endl;
-				count++;
-			}
-			std::cout << "OK " << count << std::endl;
+
+			auto collect_entries = [&output_file, &count](Node* node) {
+				output_file << entry_to_str(node -> key, node -> value) << std::endl;
+				count += 1;
+			};
+			traverse_tree(_root, collect_entries);
+
 			output_file.close();
 
 		} else {
