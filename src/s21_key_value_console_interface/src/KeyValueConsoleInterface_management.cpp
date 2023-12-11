@@ -85,7 +85,13 @@ void KeyValueConsoleInterface::update_(const std::vector<std::string>& tokens) n
 		return;
 	}
 	try {
-		storage_ -> update(tokens[1], { "Ivanov", "Ivan", "2020", "Rostov", "55" }); // TODO
+		storage_ -> update(
+			tokens[1],
+			Value::parse_value(tokens[2],
+							   tokens[3],
+							   tokens[4],
+							   tokens[5],
+							   tokens[6]));
 		std::cout << GREY << "> OK" << NONE << std::endl;
 	} catch (std::exception& e) {
 		std::cout << RED << "> ERROR: " << e.what() << NONE << std::endl;
@@ -97,9 +103,11 @@ void KeyValueConsoleInterface::keys_(const std::vector<std::string>& tokens) noe
 		return;
 	}
 	std::vector<Key> keys = storage_ -> keys();
-	std::cout << GREY << "KEYS" << NONE << std::endl;
+	if (keys.size() == 0) {
+		std::cout << GREY << "> Storage is empty" << NONE << std::endl;
+	}
 	for (std::size_t i = 0; i < keys.size(); i++) {
-		std::cout << GREY << i << ") " << keys[i] << NONE << std::endl;
+		std::cout << GREY << i + 1 << ") " << keys[i] << NONE << std::endl;
 	}
 }
 
@@ -119,16 +127,31 @@ void KeyValueConsoleInterface::ttl_(const std::vector<std::string>& tokens) noex
 	if (validateTokens_(tokens, 2)) {
 		return;
 	}
-	std::cout << "> " << storage_ -> ttl(tokens[1]) << std::endl;
+	TimeLimit tl = storage_ -> ttl(tokens[1]);
+	if (tl > 0) {
+		std::cout << GREY << "> " << tl << NONE << std::endl;
+	} else {
+		std::cout << GREY << "> (null)" << NONE << std::endl;
+	}
+
 }
 
 void KeyValueConsoleInterface::find_(const std::vector<std::string>& tokens) noexcept {
 	if (validateTokens_(tokens, 6)) {
 		return;
 	}
-	std::vector<Key> keys = storage_ -> find({ "Ivanov", "Ivan", "2020", "Rostov", "55" }); // TODO
+	std::vector<Key> keys = storage_ -> find({
+			tokens[1],
+			tokens[2],
+			tokens[3],
+			tokens[4],
+			tokens[5]});
+	if (keys.size() == 0) {
+		std::cout << GREY << "> No matches found" << NONE << std::endl;
+		return;
+	}
 	for (std::size_t i = 0; i < keys.size(); i++) {
-		std::cout << GREY << i << ") " << keys[i] << NONE << std::endl;
+		std::cout << GREY << i + 1 << ") " << keys[i] << NONE << std::endl;
 	}
 }
 
@@ -144,7 +167,7 @@ void KeyValueConsoleInterface::showall_(const std::vector<std::string>& tokens) 
 
 	std::vector<Value> vals = storage_ -> showall();
 	if (vals.size() == 0) {
-		std::cout << GREY << "Storage is empty" << NONE << std::endl;
+		std::cout << GREY << "> Storage is empty" << NONE << std::endl;
 		return;
 	}
 

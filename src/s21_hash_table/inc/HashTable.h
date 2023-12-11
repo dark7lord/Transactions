@@ -4,6 +4,7 @@
 #include "../../s21_i_key_value_storage/s21_i_key_value_storage.h"
 #include <list>
 #include <iostream>
+#include <ctime>
 
 namespace s21 {
 
@@ -22,17 +23,17 @@ namespace s21 {
 
 		/* HashTable base functional. Defined in HashTable.cpp */
 		void				set(const Key&, const Value&, TimeLimit=-1) override;
-		const Value*		get(const Key&) const noexcept override;
-		bool				exists(const Key&) const noexcept override;
+		const Value*		get(const Key&) noexcept override;
+		bool				exists(const Key&) noexcept override;
 		bool				del(const Key&) noexcept override;
 		void				update(const Key&, const Value&) override;
-		std::vector<Key>	keys() const noexcept override;
+		std::vector<Key>	keys() noexcept override;
 		void				rename(const Key&, const Key&) override;
-		TimeLimit			ttl(const Key&) const noexcept override;
-		std::vector<Key>	find(const Value&) const noexcept override;
-		std::vector<Value>	showall(void) const noexcept override;
+		TimeLimit			ttl(const Key&) noexcept override;
+		std::vector<Key>	find(const Value&) noexcept override;
+		std::vector<Value>	showall(void) noexcept override;
 		void				upload(const std::string& filename) override;
-		void				save(const std::string& filename) const override;
+		void				save(const std::string& filename) override;
 
 	private:
 
@@ -48,7 +49,10 @@ namespace s21 {
 			HashCode    hash;
 			Key			key;
 			Value		val;
-			TimeLimit   time;
+			TimeLimit	time_limit;
+			std::time_t	set_time;
+
+			bool is_expired() noexcept;
 		};
 
 		/* HashTable private fields. Mechanism of nodes storage. Defined in HashTable_core.cpp. */
@@ -61,14 +65,14 @@ namespace s21 {
 		void        		increaseTable_();
 
 		/* Utility functions. Defined in utils.cpp. */
-		friend std::list<Node>::iterator
-		first_bigger_or_equal_hash(const HashCode& hash,
-								   std::list<Node>& lst) noexcept;
-		friend bool
-		check_key_exists(const Key& key,
-						 const HashCode& hash,
-						 const std::list<Node>& lst,
-						 std::list<Node>::iterator& first) noexcept;
+		std::list<Node>::iterator static
+		first_bigger_or_equal_hash_(const HashCode& hash,
+								    std::list<Node>& lst) noexcept;
+		bool
+		check_key_exists_(const Key& key,
+						  const HashCode& hash,
+						  std::list<Node>& lst,
+						  std::list<Node>::iterator& first) noexcept;
 
 	};
 

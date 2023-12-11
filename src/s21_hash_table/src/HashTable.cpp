@@ -6,17 +6,22 @@ namespace s21 {
 	Save new node in appropriate bucket in sorted by hash order.
 	Exception: the key already exists.
 	*/
-    void HashTable::set(const Key& key, const Value& val, TimeLimit time) {
+    void HashTable::set(const Key& key, const Value& val, TimeLimit time_limit) {
         HashCode    		hash = hashCode_(key);
         std::size_t			index = indexFor_(hash);
         std::list<Node>&	bucket = (*table_)[index];
 
         std::cout << "Set New node - key " << key << std::endl;
-        auto place_to_insert = first_bigger_or_equal_hash(hash, bucket);
-		if (check_key_exists(key, hash, bucket, place_to_insert)) {
+        auto place_to_insert = first_bigger_or_equal_hash_(hash, bucket);
+		if (check_key_exists_(key, hash, bucket, place_to_insert)) {
 			throw IKeyValueStorage::KeyExistsException();
 		}
-		bucket.insert(place_to_insert, HashTable::Node({hash, key, val, time}));
+		if (time_limit == 0) {
+			return;
+		}
+		bucket.insert(
+			place_to_insert,
+			HashTable::Node({hash, key, val, time_limit, std::time(nullptr)}));
         currentLoadCount_++;
         if (HashTable::currentLoadFactor_() >= initialLoadFactor_) {
             HashTable::increaseTable_();
@@ -28,31 +33,26 @@ namespace s21 {
 	/*
 	Get pointer to Value under certain key. Returns nullptr if key does not exist.
 	*/
-    const Value* HashTable::get(const Key& key) const noexcept {
+    const Value* HashTable::get(const Key& key) noexcept {
         HashCode    hash = hashCode_(key);
         std::size_t index = indexFor_(hash);
-        auto		first = (*table_)[index].begin();
-        auto		last = (*table_)[index].end();
+        auto		first = first_bigger_or_equal_hash_(hash, (*table_)[index]);
 
-        while (first != last && first -> hash <= hash) {
-            if (hash == first -> hash && key == first -> key) {
-				// Если истек удалить и вернуть null
-                return &(first -> val);
-            }
-            first++;
-        }
-        return nullptr;
+		if (check_key_exists_(key, hash, (*table_)[index], first)) {
+			return &(first -> val);
+		}
+		return nullptr;
     }
 
 	/*
 	 Check the key existing.
 	 */
-	bool HashTable::exists(const Key& key) const noexcept {
+	bool HashTable::exists(const Key& key) noexcept {
 		HashCode    hash = hashCode_(key);
 		std::size_t index = indexFor_(hash);
-		auto		first = first_bigger_or_equal_hash(hash, (*table_)[index]);
+		auto		first = first_bigger_or_equal_hash_(hash, (*table_)[index]);
 
-		return check_key_exists(key, hash, (*table_)[index], first);
+		return check_key_exists_(key, hash, (*table_)[index], first);
 	}
 
 	/*
@@ -61,10 +61,11 @@ namespace s21 {
 	bool HashTable::del(const Key& key) noexcept {
 		HashCode    hash = hashCode_(key);
 		std::size_t index = indexFor_(hash);
-		auto		first = first_bigger_or_equal_hash(hash, (*table_)[index]);
+		auto		first = first_bigger_or_equal_hash_(hash, (*table_)[index]);
 
-		if (check_key_exists(key, hash, (*table_)[index], first)) {
+		if (check_key_exists_(key, hash, (*table_)[index], first)) {
 			(*table_)[index].erase(first);
+			currentLoadCount_--;
 			return true;
 		}
 		return false;
@@ -73,9 +74,9 @@ namespace s21 {
 	void HashTable::update(const Key& key, const Value& val) {
 		HashCode    hash = hashCode_(key);
 		std::size_t index = indexFor_(hash);
-		auto		first = first_bigger_or_equal_hash(hash, (*table_)[index]);
+		auto		first = first_bigger_or_equal_hash_(hash, (*table_)[index]);
 
-		if (check_key_exists(key, hash, (*table_)[index], first)) {
+		if (check_key_exists_(key, hash, (*table_)[index], first)) {
 			first -> val = val;
 		} else {
 			throw IKeyValueStorage::KeyNotExistsException();
@@ -85,12 +86,20 @@ namespace s21 {
 	/*
 	Returns a vector of the existing keys.
 	*/
-	std::vector<Key> HashTable::keys() const noexcept {
+	std::vector<Key> HashTable::keys() noexcept {
 		std::vector<Key> res;
+		std::list<Node>::iterator first;
 
 		for (std::list<Node>& bucket : *table_) {
-			for (Node& node : bucket) {
-				res.push_back(node.key);
+			first = bucket.begin();
+			while (first != bucket.end()) {
+				if (first -> is_expired()) {
+					first = bucket.erase(first);
+					currentLoadCount_--;
+				} else {
+					res.push_back(first -> key);
+				}
+				first++;
 			}
 		}
 		return res;
@@ -102,41 +111,85 @@ namespace s21 {
 	void HashTable::rename(const Key& old_key, const Key& new_key) {
 		HashCode    old_hash = hashCode_(old_key);
 		std::size_t old_index = indexFor_(old_hash);
-		auto		old_first = first_bigger_or_equal_hash(old_hash, (*table_)[old_index]);
+		auto		old_first = first_bigger_or_equal_hash_(old_hash, (*table_)[old_index]);
 		HashCode    new_hash = hashCode_(new_key);
 		std::size_t new_index = indexFor_(new_hash);
-		auto		new_first = first_bigger_or_equal_hash(new_hash, (*table_)[new_index]);
+		auto		new_first = first_bigger_or_equal_hash_(new_hash, (*table_)[new_index]);
 
+		std::cout << old_key << " " << new_key << std::endl;
 		if (old_key == new_key) {
 			return;
 		}
-		if (!check_key_exists(old_key, old_hash, (*table_)[old_index], old_first)) {
-//			throw HashTable::KeyException("The key does not exist");
-			return;
+		if (!check_key_exists_(old_key, old_hash, (*table_)[old_index], old_first)) {
+			throw IKeyValueStorage::KeyNotExistsException();
 		}
-		if (check_key_exists(new_key, new_hash, (*table_)[new_index], new_first)) {
+		if (check_key_exists_(new_key, new_hash, (*table_)[new_index], new_first)) {
+			std::cout << "exists" << std::endl;
 			new_first -> val = old_first -> val;
+			currentLoadCount_--;
 		} else {
-			(*table_)[new_index].insert(new_first, HashTable::Node(*old_first));
+			std::cout << "not exists" << std::endl;
+			(*table_)[new_index].insert(
+				new_first,
+				HashTable::Node({new_hash, new_key,
+					old_first -> val, old_first -> time_limit, old_first -> set_time}));
 		}
 		(*table_)[old_index].erase(old_first);
 	}
 
-	TimeLimit HashTable::ttl(const Key&) const noexcept {
-		return TimeLimit();
+	TimeLimit HashTable::ttl(const Key& key) noexcept {
+		HashCode    hash = hashCode_(key);
+        std::size_t index = indexFor_(hash);
+        auto		first = first_bigger_or_equal_hash_(hash, (*table_)[index]);
+
+		if (check_key_exists_(key, hash, (*table_)[index], first)) {
+			if (first -> time_limit != -1) {
+				return ((std::time_t)(first -> time_limit) +
+					first -> set_time - std::time(nullptr));
+			}
+		}
+		return -1;
 	}
 
-	std::vector<Key> HashTable::find(const Value&) const noexcept {
-		return std::vector<Key>();
-	}
-
-	std::vector<Value> HashTable::showall() const noexcept {
-		std::vector<Value> res;
+	std::vector<Key> HashTable::find(const Value& val) noexcept {
+		std::vector<Key> res;
+		std::list<Node>::iterator first;
 
 		for (std::list<Node>& bucket : *table_) {
-			for (Node& node : bucket) {
-				// Проверить и удалить если что timelimit
-				res.push_back(node.val);
+			first = bucket.begin();
+			while (first != bucket.end()) {
+				if (!(first -> val == val)) {
+					first++;
+					continue;
+				}
+				if (first -> is_expired()) {
+					first = bucket.erase(first);
+					currentLoadCount_--;
+				} else {
+					std::cout << "Все идет по плану" << std::endl;
+					res.push_back(first -> key);
+				}
+				first++;
+			}
+		}
+
+		return res;
+	}
+
+	std::vector<Value> HashTable::showall() noexcept {
+		std::vector<Value> res;
+		std::list<Node>::iterator first;
+
+		for (std::list<Node>& bucket : *table_) {
+			first = bucket.begin();
+			while (first != bucket.end()) {
+				if (first -> is_expired()) {
+					first = bucket.erase(first);
+					currentLoadCount_--;
+				} else {
+					res.push_back(first -> val);
+				}
+				first++;
 			}
 		}
 		return res;
@@ -144,6 +197,6 @@ namespace s21 {
 
 	void HashTable::upload(const std::string&) {}
 
-	void HashTable::save(const std::string&) const {}
+	void HashTable::save(const std::string&) {}
 
 }

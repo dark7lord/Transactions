@@ -1,6 +1,7 @@
 #include "../s21_key_value_console_interface.h"
 #include <stdlib.h>
 #include <unistd.h>
+#include <csignal>
 
 static const std::string WELCOME_MESSAGE = ""
 	 "Hello! You're lucky, because it is THE BEST CONSOLE INTERFACE EVER!\n"
@@ -59,12 +60,13 @@ namespace s21 {
 
 	void KeyValueConsoleInterface::start() noexcept {
 		system("clear");
+//		std::signal(SI);
 		std::cout << BLUE << WELCOME_MESSAGE << NONE << std::endl;
 		runArrows();
-		while (!KeyValueConsoleInterface::storage_ && !KeyValueConsoleInterface::on_exit_) {
+		while (!std::cin.eof() && !KeyValueConsoleInterface::storage_ && !KeyValueConsoleInterface::on_exit_) {
 			startMenu();
 		}
-		while (!KeyValueConsoleInterface::on_exit_) {
+		while (!std::cin.eof() && !KeyValueConsoleInterface::on_exit_) {
 			menu();
 		}
 	}
