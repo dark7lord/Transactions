@@ -233,6 +233,12 @@ void KeyValueConsoleInterface::save_(const std::vector<std::string>& tokens) noe
 	if (validateTokens_(tokens, 2)) {
 		return;
 	}
+	if (tokens[1].size() < 5
+		|| (tokens[1].substr(tokens[1].size() - 4, 5) != ".dat"
+		&& tokens[1].substr(tokens[1].size() - 4, 5) != ".DAT" )) {
+		std::cout << RED << "> ERROR: .dat file with no empty name expected" << NONE << std::endl;
+		return;
+	}
 	try {
 		storage_ -> save(tokens[1]);
 		std::cout << GREY << "> OK" << NONE << std::endl;

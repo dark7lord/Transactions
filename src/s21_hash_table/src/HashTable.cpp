@@ -197,6 +197,23 @@ namespace s21 {
 
 	void HashTable::upload(const std::string&) {}
 
-	void HashTable::save(const std::string&) {}
+	void HashTable::save(const std::string& filename) {
+		std::ofstream output_file(filename, std::ios::trunc);
+		std::vector<Key> all_keys;
+		const Value* val;
+
+		if (output_file.is_open()) {
+			all_keys = keys();
+			for (const Key& key: all_keys) {
+				val = get(key);
+				if (val != nullptr) {
+					output_file << key << " " << val << std::endl;
+				}
+			}
+			output_file.close();
+		} else {
+			throw IKeyValueStorage::KeyValueStorageException("failed to create or open the file: " + filename);
+		}
+	}
 
 }
