@@ -29,8 +29,6 @@ namespace s21 {
 		std::string& operator[](const std::string& key);
 		const std::string& operator[](const std::string& key) const;
 
-		static Value str_to_value(const std::string&, std::string* = nullptr);
-		// static Value& Value::validate_str_value(
 		static Value parse_value(
 			const std::string& first_name,
 			const std::string& last_name,
@@ -64,6 +62,8 @@ namespace s21 {
 		virtual void				save(const std::string&) = 0;
 
 		virtual ~IKeyValueStorage() = default;
+
+		static Value str_to_value(const std::string&, std::string* = nullptr);
 
 		struct KeyValueStorageException : std::runtime_error {
 			explicit KeyValueStorageException(const std::string &arg);

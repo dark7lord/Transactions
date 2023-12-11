@@ -15,6 +15,11 @@ namespace s21 {
 	}
 
 	void Tree::set(const Key& key, const Value& value, TimeLimit ttl) {
+		if (ttl == 0) {
+			throw KeyValueStorageException("the ttl " + std::to_string(ttl) + " is not valid");
+		}
+		// TODO: ttl = -1????
+		
 		check_nodes_with_TTL();
 		_root = insert(_root, key, value, ttl);
 	}

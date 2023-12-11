@@ -12,7 +12,7 @@ namespace s21 {
 		if (key == "city")			return city;
 		if (key == "coins_number")	return coins_number;
 
-		throw std::out_of_range("Key not found");
+		throw IKeyValueStorage::KeyNotExistsException();
 	}
 
 	const std::string& Value::operator[](const std::string& key) const {
@@ -22,7 +22,7 @@ namespace s21 {
 		if (key == "city")			return city;
 		if (key == "coins_number")	return coins_number;
 
-		throw std::out_of_range("Key not found");
+		throw IKeyValueStorage::KeyNotExistsException();
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Value& value) {
@@ -92,11 +92,13 @@ namespace s21 {
 		const std::string& number_coins
 	) {
 		if (!is_non_negative_integer(birth_year)) {
-			throw std::invalid_argument("unable to cast value \"" + birth_year + "\" to type uint");
+			throw IKeyValueStorage::KeyValueStorageException(
+				"unable to cast value \"" + birth_year + "\" to type uint");
 		}
 
 		if (!is_non_negative_integer(number_coins)) {
-			throw std::invalid_argument("unable to cast value \"" + number_coins + "\" to type uint");
+			throw IKeyValueStorage::KeyValueStorageException(
+				"unable to cast value \"" + number_coins + "\" to type uint");
 		}
 
 		// if (!isLettersOnly(first_name)) {
@@ -119,15 +121,15 @@ namespace s21 {
 	}
 
 	// TODO: написать красивый метод вывода ошибки, которая печатает номер строки, саму ее и причина ошибки
-	Value Value::str_to_value(const std::string& line, std::string *key) {
+	Value IKeyValueStorage::str_to_value(const std::string& line, std::string *key) {
 		auto	tokens = split_to_tokens(line);
 		int		k;
 
 		if (key && tokens.size() != 6) {
-			throw std::runtime_error("Parsing with key, it's error");
+			throw IKeyValueStorage::KeyValueStorageException("Parsing with key, it's error");
 		}
 		else if (!key && tokens.size() != 5) {
-			throw std::runtime_error("Parsing without key, it's error");
+			throw IKeyValueStorage::KeyValueStorageException("Parsing without key, it's error");
 		}
 
 		// можно ли сделать перебор типа такого?
@@ -145,7 +147,7 @@ namespace s21 {
 		const std::string& city = tokens[3 + k];
 		const std::string& number_coins = tokens[4 + k];
 
-		Value value = parse_value(first_name, last_name, birth_year, city, number_coins);
+		Value value = Value::parse_value(first_name, last_name, birth_year, city, number_coins);
 
 		return value;
 	}
@@ -165,7 +167,7 @@ namespace s21 {
 		while (std::getline(input_file, line)) {
 			try {
 				Key key;
-				Value value = Value::str_to_value(line, &key);
+				Value value = IKeyValueStorage::str_to_value(line, &key);
 				keys_values.insert({ key, value });
 			}
 			catch (const std::exception& e) {
