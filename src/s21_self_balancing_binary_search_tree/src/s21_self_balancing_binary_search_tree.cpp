@@ -168,7 +168,7 @@ namespace s21 {
 
 	std::string entry_to_str(const Key& key, const Value& value) {
 		std::ostringstream oss;
-		oss << key << ' '
+		oss << std::quoted(key) << ' '
 			<< std::quoted(value.last_name) << ' '
 			<< std::quoted(value.first_name) << ' '
 			<< value.birth_year << ' '
