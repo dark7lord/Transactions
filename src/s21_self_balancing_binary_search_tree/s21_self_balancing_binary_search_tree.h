@@ -21,7 +21,7 @@ namespace s21 {
 		AVL_Node*			_root;
 		std::set<AVL_Node*>	_nodes_with_TTL;
 		map<Key, Value>		get_entries(void) const;
-		void				check_nodes_with_TTL(void) const;
+		void				check_nodes_with_TTL(void);
 
 	public:
 		SelfBalancingBinarySearchTree() : _root(nullptr) {}
@@ -32,18 +32,18 @@ namespace s21 {
 		/* * * * * * * * * * * * * * *   Methods  * * * * * * * * * * * * * * */
 
 		void				set(const Key&, const Value&, TimeLimit = -1) override;
-		const Value*		get(const Key& key) const noexcept override;
-		bool				exists(const Key&) const noexcept override;
+		const Value*		get(const Key& key) noexcept override;
+		bool				exists(const Key&) noexcept override;
 		bool				del(const Key&) noexcept override;
 		void				update(const Key&, const Value&) override;
-		std::vector<Key>	find(const Value&) const noexcept override;
-		std::vector<Key>	keys(void) const noexcept override;
+		std::vector<Key>	find(const Value&) noexcept override;
+		std::vector<Key>	keys(void) noexcept override;
 		void				rename(const Key&, const Key&) override;
-		TimeLimit			ttl(const Key&) const noexcept override;
+		TimeLimit			ttl(const Key&) noexcept override;
 
 		// TODO: the lines below have no tests
-		void 				save(const std::string&) const override;
-		std::vector<Value>	showall(void) const noexcept override;
+		void 				save(const std::string&) override;
+		std::vector<Value>	showall(void) noexcept override;
 		void				print_tree(void);
 	};
 

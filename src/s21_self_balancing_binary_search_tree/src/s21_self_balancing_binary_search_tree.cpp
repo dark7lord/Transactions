@@ -4,7 +4,7 @@ namespace s21 {
 	using Tree = SelfBalancingBinarySearchTree;
 	using Node = AVL_Node;
 
-	const Value* Tree::get(const Key& key) const noexcept {
+	const Value* Tree::get(const Key& key) noexcept {
 		check_nodes_with_TTL();
 		Node* result_node = find_node(_root, key);
 		if (result_node) {
@@ -19,7 +19,7 @@ namespace s21 {
 		_root = insert(_root, key, value, ttl);
 	}
 
-	bool Tree::exists(const Key& key) const noexcept {
+	bool Tree::exists(const Key& key) noexcept {
 		check_nodes_with_TTL();
 		return find_node(_root, key) != nullptr;
 	}
@@ -80,7 +80,7 @@ namespace s21 {
 	}
 
 	/***  "some text" == "-" is true, operator "==" is overloaded  ***/
-	std::vector<Key> Tree::find(const Value& value) const noexcept {
+	std::vector<Key> Tree::find(const Value& value) noexcept {
 		check_nodes_with_TTL();
 		std::vector<Key> keys_by_value;
 
@@ -94,7 +94,7 @@ namespace s21 {
 		return keys_by_value;
 	}
 
-	std::vector<Key> Tree::keys(void) const noexcept {
+	std::vector<Key> Tree::keys(void) noexcept {
 		check_nodes_with_TTL();
 		std::vector<Key> all_keys;
 
@@ -123,7 +123,7 @@ namespace s21 {
 	constexpr TimeLimit DELETE_TTL = 0;
 	constexpr TimeLimit NO_TTL = -1;
 
-	TimeLimit Tree::ttl(const Key& key) const noexcept {
+	TimeLimit Tree::ttl(const Key& key) noexcept {
 		check_nodes_with_TTL();
 		Node *node = find_node(_root, key);
 
@@ -146,7 +146,7 @@ namespace s21 {
 		return time_difference;
 	}
 
-	void Tree::check_nodes_with_TTL() const {
+	void Tree::check_nodes_with_TTL() {
 		for (const auto& node : _nodes_with_TTL) {
 			if (ttl(node -> key) == (DELETE_TTL)) {
 				delete_node(_root, node->key);
@@ -154,7 +154,7 @@ namespace s21 {
 		}
 	}
 
-	std::vector<Value>	Tree::showall() const noexcept {
+	std::vector<Value>	Tree::showall() noexcept {
 		check_nodes_with_TTL();
 		std::vector<Value> values;
 
@@ -189,7 +189,7 @@ namespace s21 {
 		return entries;
 	}
 
-	void Tree::save(const std::string& filename) const {
+	void Tree::save(const std::string& filename) {
 		check_nodes_with_TTL();
 		std::map<Key, Value> entries = get_entries();
 		std::ofstream output_file(filename);

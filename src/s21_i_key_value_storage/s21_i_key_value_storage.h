@@ -51,17 +51,17 @@ namespace s21 {
 	class IKeyValueStorage {
 	public:
 		virtual void				set(const Key&, const Value&, TimeLimit = -1) = 0;
-		virtual const Value*		get(const Key&) const noexcept = 0;
-		virtual bool				exists(const Key&) const noexcept = 0;
+		virtual const Value*		get(const Key&) noexcept = 0;
+		virtual bool				exists(const Key&) noexcept = 0;
 		virtual bool				del(const Key&) noexcept = 0;
 		virtual void				update(const Key&, const Value&) = 0;
-		virtual std::vector<Key>	keys() const noexcept = 0;
+		virtual std::vector<Key>	keys() noexcept = 0;
 		virtual void				rename(const Key&, const Key&) = 0;
-		virtual TimeLimit			ttl(const Key&) const noexcept = 0;
-		virtual std::vector<Key>	find(const Value&) const noexcept = 0;
-		virtual std::vector<Value>	showall() const noexcept = 0;
+		virtual TimeLimit			ttl(const Key&) noexcept = 0;
+		virtual std::vector<Key>	find(const Value&) noexcept = 0;
+		virtual std::vector<Value>	showall() noexcept = 0;
 		virtual void				upload(const std::string&);
-		virtual void				save(const std::string&) const = 0;
+		virtual void				save(const std::string&) = 0;
 
 		virtual ~IKeyValueStorage() = default;
 

@@ -2,13 +2,24 @@
 
 namespace s21 {
 
+	bool HashTable::Node::is_expired() noexcept {
+		if (this -> time_limit == -1) {
+			return false;
+		}
+		std::time_t expired_time = this -> set_time + this -> time_limit;
+		if (expired_time <= std::time(nullptr)) {
+			return true;
+		}
+		return false;
+	}
+
 	/*
     Find first occurence with bigger or equal hash code than inserted to store
     nodes in sorted order.
     */
 	std::list<HashTable::Node>::iterator
-	first_bigger_or_equal_hash(const HashCode& hash,
-							   std::list<HashTable::Node>& lst) noexcept {
+	HashTable::first_bigger_or_equal_hash_(const HashCode& hash,
+										   std::list<HashTable::Node>& lst) noexcept {
 		std::cout << "Get Place for insert - hash " << hash << std::endl;
 		auto last = lst.end();
 
@@ -20,16 +31,21 @@ namespace s21 {
 		return last;
 	}
 
-	bool check_key_exists(const Key& key,
-						  const HashCode& hash,
-						  const std::list<HashTable::Node>& lst,
-						  std::list<HashTable::Node>::iterator& first) noexcept {
+	bool HashTable::check_key_exists_(const Key& key,
+						              const HashCode& hash,
+						              std::list<HashTable::Node>& lst,
+									  std::list<HashTable::Node>::iterator& first) noexcept {
 		std::cout << "Check suspicious hash - hash " << hash << std::endl;
 		auto last = lst.end();
 		bool key_found = false;
 
 		for (; first != last && hash == first -> hash; first++) {
 			if (key == first -> key) {
+				if (first -> is_expired()) {
+					lst.erase(first);
+					currentLoadCount_--;
+					key_found = false;
+				}
 				key_found = true;
 				break;
 			}

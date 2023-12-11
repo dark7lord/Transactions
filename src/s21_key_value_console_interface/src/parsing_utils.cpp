@@ -18,7 +18,7 @@ namespace s21 {
 
 	bool KeyValueConsoleInterface::validateTokens_(const std::vector<std::string>& tokens, std::size_t expected_number) noexcept {
 		if (tokens.size() != expected_number) {
-			std::cout << RED << KeyValueConsoleInterface::ARGUMENTS_NUMBER << ": " << tokens.size() << NONE << std::endl;
+			std::cout << RED << KeyValueConsoleInterface::ARGUMENTS_NUMBER << NONE << std::endl;
 			return true;
 		}
 		for (const std::string& token : tokens) {
