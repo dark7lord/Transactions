@@ -3,7 +3,7 @@ CCFLAGS		= -Wall -Wextra -Werror -std=c++17
 NAME		= s21_i_key_value_storage.a
 SRC_DIR		= src/
 OBJ_DIR		= obj/
-SRC_FILES   = s21_i_key_value_storage.cpp
+SRC_FILES   = IKeyValueStorage.cpp Value.cpp utils.cpp
 OBJ_FILES   = $(SRC_FILES:.cpp=.o)
 SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ			= $(addprefix $(OBJ_DIR), $(OBJ_FILES))

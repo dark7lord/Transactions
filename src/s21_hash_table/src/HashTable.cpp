@@ -207,12 +207,12 @@ namespace s21 {
 			for (const Key& key: all_keys) {
 				val = get(key);
 				if (val != nullptr) {
-					output_file << key << " " << val << std::endl;
+					output_file << std::quoted(key) << " " << *val << std::endl;
 				}
 			}
 			output_file.close();
 		} else {
-			throw IKeyValueStorage::KeyValueStorageException("failed to create or open the file: " + filename);
+			throw IKeyValueStorage::CantOpenFile(filename);
 		}
 	}
 

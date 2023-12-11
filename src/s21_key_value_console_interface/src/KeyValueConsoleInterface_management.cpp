@@ -63,14 +63,19 @@ void KeyValueConsoleInterface::get_(const std::vector<std::string>& tokens) noex
 	if (validateTokens_(tokens, 2)) {
 		return;
 	}
-	std::cout << GREY << "> " << storage_ -> get(tokens[1]) << NONE << std::endl;
+	const Value* val = storage_ -> get(tokens[1]);
+	if (val == nullptr) {
+		std::cout << GREY << "> (null)" << NONE << std::endl;
+	} else {
+		std::cout << GREY << "> " << *val << NONE << std::endl;
+	}
 }
 
 void KeyValueConsoleInterface::exists_(const std::vector<std::string>& tokens) noexcept {
 	if (validateTokens_(tokens, 2)) {
 		return;
 	}
-	std::cout << GREY << "> " << storage_ -> exists(tokens[1]) << NONE << std::endl;
+	std::cout << GREY << "> " << std::boolalpha << storage_ -> exists(tokens[1]) << NONE << std::endl;
 }
 
 void KeyValueConsoleInterface::del_(const std::vector<std::string>& tokens) noexcept {
@@ -184,14 +189,14 @@ void KeyValueConsoleInterface::showall_(const std::vector<std::string>& tokens) 
 	std::size_t coins_number_max_length = std::string("Number of coins").size();
 
 	for (const Value& val : vals) {
-		if (val.last_name.size() > last_name_max_length)
-			last_name_max_length = val.last_name.size();
-		if (val.first_name.size() > first_name_max_length)
-			first_name_max_length = val.first_name.size();
+		if (get_quoted(val.last_name).size() > last_name_max_length)
+			last_name_max_length = get_quoted(val.last_name).size();
+		if (get_quoted(val.first_name).size() > first_name_max_length)
+			first_name_max_length = get_quoted(val.first_name).size();
 		if (val.birth_year.size() > birth_year_max_length)
 			birth_year_max_length = val.birth_year.size();
-		if (val.city.size() > city_max_length)
-			city_max_length = val.city.size();
+		if (get_quoted(val.city).size() > city_max_length)
+			city_max_length = get_quoted(val.city).size();
 		if (val.coins_number.size() > coins_number_max_length)
 			coins_number_max_length = val.coins_number.size();
 	}
@@ -208,10 +213,10 @@ void KeyValueConsoleInterface::showall_(const std::vector<std::string>& tokens) 
 	for (std::size_t i = 0; i < vals.size(); i++) {
 		std::cout << GREY << ">";
 		print_centered(numbers[i], number_max_length, ' ');
-		print_centered(vals[i].last_name, last_name_max_length, ' ');
-		print_centered(vals[i].first_name, first_name_max_length, ' ');
+		print_centered(get_quoted(vals[i].last_name), last_name_max_length, ' ');
+		print_centered(get_quoted(vals[i].first_name), first_name_max_length, ' ');
 		print_centered(vals[i].birth_year, birth_year_max_length, ' ');
-		print_centered(vals[i].city, city_max_length, ' ');
+		print_centered(get_quoted(vals[i].city), city_max_length, ' ');
 		print_centered(vals[i].coins_number, coins_number_max_length, ' ');
 		std::cout << NONE << std::endl;
 	}

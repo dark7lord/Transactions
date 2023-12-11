@@ -2,35 +2,27 @@
 #define S21_KEY_VALUE_STORAGE
 
 #include <string>
-#include <stdbool.h>
 #include <vector>
-#include "stdio.h"
-#include <sstream>
-#include <iomanip>
 #include <fstream>
 
 namespace s21 {
 
-	struct Value {
-		// Value(); //TODO delete
-		// Value(Value&) = default;
-		// Value(Value&&) = default;
-		// Value& operator=(Value&) = default;
-		// Value& operator=(Value&&) = default;
-		// ~Value() = default;
-		// explicit Value(std::string); // парсер // except
+	using Key = std::string;
+	using TimeLimit = int;
 
-		std::string	last_name; // только буквы или одно -
-		std::string	first_name; // только буквы или одно -
-		std::string	birth_year; // только 4 цифры или одно -
-		std::string	city; // только буквы или одно -
-		std::string	coins_number; // любые цифры или одно -
+	/* Value.cpp */
+	struct Value {
+
+		std::string	last_name;
+		std::string	first_name;
+		std::string	birth_year;
+		std::string	city;
+		std::string	coins_number;
 
 		std::string& operator[](const std::string& key);
 		const std::string& operator[](const std::string& key) const;
 
 		static Value str_to_value(const std::string&, std::string* = nullptr);
-		// static Value& Value::validate_str_value(
 		static Value parse_value(
 			const std::string& first_name,
 			const std::string& last_name,
@@ -40,14 +32,15 @@ namespace s21 {
 		);
 	};
 
-	bool operator==(const Value&, const Value&); // return true if one of the values is -
-
+	bool operator==(const Value&, const Value&);
 	std::ostream& operator<<(std::ostream& os, const Value& value);
-	std::ostream& operator<<(std::ostream& os, const Value* value);
 
-	using Key = std::string;
-	using TimeLimit = int;
+	/* utils.cpp */
+	std::string get_quoted(const std::string&);
+	std::vector<std::string> split_to_tokens(const std::string& line);
+	bool is_non_negative_integer(const std::string& s);
 
+	/* IKeyValueStorage.cpp */
 	class IKeyValueStorage {
 	public:
 		virtual void				set(const Key&, const Value&, TimeLimit = -1) = 0;
@@ -75,6 +68,10 @@ namespace s21 {
 
 		struct KeyNotExistsException : KeyValueStorageException {
 			explicit KeyNotExistsException();
+		};
+
+		struct CantOpenFile : KeyValueStorageException {
+			explicit CantOpenFile(const std::string &filename);
 		};
 	};
 
