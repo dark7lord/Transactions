@@ -32,7 +32,6 @@ namespace s21 {
 		TimeLimit			ttl(const Key&) noexcept override;
 		std::vector<Key>	find(const Value&) noexcept override;
 		std::vector<Value>	showall(void) noexcept override;
-		void				upload(const std::string& filename) override;
 		void				save(const std::string& filename) override;
 
 	private:

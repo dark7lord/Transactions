@@ -195,8 +195,6 @@ namespace s21 {
 		return res;
 	}
 
-	void HashTable::upload(const std::string&) {}
-
 	void HashTable::save(const std::string&) {}
 
 }

@@ -132,7 +132,7 @@ namespace s21 {
 			return;
 		}
 		std::cout << RED << "> ERROR: command " << tokens[0] <<
-			" is not defined. Type MENU to see help" << NONE << std::endl;
+			" is not defined" << NONE << std::endl;
 	}
 
 	void runUserInput(const std::string& user_input) noexcept {
