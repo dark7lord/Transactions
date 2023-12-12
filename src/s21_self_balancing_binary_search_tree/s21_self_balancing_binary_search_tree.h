@@ -45,7 +45,6 @@ class SelfBalancingBinarySearchTree : public IKeyValueStorage {
 
  private:
   Node* root_;
-  std::set<Node*> nodes_with_TTL_;
 };
 
 }  // namespace s21
