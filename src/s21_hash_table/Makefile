@@ -44,7 +44,7 @@ clean:
 	@echo Cleaning obj/ success!
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(TEST_DIR)$(TEST_EXE)
 	cd $(EXT_DIR) && make fclean
 	@echo Full cleaning success!
 

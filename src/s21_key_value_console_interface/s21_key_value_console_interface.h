@@ -40,6 +40,13 @@ namespace s21 {
 
 		static void tokenize_(const std::string& user_input, std::vector<std::string>& out) noexcept;
 		static bool validateTokens_(const std::vector<std::string>&, std::size_t) noexcept;
+		static Value parse_value_dash_(
+			const std::string& first_name,
+			const std::string& last_name,
+			const std::string& birth_year,
+			const std::string& city,
+			const std::string& coins_number
+		);
 
 		static void menu_(const std::vector<std::string>&) noexcept;
 		static void	files_(const std::vector<std::string>&) noexcept;

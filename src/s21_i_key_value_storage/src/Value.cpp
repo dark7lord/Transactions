@@ -57,6 +57,10 @@ namespace s21 {
 			throw std::invalid_argument("unable to cast value \"" + number_coins + "\" to type uint");
 		}
 
+		if (last_name == "-" || first_name == "-" || city == "-") {
+			throw std::invalid_argument("can not set empty parameter");
+		}
+
 		Value value = {
 			last_name,
 			first_name,

@@ -30,4 +30,30 @@ namespace s21 {
 		return false;
 	}
 
+	Value KeyValueConsoleInterface::parse_value_dash_(
+		const std::string& last_name,
+		const std::string& first_name,
+		const std::string& birth_year,
+		const std::string& city,
+		const std::string& number_coins
+	) {
+		if (!is_non_negative_integer(birth_year) && birth_year != "-") {
+			throw std::invalid_argument("unable to cast value \"" + birth_year + "\" to type uint");
+		}
+
+		if (!is_non_negative_integer(number_coins) && number_coins != "-") {
+			throw std::invalid_argument("unable to cast value \"" + number_coins + "\" to type uint");
+		}
+
+		Value value = {
+			last_name,
+			first_name,
+			birth_year,
+			city,
+			number_coins
+		};
+
+		return value;
+	}
+
 } // namespace s21

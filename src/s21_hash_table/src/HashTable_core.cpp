@@ -4,20 +4,16 @@ namespace s21 {
 
 	HashTable::HashTable() : currentBucketCount_(initialBucketCount_),
 							 currentLoadCount_(0) {
-		std::cout << "Create Hash Table - default constructor" << std::endl;
 		table_ = new std::vector<std::list<Node>>(initialBucketCount_);
-		std::cout << "Create Hash Table : capacity " << table_ -> capacity() << " size " << table_ -> size() << std::endl;
 	}
 
 	HashTable::HashTable(HashTable const& other) : currentBucketCount_(other.currentBucketCount_),
 												   currentLoadCount_(other.currentLoadCount_) {
-		std::cout << "Create Hash Table - copy constructor" << std::endl;
 		table_ = new std::vector<std::list<Node>>(*other.table_);
 	}
 
 	HashTable::HashTable(HashTable&& other) noexcept : currentBucketCount_(other.currentBucketCount_),
 	                                                   currentLoadCount_(other.currentLoadCount_) {
-		std::cout << "Create Hash Table - move constructor" << std::endl;
 		table_ = other.table_;
 		other.table_ = nullptr;
 		other.currentBucketCount_ = 0;
@@ -25,7 +21,6 @@ namespace s21 {
 	}
 
 	HashTable& HashTable::operator=(const HashTable& other) {
-		std::cout << "Copy Hash Table - copy operator" << std::endl;
 		if (this != &other) {
 			if (table_ != nullptr) {
 				delete table_;
@@ -38,7 +33,6 @@ namespace s21 {
 	}
 
 	HashTable& HashTable::operator=(HashTable&& other) noexcept {
-		std::cout << "Move Hash Table - move operator" << std::endl;
 		if(this != &other) {
 			if (table_ != nullptr) {
 				delete table_;
@@ -54,7 +48,6 @@ namespace s21 {
 	}
 
 	HashTable::~HashTable() {
-		std::cout << "Destroy Hash Table - destructor" << std::endl;
 		delete table_;
 	}
 
@@ -64,7 +57,6 @@ namespace s21 {
 	binary sequence.
 	*/
 	HashCode HashTable::hashCode_(const Key& key) noexcept {
-		std::cout << "Get Hash Code - key " << key << std::endl;
 		HashCode    seed = HashTable::hashSeed_;
 		auto        first = key.begin();
 		auto        last = key.end();
@@ -77,8 +69,6 @@ namespace s21 {
 	}
 
 	std::size_t HashTable::indexFor_(HashCode hash) const noexcept {
-		std::cout << "Get Index - hash " << hash << std::endl;
-		std::cout << "Get Index - Capacity " << table_ -> capacity() << std::endl;
 		return hash & ((table_ -> capacity()) - 1);
 	}
 
@@ -90,7 +80,6 @@ namespace s21 {
 		std::size_t	old_buckets_cnt = currentBucketCount_;
 		std::list<Node>::iterator it;
 		std::size_t new_index;
-		std::cout << "increase table - capacity " << table_ -> capacity() << " size " << table_ -> size() << std::endl;
 
 		if (currentBucketCount_ == maximumCapacity_) {
 			return;
@@ -110,7 +99,6 @@ namespace s21 {
 				}
 			}
 		}
-		std::cout << "increase table - capacity " << table_ -> capacity() << " size " << table_ -> size() << std::endl;
 	}
 
 } // namespace s21
