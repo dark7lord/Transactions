@@ -14,7 +14,8 @@ TEST(SelfBalancingBinarySearchTree, set) {
 
   ASSERT_NE(tree.get("Alice"), nullptr);
   EXPECT_EQ(*tree.get("Alice"), value);
-  EXPECT_THROW(tree.set("Alice", value), s21::IKeyValueStorage::KeyExistsException);
+  EXPECT_THROW(tree.set("Alice", value),
+               s21::IKeyValueStorage::KeyExistsException);
 
   // ASSERT_EQ(4 - 2, 2);
 }
@@ -71,7 +72,6 @@ TEST(SelfBalancingBinarySearchTree, del) {
   EXPECT_TRUE(tree.exists("Aplil5"));
   EXPECT_TRUE(tree.del("Aplil5"));
   EXPECT_NO_THROW(tree.set("Aplil5", value));
-
 
   EXPECT_EQ(tree.exists("Alril5"), false);
 }
