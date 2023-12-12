@@ -20,8 +20,8 @@ void HashTable::set(const Key& key, const Value& val, TimeLimit time_limit) {
   }
   bucket.insert(place_to_insert, HashTable::Node({hash, key, val, time_limit,
                                                   std::time(nullptr)}));
-  currentLoadCount_++;
-  if (HashTable::currentLoadFactor_() >= initialLoadFactor_) {
+  current_load_count_++;
+  if (HashTable::currentLoadFactor_() >= initial_load_factor_) {
     HashTable::increaseTable_();
   }
 }
@@ -61,7 +61,7 @@ bool HashTable::del(const Key& key) noexcept {
 
   if (check_key_exists_(key, hash, (*table_)[index], first)) {
     (*table_)[index].erase(first);
-    currentLoadCount_--;
+    current_load_count_--;
     return true;
   }
   return false;
@@ -105,7 +105,7 @@ std::vector<Key> HashTable::keys() noexcept {
     while (first != bucket.end()) {
       if (first->is_expired()) {
         first = bucket.erase(first);
-        currentLoadCount_--;
+        current_load_count_--;
       } else {
         res.push_back(first->key);
       }
@@ -170,7 +170,7 @@ std::vector<Key> HashTable::find(const Value& val) noexcept {
       }
       if (first->is_expired()) {
         first = bucket.erase(first);
-        currentLoadCount_--;
+        current_load_count_--;
       } else {
         res.push_back(first->key);
       }
@@ -190,7 +190,7 @@ std::vector<Value> HashTable::showall() noexcept {
     while (first != bucket.end()) {
       if (first->is_expired()) {
         first = bucket.erase(first);
-        currentLoadCount_--;
+        current_load_count_--;
       } else {
         res.push_back(first->val);
       }

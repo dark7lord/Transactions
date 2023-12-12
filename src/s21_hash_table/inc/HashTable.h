@@ -36,10 +36,10 @@ class HashTable : public IKeyValueStorage {
 
  private:
   /* HashTable configurations. Defined in HashTable_core.cpp. */
-  static constexpr std::size_t initialBucketCount_ = 4;
-  static constexpr std::size_t maximumCapacity_ = 1 << 30;
-  static constexpr double initialLoadFactor_ = 0.75f;
-  static constexpr HashCode hashSeed_ = 4;
+  static constexpr std::size_t initial_bucket_count_ = 4;
+  static constexpr std::size_t maximum_capacity_ = 1 << 30;
+  static constexpr double initial_load_factor_ = 0.75f;
+  static constexpr HashCode hash_seed_ = 4;
   static HashCode hashCode_(const Key&) noexcept;
 
   /* Key-Value pair and additional information to store in HashTable. */
@@ -56,8 +56,8 @@ class HashTable : public IKeyValueStorage {
   /* HashTable private fields. Mechanism of nodes storage. Defined in
    * HashTable_core.cpp. */
   std::vector<std::list<Node>>* table_;
-  std::size_t currentBucketCount_;
-  std::size_t currentLoadCount_;
+  std::size_t current_bucket_count_;
+  std::size_t current_load_count_;
 
   HashCode indexFor_(HashCode) const noexcept;
   double currentLoadFactor_() const noexcept;

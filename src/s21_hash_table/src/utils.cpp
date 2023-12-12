@@ -39,7 +39,7 @@ bool HashTable::check_key_exists_(
     if (key == first->key) {
       if (first->is_expired()) {
         lst.erase(first);
-        currentLoadCount_--;
+        current_load_count_--;
         key_found = false;
       }
       key_found = true;
