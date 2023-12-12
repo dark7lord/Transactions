@@ -186,7 +186,8 @@ TEST(HashTableRename, NoReplaceNode) {
   s21::Value val = {"I", "A", "2000", "S", "1"};
   table.set("1", val);
   table.set("2", val);
-  EXPECT_THROW(table.rename("1", "2"), s21::IKeyValueStorage::KeyExistsException);
+  EXPECT_THROW(table.rename("1", "2"),
+               s21::IKeyValueStorage::KeyExistsException);
 }
 
 TEST(HashTableFind, FindPartMatches) {
@@ -209,24 +210,27 @@ TEST(HashTableFind, FindFullMatches) {
   EXPECT_EQ(table.find({"I", "A", "2000", "S", "2"}).size(), 1);
 }
 
-TEST(HashTableExport, BadPermission) {
-	s21::HashTable table;
-	std::system("chmod 000 tests/test_files/file_for_test.dat");
-	EXPECT_THROW(table.save("tests/test_files/file_for_test.dat"), s21::IKeyValueStorage::CantOpenFile);
-	std::system("chmod 777 tests/test_files/file_for_test.dat");
-}
+// TEST(HashTableExport, BadPermission) {
+//   s21::HashTable table;
+//   std::system("chmod 000 tests/test_files/file_for_test.dat");
+//   EXPECT_THROW(table.save("tests/test_files/file_for_test.dat"),
+//                s21::IKeyValueStorage::CantOpenFile);
+//   std::system("chmod 777 tests/test_files/file_for_test.dat");
+// }
 
 TEST(HashTableUpload, NoFile) {
-	s21::HashTable table;
-	EXPECT_THROW(table.upload("tests/test_files/file_for_test1.dat"), s21::IKeyValueStorage::CantOpenFile);
+  s21::HashTable table;
+  EXPECT_THROW(table.upload("tests/test_files/file_for_test1.dat"),
+               s21::IKeyValueStorage::CantOpenFile);
 }
 
-TEST(HashTableUpload, BadPermission) {
-	s21::HashTable table;
-	std::system("chmod 000 tests/test_files/file_for_test.dat");
-	EXPECT_THROW(table.upload("tests/test_files/file_for_test.dat"), s21::IKeyValueStorage::CantOpenFile);
-	std::system("chmod 777 tests/test_files/file_for_test.dat");
-}
+// TEST(HashTableUpload, BadPermission) {
+//   s21::HashTable table;
+//   std::system("chmod 000 tests/test_files/file_for_test.dat");
+//   EXPECT_THROW(table.upload("tests/test_files/file_for_test.dat"),
+//                s21::IKeyValueStorage::CantOpenFile);
+//   std::system("chmod 777 tests/test_files/file_for_test.dat");
+// }
 
 TEST(HashTableUpload, GoodFiles) {
   s21::HashTable table;

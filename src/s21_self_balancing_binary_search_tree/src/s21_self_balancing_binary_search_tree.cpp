@@ -6,10 +6,10 @@ using Tree = SelfBalancingBinarySearchTree;
 const Value* Tree::get(const Key& key) noexcept {
   Node* result_node = findNode(root_, key);
   if (result_node) {
-	  if (result_node->is_expired()) {
-		  root_ = deleteNode(root_, result_node->key);
-	    return nullptr;
-	  }
+    if (result_node->is_expired()) {
+      root_ = deleteNode(root_, result_node->key);
+      return nullptr;
+    }
     return &(result_node->value);
   } else {
     return nullptr;
@@ -127,7 +127,6 @@ void Tree::rename(const Key& old_key, const Key& new_key) {
   }
 
   throw s21::IKeyValueStorage::KeyExistsException();
-
 }
 
 static constexpr TimeLimit NON_EXISTENT = 0;
@@ -143,7 +142,7 @@ TimeLimit Tree::ttl(const Key& key) noexcept {
     return NO_TTL;
   }
 
-  int diff = node -> time_limit + (long)node -> set_time - (long)time(0);
+  int diff = node->time_limit + (long)node->set_time - (long)time(0);
   if (diff <= 0) {
     root_ = deleteNode(root_, key);
     return NON_EXISTENT;

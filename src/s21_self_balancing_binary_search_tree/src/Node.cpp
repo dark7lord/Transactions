@@ -15,7 +15,6 @@ Node::Node(const s21::Key& k, const s21::Value& v, s21::TimeLimit t)
 Node::~Node() {
   delete left;
   delete right;
-  left = right = nullptr;
 }
 
 static int getHeight(Node* node) {
@@ -88,9 +87,9 @@ Node* insert(Node* node, const Key& key, const Value& value, TimeLimit ttl) {
   } else {
     if (node->is_expired()) {
       node->value = value;
-		  node->time_limit = ttl;
+      node->time_limit = ttl;
       node->set_time = time(0);
-	  } else {
+    } else {
       throw IKeyValueStorage::KeyExistsException();
     }
   }
@@ -129,11 +128,13 @@ Node* deleteNode(Node* root, const Key& key) {
       Node* temp = root->left ? root->left : root->right;
 
       if (temp == nullptr) {
+        temp = root;
         root = nullptr;
       } else {
         *root = *temp;
       }
-
+      temp->left = nullptr;
+      temp->right = nullptr;
       delete (temp);
     } else {
       Node* temp = minValueNode(root->right);
@@ -160,8 +161,8 @@ bool Node::is_expired() {
   if (this->time_limit == -1) {
     return false;
   } else {
-    int diff = this -> time_limit + (long)this -> set_time - (long)time(0);
-//    std::cout << "is expired: " << diff << std::endl;
+    int diff = this->time_limit + (long)this->set_time - (long)time(0);
+    //    std::cout << "is expired: " << diff << std::endl;
     if (diff > 0) {
       return false;
     } else {

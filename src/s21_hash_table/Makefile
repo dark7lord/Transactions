@@ -54,5 +54,5 @@ re: fclean all
 tests: all
 	$(CC) -std=c++17 $(TEST) $(NAME) -o $(TEST_DIR)$(TEST_EXE) $(LDFLAGS)
 	./$(TEST_DIR)$(TEST_EXE)
-	#leaks -atExit -- ./$(TEST_DIR)$(TEST_EXE)
+#	leaks -atExit -- ./$(TEST_DIR)$(TEST_EXE)
 	rm $(TEST_DIR)$(TEST_EXE)

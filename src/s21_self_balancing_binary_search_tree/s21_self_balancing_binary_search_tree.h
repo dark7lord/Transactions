@@ -22,6 +22,7 @@ class SelfBalancingBinarySearchTree : public IKeyValueStorage {
   SelfBalancingBinarySearchTree() : root_(nullptr) {}
   ~SelfBalancingBinarySearchTree() {
     if (root_) delete root_;
+    root_ = nullptr;
   }
   SelfBalancingBinarySearchTree(const SelfBalancingBinarySearchTree&) = delete;
   SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&&) noexcept =

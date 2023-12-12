@@ -9,34 +9,26 @@
 
 TEST(SelfBalancingBinarySearchTree, set) {
   s21::SelfBalancingBinarySearchTree tree;
-  tree.set("Alice", (s21::Value){"Alice", "Wonder", "1996", "Paris", "0"}, -1);
-  // test nullptr
-  // test TimiLimit t
-  // test same key
-  // а что если задать время 0, то это запись которая уже мертва без шанса
-  // пожить какое-то время? 	s21::SelfBalancingBinarySearchTree tree1;
+  s21::Value value = {"Alice", "Wonder", "1996", "Paris", "0"};
+  tree.set("Alice", value);
 
-  // tree1.upload("file1.dat");
-  // // tree1.clear();
-  // // tree2.copy_tree(tree1, );
-  // s21::SelfBalancingBinarySearchTree tree2;
-  // tree2.upload("file2.dat");
-  // // tree1.print_tree();
-  // tree2 = std::move(tree1);
-  // tree1.print_tree();
-  // tree2.print_tree();
+  ASSERT_NE(tree.get("Alice"), nullptr);
+  EXPECT_EQ(*tree.get("Alice"), value);
+  EXPECT_THROW(tree.set("Alice", value), s21::IKeyValueStorage::KeyExistsException);
 
-  ASSERT_EQ(4 - 2, 2);
+  // ASSERT_EQ(4 - 2, 2);
 }
 
 TEST(SelfBalancingBinarySearchTree, get) {
   s21::SelfBalancingBinarySearchTree tree;
   s21::Value value = {"Bruce", "Wayne", "1996", "Gotham", "100000"};
   tree.set("Bruce", value);
+  tree.set("Bruce2sec", value, 2);
+  sleep(2);
 
+  ASSERT_NE(tree.get("Bruce"), nullptr);
   ASSERT_EQ(*tree.get("Bruce"), value);
   ASSERT_EQ(tree.get("Random key"), nullptr);
-  // ASSERT_EQ(tree.get(nullptr), nullptr);
 }
 
 TEST(SelfBalancingBinarySearchTree, exists) {
@@ -53,11 +45,35 @@ TEST(SelfBalancingBinarySearchTree, del) {
   s21::Value value = {"April", "O'Neil", "1990", "New York", "4500"};
 
   ASSERT_EQ(tree.del("April"), false);
-  tree.set("April", value);
-  ASSERT_EQ(tree.exists("April"), true);
-  EXPECT_TRUE(tree.del("April"));
+  tree.set("April1", value);
+  tree.set("Aplil2", value);
+  tree.set("Aplil3", value);
+  tree.set("Aplil4", value);
+  tree.set("Aplil5", value);
+  tree.set("Aprir6", value);
 
-  ASSERT_EQ(tree.exists("April"), false);
+  EXPECT_TRUE(tree.exists("April1"));
+  EXPECT_TRUE(tree.del("April1"));
+  EXPECT_NO_THROW(tree.set("April1", value));
+
+  EXPECT_TRUE(tree.exists("Aplil2"));
+  EXPECT_TRUE(tree.del("Aplil2"));
+  EXPECT_NO_THROW(tree.set("Aplil2", value));
+
+  EXPECT_TRUE(tree.exists("Aplil3"));
+  EXPECT_TRUE(tree.del("Aplil3"));
+  EXPECT_NO_THROW(tree.set("Aplil3", value));
+
+  EXPECT_TRUE(tree.exists("Aplil4"));
+  EXPECT_TRUE(tree.del("Aplil4"));
+  EXPECT_NO_THROW(tree.set("Aplil4", value));
+
+  EXPECT_TRUE(tree.exists("Aplil5"));
+  EXPECT_TRUE(tree.del("Aplil5"));
+  EXPECT_NO_THROW(tree.set("Aplil5", value));
+
+
+  EXPECT_EQ(tree.exists("Alril5"), false);
 }
 
 TEST(SelfBalancingBinarySearchTree, update) {

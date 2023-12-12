@@ -254,8 +254,9 @@ void KeyValueConsoleInterface::save_(
   if (tokens[1].size() < 5 ||
       (tokens[1].substr(tokens[1].size() - 4, 5) != ".dat" &&
        tokens[1].substr(tokens[1].size() - 4, 5) != ".DAT")) {
-    std::cout << RED << "> ERROR: .dat file_for_test.dat with no empty name expected" << NONE
-              << std::endl;
+    std::cout << RED
+              << "> ERROR: .dat file_for_test.dat with no empty name expected"
+              << NONE << std::endl;
     return;
   }
   try {
