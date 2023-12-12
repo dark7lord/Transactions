@@ -20,7 +20,6 @@ namespace s21 {
 	std::list<HashTable::Node>::iterator
 	HashTable::first_bigger_or_equal_hash_(const HashCode& hash,
 										   std::list<HashTable::Node>& lst) noexcept {
-		std::cout << "Get Place for insert - hash " << hash << std::endl;
 		auto last = lst.end();
 
 		for (auto first = lst.begin(); first != last; first++) {
@@ -35,7 +34,6 @@ namespace s21 {
 						              const HashCode& hash,
 						              std::list<HashTable::Node>& lst,
 									  std::list<HashTable::Node>::iterator& first) noexcept {
-		std::cout << "Check suspicious hash - hash " << hash << std::endl;
 		auto last = lst.end();
 		bool key_found = false;
 

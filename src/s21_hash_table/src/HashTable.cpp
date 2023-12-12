@@ -11,7 +11,6 @@ namespace s21 {
         std::size_t			index = indexFor_(hash);
         std::list<Node>&	bucket = (*table_)[index];
 
-        std::cout << "Set New node - key " << key << std::endl;
         auto place_to_insert = first_bigger_or_equal_hash_(hash, bucket);
 		if (check_key_exists_(key, hash, bucket, place_to_insert)) {
 			throw IKeyValueStorage::KeyExistsException();
@@ -26,8 +25,6 @@ namespace s21 {
         if (HashTable::currentLoadFactor_() >= initialLoadFactor_) {
             HashTable::increaseTable_();
         }
-        std::cout << "Changed list index " << index << std::endl;
-        std::cout << "New lst size " << (*table_)[index].size() << std::endl;
     }
 
 	/*
@@ -130,7 +127,6 @@ namespace s21 {
 		std::size_t new_index = indexFor_(new_hash);
 		auto		new_first = first_bigger_or_equal_hash_(new_hash, (*table_)[new_index]);
 
-		std::cout << old_key << " " << new_key << std::endl;
 		if (old_key == new_key) {
 			return;
 		}
@@ -138,11 +134,9 @@ namespace s21 {
 			throw IKeyValueStorage::KeyNotExistsException();
 		}
 		if (check_key_exists_(new_key, new_hash, (*table_)[new_index], new_first)) {
-			std::cout << "exists" << std::endl;
 			new_first -> val = old_first -> val;
 			currentLoadCount_--;
 		} else {
-			std::cout << "not exists" << std::endl;
 			(*table_)[new_index].insert(
 				new_first,
 				HashTable::Node({new_hash, new_key,
@@ -180,7 +174,6 @@ namespace s21 {
 					first = bucket.erase(first);
 					currentLoadCount_--;
 				} else {
-					std::cout << "Все идет по плану" << std::endl;
 					res.push_back(first -> key);
 				}
 				first++;
