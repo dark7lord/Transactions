@@ -20,11 +20,16 @@ namespace s21 {
 		std::cout << "Create Hash Table - move constructor" << std::endl;
 		table_ = other.table_;
 		other.table_ = nullptr;
+		other.currentBucketCount_ = 0;
+		other.currentLoadCount_ = 0;
 	}
 
 	HashTable& HashTable::operator=(const HashTable& other) {
 		std::cout << "Copy Hash Table - copy operator" << std::endl;
 		if (this != &other) {
+			if (table_ != nullptr) {
+				delete table_;
+			}
 			table_ = new std::vector<std::list<Node>>(*other.table_);
 			currentBucketCount_ = other.currentBucketCount_;
 			currentLoadCount_ = other.currentLoadCount_;
@@ -35,10 +40,15 @@ namespace s21 {
 	HashTable& HashTable::operator=(HashTable&& other) noexcept {
 		std::cout << "Move Hash Table - move operator" << std::endl;
 		if(this != &other) {
+			if (table_ != nullptr) {
+				delete table_;
+			}
 			table_ = other.table_;
 			other.table_ = nullptr;
 			currentBucketCount_ = other.currentBucketCount_;
+			other.currentBucketCount_ = 0;
 			currentLoadCount_ = other.currentLoadCount_;
+			other.currentLoadCount_ = 0;
 		}
 		return *this;
 	}
