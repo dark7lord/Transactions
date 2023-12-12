@@ -15,6 +15,10 @@ namespace s21 {
 	}
 
 	void Tree::set(const Key& key, const Value& value, TimeLimit ttl) {
+		if (ttl == 0) {
+			throw KeyValueStorageException("the ttl " + std::to_string(ttl) + " is not valid");
+		}
+		// TODO: ttl = -1????
 		check_nodes_with_TTL();
 		_root = insert(_root, key, value, ttl);
 	}
@@ -26,9 +30,12 @@ namespace s21 {
 
 	bool Tree::del(const Key& key) noexcept {
 		check_nodes_with_TTL();
-		Node* current_root = _root;
-		_root = delete_node(current_root, key);
-		return current_root != _root;
+
+		Node* current_root = find_node(_root, key);
+		if (!current_root) return false;
+		_root = delete_node(_root, key);
+
+		return true;
 	}
 
 	// Рекурсия, я люблю тебя
@@ -180,7 +187,7 @@ namespace s21 {
 
 	void Tree::save(const std::string& filename) {
 		check_nodes_with_TTL();
-		std::ofstream output_file(filename);
+		std::ofstream output_file(filename, std::ios::trunc);
 
 		if (output_file.is_open()) {
 			int count = 0;

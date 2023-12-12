@@ -97,7 +97,7 @@ namespace s21 {
 		} else if (key > node->key) {
 			node->right = insert(node->right, key, value, ttl);
 		} else {
-			throw std::out_of_range("The key" + key + "exists");
+			throw IKeyValueStorage::KeyExistsException();
 		}
 
 		return balance(node);

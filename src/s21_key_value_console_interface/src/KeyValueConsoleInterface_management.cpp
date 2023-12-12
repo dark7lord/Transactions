@@ -44,6 +44,10 @@ void KeyValueConsoleInterface::set_(const std::vector<std::string>& tokens) noex
 	try {
 		if (tokens.size() == 9) {
 			time = std::stoi(tokens[8]);
+			if (time < 0) {
+				std::cout << RED << "> ERROR: time limit should be positive" << NONE << std::endl;
+				return;
+			}
 		}
 		storage_ -> set(
 				tokens[1],

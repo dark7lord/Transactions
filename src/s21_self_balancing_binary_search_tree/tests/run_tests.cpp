@@ -2,6 +2,7 @@
 #include "../s21_self_balancing_binary_search_tree.h"
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <string>
 
 TEST(SelfBalancingBinarySearchTree, set) {
@@ -130,34 +131,6 @@ TEST(SelfBalancingBinarySearchTree, rename) {
 }
 
 
-TEST(SelfBalancingBinarySearchTree, save) {
-	s21::SelfBalancingBinarySearchTree tree;
-
-	s21::Value value1 = { "Naruto", "Uzumaki", "1999", "Konoha", "15" };
-	s21::Value value2 = { "Haruno", "Sakura", "1998", "Konoha", "60" };
-	s21::Value value3 = { "Nara", "Shikamaru", "1997", "Konoha", "80" };
-
-	tree.set("Naruto", value1);
-	tree.set("Sakura", value2);
-	tree.set("Shikamaru", value3);
-
-	// Save the tree to a file
-	const std::string filename = "test_files/file_for_export.1";
-
-	try {
-		tree.save(filename);
-		std::cout << "File saved successfully." << std::endl;
-	} catch (const std::exception& e) {
-		std::cerr << "Exception caught: " << e.what() << std::endl;
-		FAIL();  // Mark the test as failed
-	}
-
-	// Verify that the file was created
-	std::ifstream input_file(filename);
-	ASSERT_TRUE(input_file.good());
-
-	// Add more assertions as needed...
-}
 
 TEST(SelfBalancingBinarySearchTree, showall) {
 	s21::SelfBalancingBinarySearchTree tree;
@@ -190,67 +163,50 @@ TEST(SelfBalancingBinarySearchTree, ttl) {
 	ASSERT_EQ(tree.ttl("dead"), 0);
 }
 
-// TEST(SelfBalancingBinarySearchTree, upload) {
-//     s21::SelfBalancingBinarySearchTree tree;
+TEST(SelfBalancingBinarySearchTree, upload) {
+    s21::SelfBalancingBinarySearchTree tree;
 
-//     // Attempt to upload from a non-existent file
-//     const std::string filename = "test_files/file_for_import.dat";
+    // Attempt to upload from a non-existent file
+    const std::string filename = "tests/test_files/file_for_import.dat";
 
-//     try {
-//         tree.upload(filename);
-//         std::cout << "File uploaded successfully." << std::endl;
-//     } catch (const std::exception& e) {
-//         std::cerr << "Exception caught: " << e.what() << std::endl;
-//         FAIL();  // Mark the test as failed
-//     }
-
-//     // Add more assertions as needed...
-// }
-
-class FileManager {
-public:
-    void createFile(const std::string& filename, const std::string& content) {
-        std::ofstream file(filename);
-        if (file.is_open()) {
-            file << content;
-            file.close();
-        } else {
-            std::cerr << "Failed to create file: " << filename << std::endl;
-        }
+    try {
+        tree.upload(filename);
+        std::cout << "File uploaded successfully." << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception caught: " << e.what() << std::endl;
+        FAIL();  // Mark the test as failed
     }
 
-    std::string readFile(const std::string& filename) {
-        std::ifstream file(filename);
-        std::string content;
+    // Add more assertions as needed...
+}
 
-        if (file.is_open()) {
-            std::getline(file, content);
-            file.close();
-        } else {
-            std::cerr << "Failed to open file: " << filename << std::endl;
-        }
+TEST(SelfBalancingBinarySearchTree, save) {
+	s21::SelfBalancingBinarySearchTree tree;
 
-        return content;
-    }
-};
+	s21::Value value1 = { "Naruto", "Uzumaki", "1999", "Konoha", "15" };
+	s21::Value value2 = { "Haruno", "Sakura", "1998", "Konoha", "60" };
+	s21::Value value3 = { "Nara", "Shikamaru", "1997", "Konoha", "80" };
 
-TEST(FileManagerTest, CreateAndReadFile) {
-    FileManager fileManager;
+	tree.set("Naruto", value1);
+	tree.set("Sakura", value2);
+	tree.set("Shikamaru", value3);
 
-    // Временное имя файла для теста
-    const std::string filename = "test_file.txt";
+	// Save the tree to a file
+	const std::string filename = "tests/test_files/file_for_export.dat";
 
-    // Содержимое, которое мы хотим записать в файл
-    const std::string content = "Hello, World!";
+	try {
+		tree.save(filename);
+		std::cout << "File saved successfully." << std::endl;
+	} catch (const std::exception& e) {
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+		FAIL();  // Mark the test as failed
+	}
 
-    // Создаем файл
-    fileManager.createFile(filename, content);
+	// Verify that the file was created
+	std::ifstream input_file(filename);
+	ASSERT_TRUE(input_file.good());
 
-    // Читаем содержимое файла
-    std::string readContent = fileManager.readFile(filename);
-
-    // Проверяем, что содержимое файла совпадает с ожидаемым
-    EXPECT_EQ(content, readContent);
+	// Add more assertions as needed...
 }
 
 int main(int argc, char *argv[]) {

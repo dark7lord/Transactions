@@ -58,6 +58,8 @@ namespace s21 {
 
 		virtual ~IKeyValueStorage() = default;
 
+		static void str_to_value(const std::string& line, std::string& key, Value& value);
+
 		struct KeyValueStorageException : std::runtime_error {
 			explicit KeyValueStorageException(const std::string &arg);
 		};
