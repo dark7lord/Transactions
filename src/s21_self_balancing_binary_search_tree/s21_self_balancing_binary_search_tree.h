@@ -25,8 +25,12 @@ namespace s21 {
 	public:
 		SelfBalancingBinarySearchTree() : _root(nullptr) {}
 		~SelfBalancingBinarySearchTree() { if (_root) delete _root; }
-		// SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&) = default;
-		// SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&&) = default;
+		SelfBalancingBinarySearchTree(const SelfBalancingBinarySearchTree&);
+		SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&&);
+		SelfBalancingBinarySearchTree& operator=(const SelfBalancingBinarySearchTree&);
+		SelfBalancingBinarySearchTree& operator=(SelfBalancingBinarySearchTree&&) noexcept;
+		void copy_tree(AVL_Node*& destination, const AVL_Node* source);
+		void clear();
 
 		/* * * * * * * * * * * * * * *   Methods  * * * * * * * * * * * * * * */
 
@@ -39,8 +43,6 @@ namespace s21 {
 		std::vector<Key>	keys(void) noexcept override;
 		void				rename(const Key&, const Key&) override;
 		TimeLimit			ttl(const Key&) noexcept override;
-
-		// TODO: the lines below have no tests
 		void 				save(const std::string&) override;
 		std::vector<Value>	showall(void) noexcept override;
 		void				print_tree(void);

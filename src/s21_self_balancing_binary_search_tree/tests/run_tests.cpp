@@ -12,6 +12,18 @@ TEST(SelfBalancingBinarySearchTree, set) {
 	// test TimiLimit t
 	// test same key
 	// а что если задать время 0, то это запись которая уже мертва без шанса пожить какое-то время?
+	// 	s21::SelfBalancingBinarySearchTree tree1;
+
+	// tree1.upload("file1.dat");
+	// // tree1.clear();
+	// // tree2.copy_tree(tree1, );
+	// s21::SelfBalancingBinarySearchTree tree2;
+	// tree2.upload("file2.dat");
+	// // tree1.print_tree();
+	// tree2 = std::move(tree1);
+	// tree1.print_tree();
+	// tree2.print_tree();
+
 	ASSERT_EQ(4 - 2, 2);
 }
 

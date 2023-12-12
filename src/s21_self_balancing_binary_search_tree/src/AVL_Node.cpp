@@ -16,6 +16,7 @@ namespace s21 {
 	AVL_Node::~AVL_Node() {
 		delete left;
 		delete right;
+		left = right = nullptr;
 	}
 
 	using Node = AVL_Node;

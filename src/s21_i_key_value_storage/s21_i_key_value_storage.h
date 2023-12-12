@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 
 namespace s21 {
 

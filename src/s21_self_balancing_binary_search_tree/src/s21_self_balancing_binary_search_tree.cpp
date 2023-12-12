@@ -4,6 +4,55 @@ namespace s21 {
 	using Tree = SelfBalancingBinarySearchTree;
 	using Node = AVL_Node;
 
+	void SelfBalancingBinarySearchTree::copy_tree(Node*& destination, const Node* source) {
+		if (source == nullptr) {
+			destination = nullptr;
+			return;
+		}
+
+		destination = new Node(source->key, source->value, source->time_limit);
+		copy_tree(destination->left, source->left);
+		copy_tree(destination->right, source->right);
+	}
+
+	void clear_tree(Node*& node) {
+		if (node == nullptr) return;
+
+		clear_tree(node->left);
+		clear_tree(node->right);
+		delete node;
+		node = nullptr;
+	}
+
+	void SelfBalancingBinarySearchTree::clear() {
+		clear_tree(_root);
+	}
+
+	SelfBalancingBinarySearchTree::SelfBalancingBinarySearchTree(const SelfBalancingBinarySearchTree& other) {
+		copy_tree(_root, other._root);
+	}
+
+	SelfBalancingBinarySearchTree::SelfBalancingBinarySearchTree(SelfBalancingBinarySearchTree&& other) {
+		_root = other._root;
+		other._root = nullptr;
+	}
+
+	SelfBalancingBinarySearchTree& SelfBalancingBinarySearchTree::operator=(SelfBalancingBinarySearchTree&& other) noexcept {
+		if (this != &other) {
+			_root = other._root;
+			other._root = nullptr;
+		}
+		return *this;
+	}
+	// Оператор присваивания
+	SelfBalancingBinarySearchTree& SelfBalancingBinarySearchTree::operator=(const SelfBalancingBinarySearchTree& other) {
+		if (this != &other) {
+			clear_tree(_root);
+			copy_tree(_root, other._root);
+		}
+		return *this;
+	}
+
 	const Value* Tree::get(const Key& key) noexcept {
 		check_nodes_with_TTL();
 		Node* result_node = find_node(_root, key);
