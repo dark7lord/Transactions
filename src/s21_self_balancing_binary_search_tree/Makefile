@@ -11,9 +11,9 @@ TEST_DIR		:= tests/
 EXT_DIR			:= ../s21_i_key_value_storage/
 EXT_OBJ_DIR		:= $(EXT_DIR)obj/
 
-SRC_FILES		:= s21_self_balancing_binary_search_tree.cpp AVL_Node.cpp
+SRC_FILES		:= s21_self_balancing_binary_search_tree.cpp Node.cpp
 OBJ_FILES		:= $(SRC_FILES:.cpp=.o)
-INC_FILES		:= AVL_Node.h
+INC_FILES		:= Node.h
 HEADER			:= s21_self_balancing_binary_search_tree.h
 TEST_FILES		:= run_tests.cpp
 TEST_EXE		:= bst.exe
@@ -58,7 +58,7 @@ fclean: clean
 re: fclean $(FULL_NAME) all $(TARGET_TEST)
 
 
-# clang_n:
-# 	clang-format -style=Google -n *.c *.h
+ clang_n:
+ 	clang-format -style=Google -n *.c *.h
 # clang_i:
 # 	clang-format -style=Google -i *.c *.h

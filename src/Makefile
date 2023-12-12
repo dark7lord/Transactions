@@ -62,6 +62,6 @@ fclean:
 re: fclean all
 
 tests:
-	@make --silent -C $(KEY_VALUE_STORAGE_PATH) tests
-	@make --silent -C $(HASH_TABLE_PATH) tests
-	@make --silent -C $(BIN_TREE_PATH) tests
+	@cd $(KEY_VALUE_STORAGE_PATH) && make tests
+	@cd $(BIN_TREE_PATH) && make tests
+	@cd $(HASH_TABLE_PATH) && make tests
