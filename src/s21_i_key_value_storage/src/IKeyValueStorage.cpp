@@ -1,10 +1,10 @@
 #include "../s21_i_key_value_storage.h"
-#include <map>
+#include <set>
 
 namespace s21 {
 
 	void IKeyValueStorage::upload(const std::string& filename) {
-		std::ifstream input_file(filename, std::ios::in);
+		std::ifstream input_file(filename);
 
 		if (!input_file.is_open()) {
 			throw IKeyValueStorage::CantOpenFile(filename);
@@ -12,17 +12,23 @@ namespace s21 {
 
 		std::string line;
 		int count = 0;
-		// на случай, если одна строка не валидна, всё пишется в мапе, и хранилище не нужно ощищать
-		std::map<Key, Value> keys_values;
+		std::set<Key> keys;
 
 		while (std::getline(input_file, line)) {
 			try {
 				Key key;
-				Value value = Value::str_to_value(line, &key);
-				keys_values.insert({ key, value });
+				Value value;
+				IKeyValueStorage::str_to_value(line, key, value);
+				if (keys.count(key) == 0 && get(key) == nullptr) {
+					keys.insert(key);
+				}
+				else {
+					throw IKeyValueStorage::KeyExistsException();
+				}
 			}
 			catch (const std::exception& e) {
-				std::string numbered_line = "Failed to parse line " + std::to_string(++count) + ": " + line;
+				std::string numbered_line = "Failed to parse line " +
+					std::to_string(++count) + ": " + line;
 				std::string type_error = e.what();
 				std::string error_msg = numbered_line + "\n" + type_error;
 
@@ -30,14 +36,27 @@ namespace s21 {
 			}
 		}
 
-		input_file.close();
+		input_file.clear();
+		input_file.seekg(0, std::ios::beg);
 
-		// А что если он пустой? отработает и вернет пустую мапу,
-		// но если просто перенос строки, то ошибка парсинга
-		for (const auto& [key, value]: keys_values ) {
-			// std::cout << key << value << std::endl;
+		while (std::getline(input_file, line)) {
+			Key key;
+			Value value;
+			IKeyValueStorage::str_to_value(line, key, value);
 			set(key, value);
 		}
+	}
+
+	void IKeyValueStorage::
+	str_to_value(const std::string& line, std::string& key, Value& value) {
+		auto	tokens = split_to_tokens(line);
+
+		if (tokens.size() != 6) {
+			throw IKeyValueStorage::KeyValueStorageException("invalid number of arguments");
+		}
+
+		key = tokens[0];
+		value = Value::parse_value(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]);
 	}
 
 	IKeyValueStorage::KeyValueStorageException::

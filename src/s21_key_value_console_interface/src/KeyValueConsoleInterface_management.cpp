@@ -95,12 +95,12 @@ void KeyValueConsoleInterface::update_(const std::vector<std::string>& tokens) n
 	}
 	try {
 		storage_ -> update(
-			tokens[1],
-			Value::parse_value(tokens[2],
-							   tokens[3],
-							   tokens[4],
-							   tokens[5],
-							   tokens[6]));
+			tokens[1], {
+				tokens[2],
+				tokens[3],
+				tokens[4],
+				tokens[5],
+				tokens[6]});
 		std::cout << GREY << "> OK" << NONE << std::endl;
 	} catch (std::exception& e) {
 		std::cout << RED << "> ERROR: " << e.what() << NONE << std::endl;

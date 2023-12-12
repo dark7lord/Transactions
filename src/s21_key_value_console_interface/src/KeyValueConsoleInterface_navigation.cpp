@@ -41,7 +41,7 @@ static const std::string MENU_MESSAGE = "\n"
 	"		<number of current coins>:\n"
 	"		restore the key (or keys) according to a given value. f any fields will\n"
 	"		not be searched, it is replaced by a dash '-'.\n"
-	"		to restore the key (or keys) according to a given value."
+	"		to restore the key (or keys) according to a given value.\n"
 	"	MENU: show this message.\n"
 	"	EXIT: exit program.\n\n"
 	"You need to choose one and type the command or MENU to see menu:";

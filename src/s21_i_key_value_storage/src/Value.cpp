@@ -68,36 +68,4 @@ namespace s21 {
 		return value;
 	}
 
-	// TODO: написать красивый метод вывода ошибки, которая печатает номер строки, саму ее и причина ошибки
-	Value Value::str_to_value(const std::string& line, std::string *key) {
-		auto	tokens = split_to_tokens(line);
-		int		k;
-
-		if (key && tokens.size() != 6) {
-			throw std::runtime_error("Parsing with key, it's error");
-		}
-		else if (!key && tokens.size() != 5) {
-			throw std::runtime_error("Parsing without key, it's error");
-		}
-
-		// можно ли сделать перебор типа такого?
-		// for (const auto& key : {"first_name", "last_name", "birth_year", "city", "number_coins"})
-		if (key) {
-			k = 1;
-			*key = tokens[0];
-		} else {
-			k = 0;
-		}
-
-		const std::string& first_name = tokens[0 + k];
-		const std::string& last_name = tokens[1 + k];
-		const std::string& birth_year = tokens[2 + k];
-		const std::string& city = tokens[3 + k];
-		const std::string& number_coins = tokens[4 + k];
-
-		Value value = parse_value(first_name, last_name, birth_year, city, number_coins);
-
-		return value;
-	}
-
 } // namespace s21

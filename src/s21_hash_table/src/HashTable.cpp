@@ -77,7 +77,21 @@ namespace s21 {
 		auto		first = first_bigger_or_equal_hash_(hash, (*table_)[index]);
 
 		if (check_key_exists_(key, hash, (*table_)[index], first)) {
-			first -> val = val;
+			if (val.last_name != "-") {
+				(first -> val).last_name = val.last_name;
+			}
+			if (val.first_name != "-") {
+				(first -> val).first_name = val.first_name;
+			}
+			if (val.birth_year != "-") {
+				(first -> val).birth_year = val.birth_year;
+			}
+			if (val.city != "-") {
+				(first -> val).city = val.city;
+			}
+			if (val.coins_number != "-") {
+				(first -> val).coins_number = val.coins_number;
+			}
 		} else {
 			throw IKeyValueStorage::KeyNotExistsException();
 		}
@@ -194,8 +208,6 @@ namespace s21 {
 		}
 		return res;
 	}
-
-	void HashTable::upload(const std::string&) {}
 
 	void HashTable::save(const std::string& filename) {
 		std::ofstream output_file(filename, std::ios::trunc);
