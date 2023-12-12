@@ -1,7 +1,5 @@
 #include "../inc/Node.h"
 
-#include <iostream>
-
 namespace s21 {
 Node::Node(const s21::Key& k, const s21::Value& v, s21::TimeLimit t)
     : key(k),
@@ -162,7 +160,6 @@ bool Node::is_expired() {
     return false;
   } else {
     int diff = this->time_limit + (long)this->set_time - (long)time(0);
-    //    std::cout << "is expired: " << diff << std::endl;
     if (diff > 0) {
       return false;
     } else {
