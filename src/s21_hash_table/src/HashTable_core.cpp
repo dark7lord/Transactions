@@ -3,23 +3,23 @@
 namespace s21 {
 
 HashTable::HashTable()
-    : currentBucketCount_(initialBucketCount_), currentLoadCount_(0) {
-  table_ = new std::vector<std::list<Node>>(initialBucketCount_);
+    : current_bucket_count_(initial_bucket_count_), current_load_count_(0) {
+  table_ = new std::vector<std::list<Node>>(initial_bucket_count_);
 }
 
 HashTable::HashTable(HashTable const& other)
-    : currentBucketCount_(other.currentBucketCount_),
-      currentLoadCount_(other.currentLoadCount_) {
+    : current_bucket_count_(other.current_bucket_count_),
+      current_load_count_(other.current_load_count_) {
   table_ = new std::vector<std::list<Node>>(*other.table_);
 }
 
 HashTable::HashTable(HashTable&& other) noexcept
-    : currentBucketCount_(other.currentBucketCount_),
-      currentLoadCount_(other.currentLoadCount_) {
+    : current_bucket_count_(other.current_bucket_count_),
+      current_load_count_(other.current_load_count_) {
   table_ = other.table_;
   other.table_ = nullptr;
-  other.currentBucketCount_ = 0;
-  other.currentLoadCount_ = 0;
+  other.current_bucket_count_ = 0;
+  other.current_load_count_ = 0;
 }
 
 HashTable& HashTable::operator=(const HashTable& other) {
@@ -28,8 +28,8 @@ HashTable& HashTable::operator=(const HashTable& other) {
       delete table_;
     }
     table_ = new std::vector<std::list<Node>>(*other.table_);
-    currentBucketCount_ = other.currentBucketCount_;
-    currentLoadCount_ = other.currentLoadCount_;
+    current_bucket_count_ = other.current_bucket_count_;
+    current_load_count_ = other.current_load_count_;
   }
   return *this;
 }
@@ -41,10 +41,10 @@ HashTable& HashTable::operator=(HashTable&& other) noexcept {
     }
     table_ = other.table_;
     other.table_ = nullptr;
-    currentBucketCount_ = other.currentBucketCount_;
-    other.currentBucketCount_ = 0;
-    currentLoadCount_ = other.currentLoadCount_;
-    other.currentLoadCount_ = 0;
+    current_bucket_count_ = other.current_bucket_count_;
+    other.current_bucket_count_ = 0;
+    current_load_count_ = other.current_load_count_;
+    other.current_load_count_ = 0;
   }
   return *this;
 }
@@ -57,7 +57,7 @@ irrational golden ratio 0x9e3779b9 is used for generating non-collinear
 binary sequence.
 */
 HashCode HashTable::hashCode_(const Key& key) noexcept {
-  HashCode seed = HashTable::hashSeed_;
+  HashCode seed = HashTable::hash_seed_;
   auto first = key.begin();
   auto last = key.end();
 
@@ -72,19 +72,19 @@ std::size_t HashTable::indexFor_(HashCode hash) const noexcept {
 }
 
 double HashTable::currentLoadFactor_() const noexcept {
-  return (double)currentLoadCount_ / (double)currentBucketCount_;
+  return (double)current_load_count_ / (double)current_bucket_count_;
 }
 
 void HashTable::increaseTable_() {
-  std::size_t old_buckets_cnt = currentBucketCount_;
+  std::size_t old_buckets_cnt = current_bucket_count_;
   std::list<Node>::iterator it;
   std::size_t new_index;
 
-  if (currentBucketCount_ == maximumCapacity_) {
+  if (current_bucket_count_ == maximum_capacity_) {
     return;
   }
-  currentBucketCount_ *= 2;
-  table_->reserve(currentBucketCount_);
+  current_bucket_count_ *= 2;
+  table_->reserve(current_bucket_count_);
   table_->insert(table_->end(), old_buckets_cnt, std::list<Node>());
   for (std::size_t bucket_num = 0; bucket_num < old_buckets_cnt; bucket_num++) {
     it = (*table_)[bucket_num].begin();
