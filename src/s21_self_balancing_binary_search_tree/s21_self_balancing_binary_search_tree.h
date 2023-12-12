@@ -40,13 +40,12 @@ class SelfBalancingBinarySearchTree : public IKeyValueStorage {
   std::vector<Key> keys() noexcept override;
   void rename(const Key&, const Key&) override;
   TimeLimit ttl(const Key&) noexcept override;
-  void save(const std::string&) override;
+  std::size_t save(const std::string&) override;
   std::vector<Value> showall() noexcept override;
 
  private:
   Node* root_;
   std::set<Node*> nodes_with_TTL_;
-  void checkNodesWithTtl_();
 };
 
 }  // namespace s21

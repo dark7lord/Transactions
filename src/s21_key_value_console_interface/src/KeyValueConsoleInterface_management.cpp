@@ -239,8 +239,8 @@ void KeyValueConsoleInterface::upload_(
     return;
   }
   try {
-    storage_->upload(tokens[1]);
-    std::cout << GREY << "> OK" << NONE << std::endl;
+    std::size_t res = storage_->upload(tokens[1]);
+    std::cout << GREY << "> OK " << res << NONE << std::endl;
   } catch (std::exception& e) {
     std::cout << RED << "> ERROR: " << e.what() << NONE << std::endl;
   }
@@ -259,8 +259,8 @@ void KeyValueConsoleInterface::save_(
     return;
   }
   try {
-    storage_->save(tokens[1]);
-    std::cout << GREY << "> OK" << NONE << std::endl;
+    std::size_t res = storage_->save(tokens[1]);
+    std::cout << GREY << "> OK " << res << NONE << std::endl;
   } catch (std::exception& e) {
     std::cout << RED << "> ERROR: " << e.what() << NONE << std::endl;
   }

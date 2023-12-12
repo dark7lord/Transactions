@@ -9,9 +9,8 @@ Node::Node(const s21::Key& k, const s21::Value& v, s21::TimeLimit t)
       left(nullptr),
       right(nullptr),
       height(1),
-      time_limit(t) {
-  if (time_limit > 0) time_limit = time(0) + t;  // timestamp
-}
+      time_limit(t),
+      set_time(time(0)) {}
 
 Node::~Node() {
   delete left;
@@ -87,7 +86,13 @@ Node* insert(Node* node, const Key& key, const Value& value, TimeLimit ttl) {
   } else if (key > node->key) {
     node->right = insert(node->right, key, value, ttl);
   } else {
-    throw IKeyValueStorage::KeyExistsException();
+    if (node->is_expired()) {
+      node->value = value;
+		  node->time_limit = ttl;
+      node->set_time = time(0);
+	  } else {
+      throw IKeyValueStorage::KeyExistsException();
+    }
   }
 
   return balance(node);
@@ -150,4 +155,19 @@ void traverseTree(Node* node, const std::function<void(Node*)>& func) {
     traverseTree(node->right, func);
   }
 }
+
+bool Node::is_expired() {
+  if (this->time_limit == -1) {
+    return false;
+  } else {
+    int diff = this -> time_limit + (long)this -> set_time - (long)time(0);
+//    std::cout << "is expired: " << diff << std::endl;
+    if (diff > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+
 }  // namespace s21

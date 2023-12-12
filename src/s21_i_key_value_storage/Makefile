@@ -19,6 +19,7 @@ $(NAME): $(OBJ) $(INC)
 	ar rcs $(NAME) $(OBJ)
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC)
+	@rm -f $(NAME)
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CCFLAGS) -c $< -o $@
 

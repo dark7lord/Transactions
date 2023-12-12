@@ -52,8 +52,8 @@ class IKeyValueStorage {
   virtual TimeLimit ttl(const Key&) noexcept = 0;
   virtual std::vector<Key> find(const Value&) noexcept = 0;
   virtual std::vector<Value> showall() noexcept = 0;
-  virtual void upload(const std::string&);
-  virtual void save(const std::string&) = 0;
+  virtual std::size_t upload(const std::string&);
+  virtual std::size_t save(const std::string&) = 0;
 
   virtual ~IKeyValueStorage() = default;
 

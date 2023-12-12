@@ -130,10 +130,10 @@ TEST(HashTableKeys, ReturnsRightSize) {
   EXPECT_EQ(table.keys().size(), 6);
   EXPECT_FALSE(table.del("100"));
   EXPECT_EQ(table.keys().size(), 6);
-  ASSERT_NO_THROW(table.rename("0", "1"));
-  EXPECT_EQ(table.keys().size(), 5);
   ASSERT_NO_THROW(table.rename("1", "4"));
-  EXPECT_EQ(table.keys().size(), 5);
+  EXPECT_EQ(table.keys().size(), 6);
+  ASSERT_NO_THROW(table.set("32638", val));
+  EXPECT_EQ(table.keys().size(), 7);
 }
 
 TEST(HashTableShowall, ReturnsRightSize) {
@@ -151,10 +151,10 @@ TEST(HashTableShowall, ReturnsRightSize) {
   EXPECT_EQ(table.showall().size(), 6);
   EXPECT_FALSE(table.del("100"));
   EXPECT_EQ(table.showall().size(), 6);
-  ASSERT_NO_THROW(table.rename("0", "1"));
-  EXPECT_EQ(table.showall().size(), 5);
   ASSERT_NO_THROW(table.rename("1", "4"));
-  EXPECT_EQ(table.showall().size(), 5);
+  EXPECT_EQ(table.showall().size(), 6);
+  ASSERT_NO_THROW(table.set("32638", val));
+  EXPECT_EQ(table.showall().size(), 7);
 }
 
 TEST(HashTableRename, ThrowOnNotExists) {
@@ -181,15 +181,12 @@ TEST(HashTableRename, CreateNewNode) {
   EXPECT_EQ(table.keys(), std::vector<s21::Key>{"2"});
 }
 
-TEST(HashTableRename, ReplaceNode) {
+TEST(HashTableRename, NoReplaceNode) {
   s21::HashTable table;
   s21::Value val = {"I", "A", "2000", "S", "1"};
   table.set("1", val);
   table.set("2", val);
-  EXPECT_NO_THROW(table.rename("1", "2"));
-  ASSERT_TRUE(table.exists("2"));
-  ASSERT_FALSE(table.exists("1"));
-  EXPECT_EQ(table.keys(), std::vector<s21::Key>{"2"});
+  EXPECT_THROW(table.rename("1", "2"), s21::IKeyValueStorage::KeyExistsException);
 }
 
 TEST(HashTableFind, FindPartMatches) {

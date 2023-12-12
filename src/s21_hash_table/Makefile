@@ -35,6 +35,7 @@ $(NAME): $(OBJ)
 	@echo Compiling $(NAME) success!
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC) $(EXT_DIR)$(EXT_LIB)
+	@rm -f $(NAME)
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CCFLAGS) -c $< -o $@
 

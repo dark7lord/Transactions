@@ -133,8 +133,7 @@ void HashTable::rename(const Key& old_key, const Key& new_key) {
     throw IKeyValueStorage::KeyNotExistsException();
   }
   if (check_key_exists_(new_key, new_hash, (*table_)[new_index], new_first)) {
-    new_first->val = old_first->val;
-    currentLoadCount_--;
+    throw IKeyValueStorage::KeyExistsException();
   } else {
     (*table_)[new_index].insert(
         new_first,
@@ -201,23 +200,26 @@ std::vector<Value> HashTable::showall() noexcept {
   return res;
 }
 
-void HashTable::save(const std::string& filename) {
+std::size_t HashTable::save(const std::string& filename) {
   std::ofstream output_file(filename, std::ios::trunc);
   std::vector<Key> all_keys;
   const Value* val;
 
-  if (output_file.is_open()) {
-    all_keys = keys();
-    for (const Key& key : all_keys) {
-      val = get(key);
-      if (val != nullptr) {
-        output_file << std::quoted(key) << " " << *val << std::endl;
-      }
-    }
-    output_file.close();
-  } else {
+  if (!output_file.is_open()) {
     throw IKeyValueStorage::CantOpenFile(filename);
   }
+
+  std::size_t count = 0;
+  all_keys = keys();
+  for (const Key& key : all_keys) {
+    val = get(key);
+    if (val != nullptr) {
+      count++;
+      output_file << std::quoted(key) << " " << *val << std::endl;
+    }
+  }
+  output_file.close();
+  return count;
 }
 
 }  // namespace s21

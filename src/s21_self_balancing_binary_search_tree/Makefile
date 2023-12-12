@@ -26,7 +26,7 @@ TEST			:= $(addprefix $(TEST_DIR), $(TEST_FILES))
 
 .PHONY: all clean fclean re tests run_test
 
-all : $(EXT_DIR)$(EXT_LIB) $(NAME) $()
+all : $(EXT_DIR)$(EXT_LIB) $(NAME)
 
 $(EXT_DIR)$(EXT_LIB):
 	make --silent -C $(EXT_DIR) && echo ...compiling $(EXT_LIB)
@@ -36,6 +36,7 @@ $(NAME): $(OBJ)
 	@echo Compiling $(NAME) success!
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp $(INC) $(EXT_DIR)$(EXT_LIB)
+	@rm -f $(NAME)
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CCFLAGS) -c $< -o $@
 
@@ -58,7 +59,7 @@ fclean: clean
 re: fclean $(FULL_NAME) all $(TARGET_TEST)
 
 
- clang_n:
- 	clang-format -style=Google -n *.c *.h
+# clang_n:
+# 	clang-format -style=Google -n *.c *.h
 # clang_i:
 # 	clang-format -style=Google -i *.c *.h

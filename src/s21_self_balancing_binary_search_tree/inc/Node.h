@@ -16,7 +16,9 @@ class Node {
   Node* right;
   int height;
   s21::TimeLimit time_limit;
+  time_t set_time;
 
+  bool is_expired();
   Node(const s21::Key& k, const s21::Value& v, s21::TimeLimit = -1);
   ~Node();
 };

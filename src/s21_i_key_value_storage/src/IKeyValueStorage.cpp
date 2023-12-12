@@ -4,7 +4,7 @@
 
 namespace s21 {
 
-void IKeyValueStorage::upload(const std::string& filename) {
+std::size_t IKeyValueStorage::upload(const std::string& filename) {
   std::ifstream input_file(filename);
 
   if (!input_file.is_open()) {
@@ -38,6 +38,8 @@ void IKeyValueStorage::upload(const std::string& filename) {
     IKeyValueStorage::str_to_value(line, key, value);
     set(key, value);
   }
+
+  return keys.size();
 }
 
 void IKeyValueStorage::str_to_value(const std::string& line, std::string& key,

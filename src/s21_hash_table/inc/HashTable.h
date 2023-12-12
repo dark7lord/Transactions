@@ -32,7 +32,7 @@ class HashTable : public IKeyValueStorage {
   TimeLimit ttl(const Key&) noexcept override;
   std::vector<Key> find(const Value&) noexcept override;
   std::vector<Value> showall(void) noexcept override;
-  void save(const std::string& filename) override;
+  std::size_t save(const std::string& filename) override;
 
  private:
   /* HashTable configurations. Defined in HashTable_core.cpp. */
